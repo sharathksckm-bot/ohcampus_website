@@ -1,0 +1,50 @@
+.heroSection{
+    background-image: url(../../../../assets/images/heroimg.jpg);
+    background-size: cover;
+    
+    background-position: center;
+    .textset{
+        margin: 0;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);width: 80%;
+    }
+}
+.heroSection::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+   // background-color: #015181b5;
+    background-color: #034870b5;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}
+::ng-deep .mat-tab-group.greenTab .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active{
+    background-color: #88d834!important; 
+}
+::ng-deep .mat-tab-group.greenTab .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active{
+    color: #fff!important; 
+}
+
+::ng-deep .mat-accordion.matdecor .mat-expansion-panel .mat-expansion-panel-header {
+    font-size: 14px;
+    background: #f0f5f9;
+}
+
+::ng-deep .mat-accordion.matdecor .mat-expansion-panel:hover {
+    --tw-shadow:none !important;
+    box-shadow: none !important;
+}
+::ng-deep .mat-accordion.matdecor .mat-expansion-panel.mat-expanded, ::ng-deep .mat-accordion.matdecor .mat-expansion-panel:hover{
+    --tw-shadow:none !important;
+    box-shadow: none !important;
+}
+::ng-deep .mat-accordion.matdecor .mat-expansion-panel .mat-expansion-panel-body{
+  padding: 0px 4px;
+}
+.mat-accordion.matdecor .mat-expansion-panel .mat-expansion-panel-header:hover{
+    background: #f0f5f9!important;
+}

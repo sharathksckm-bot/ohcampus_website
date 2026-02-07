@@ -1,0 +1,345 @@
+.wikiContents table th:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.wikiContents table th {
+    padding: 0.5rem 1.15rem;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.wikiContents table th,
+.wikiContents table th {
+    background-color: #bddbfa;
+    color: #353535 !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+}
+
+.wikiContents table tr td:not(:last-child) {
+    border-right: 1px dashed #dfdfdf;
+}
+
+.wikiContents table tr td {
+    color: #353535;
+    text-align: left;
+    background-color: white;
+    font-size: var(--text-regular);
+    padding: 0.5rem 1.15rem;
+    line-height: 1.375rem;
+}
+
+.wikiContents table tr {
+    border-bottom: 1px dashed #dfdfdf;
+}
+
+.wikiContents table th:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+ul.ullist {
+    list-style: unset !important;
+    margin: 0.5em !important;
+    padding: 1em !important;
+}
+
+.ulli ul {
+    margin: 0;
+    padding: 0;
+}
+
+.highlight ul {
+    margin: 0;
+    padding: 0;
+}
+
+
+.mat-accordion.clgCompAcc .mat-expansion-panel {
+    border-radius: 0 !important;
+}
+
+.mat-accordion.clgCompAcc .mat-expansion-panel.mat-expanded,
+.mat-accordion .mat-expansion-panel:hover {
+    --tw-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.mat-accordion.clgCompAcc .mat-expansion-panel {
+    margin: 1em 0em !important;
+}
+
+.rwsHead {
+    padding: 36px 36px 0;
+}
+
+.rwsTag {
+    border-radius: 4px;
+    background: #a687d6;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px !important;
+    padding: 4px 12px;
+}
+
+h2.rwsHeading {
+    color: var(--primary-dark, #2f1238);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 30px !important;
+    margin: 12px 0 4px;
+}
+
+.mA {
+    align-items: center;
+}
+
+.flxBox {
+    display: flex;
+}
+
+.editCase {
+    gap: 8px;
+}
+
+p.rwsHeadingSupportiveTxt {
+    color: #353535;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px !important;
+    max-width: calc(100% - 50px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recoWidgetSection {
+    border-radius: 12px;
+    background: linear-gradient(310deg, rgba(125, 129, 251, .3) .01%, rgba(244, 197, 204, .3));
+    box-shadow: 0 0 4px 0 rgba(16, 24, 64, .12);
+    margin: 20px 0;
+    min-height: 455px;
+}
+
+::ng-deep .carousel-indicators button {
+    width: 15px;
+    height: 15px;
+    margin: 7.5px;
+    min-height: 0 !important;
+}
+
+::ng-deep .carousel-slide-content {
+    background: #fff !important;
+}
+
+::ng-deep .carousel>button:first-of-type {
+    left: 0px !important;
+}
+
+::ng-deep .carousel>button:last-of-type {
+    right: 0px !important;
+}
+
+::ng-deep .carousel-indicators {
+    bottom: -3px !important;
+}
+
+.paused {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+}
+
+.text-right {
+    text-align: right;
+}
+
+agm-map {
+    height: 300px;
+}
+
+.mat-tab-label.mat-tab-label-active {
+    background-color: #adff00;
+}
+
+.desc {
+    font-weight: 700;
+    background: aliceblue;
+    padding: 10px;
+}
+
+.loader {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Add opacity for blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loading {
+    filter: blur(5px);
+    position: absolute;
+    z-index: 9999;
+    /* Adjust blur amount as needed */
+}
+
+.article:hover {
+    text-decoration: underline;
+}
+
+.s_btn {
+
+    button.mat-flat-button,
+    .mat-stroked-button {
+        min-height: 0;
+        height: 28px !important;
+        font-size: 12px;
+        padding: 0 10px !important;
+    }
+
+    mat-icon {
+        height: 20px;
+        width: 20px;
+        min-width: 0;
+    }
+}
+
+::ng-deep .mat-tab-list {
+    width: 100% !important;
+}
+
+::ng-deep .mat-tab-group.tabbody .mat-tab-body-content {
+    padding: 24px 10px !important;
+}
+
+@media only screen and (max-width: 600px) {
+    ::ng-deep .mat-tab-list {
+        width: auto !important;
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+    .popuplogin {
+        width: 100%;
+    }
+}
+
+// .top-btn {
+//     position: fixed;
+//     bottom: 5px;
+//     right: 5px;
+//     font-size: 12px;
+//     text-align: center;
+//     border-radius: 5px;
+//     outline: none;
+//     z-index: 99 !important;
+//     cursor: pointer;
+//   }
+
+.scroll-top-button {
+    position: fixed;
+    bottom: 20px;
+    /* Adjust as needed */
+    right: 20px;
+    /* Adjust as needed */
+    z-index: 1000;
+    display: none;
+    /* Initially hide the button */
+}
+
+.scroll-top-button.show {
+    display: block;
+    /* Show the button when scrolling */
+}
+
+.hover:hover {
+    color: rgb(33 150 243);
+}
+
+.transLyer::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 111;
+    background: rgba(255, 255, 255, 0.4);
+    left: 0;
+    top: 20%
+}
+
+::ng-deep .mat-tab-group .mat-tab-header .mat-tab-label-container {
+    padding: 0px !important;
+    // overflow-x: scroll;
+}
+
+.wa1 {
+    background: #34af23;
+}
+.li1 {
+    background: #0077b5;
+}
+.share-btn {
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+.share-btn ul {
+    padding: 0px;
+    margin-bottom: 0px;
+}
+
+
+.share-btn ul li {
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 40px;
+}
+
+.share-btn ul li a {
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 600;
+    font-size: 10px;
+    padding: 8px 12px;
+    border-radius: 3px;
+}
+
+.share-btn ul li:nth-child(1) a {
+    background: #3b5998;
+}
+
+.share-btn ul li:nth-child(2) a {
+    background: #00aced;
+}
+
+.icon-link {
+    display: flex;
+    align-items: center;
+    color: inherit; /* Inherit color from parent */
+    text-decoration: none;
+    font-size: 24px;
+  }
+  
+  .whatsapp .fa-whatsapp {
+    color: green; /* Change color for WhatsApp icon */
+  }
+  
+  .facebook .fa-facebook {
+    color: blue; /* Change color for Facebook icon */
+  }
+  
+  .twitter .fa-twitter {
+    color: #1DA1F2; /* Change color for Twitter icon */
+  }
+  
+  .linkedin .fa-linkedin {
+    color: #0077B5; /* Change color for LinkedIn icon */
+  }

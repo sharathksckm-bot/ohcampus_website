@@ -1,0 +1,314 @@
+<div class="flex flex-col flex-auto min-w-0">
+  <!-- Main -->
+  <div class="flex-auto mt-8 mb-14">
+    <form [formGroup]="AllCollegesForm">
+      <div class="sm:grid md:grid-cols-4 lg:grid-cols-4 gap-4 min-w-0 md:mx-32 lg:mx-32">
+
+        <div class="flex flex-col flex-auto min-w-0 bg-card rounded p-3 md:p-6 lg:p-6 bg-primary-200">
+          <div class="flex font-semibold text-xl  bg-white rounded p-2">
+            <div>Filters</div>
+            <button class="text-md ml-auto mr-2 text-primary items-center cursor-pointer" (click)="clearFilter()">Reset
+              Filters</button>
+          </div>
+          <mat-accordion class="filterAccordian mt-2" [multi]="true">
+
+            <mat-expansion-panel [expanded]="isExpanded">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="font-semibold text-lg">
+                  Filter by Location
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+
+                <mat-form-field class="w-full">
+                  <input matInput placeholder="Search location" [formControl]="searchLocControl">
+                  <img *ngIf="locLoader" class="img-fluid " style="width: 30px" src="assets/images/Loader.gif" alt=""
+                    class=" rounded-full mx-auto" />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <div class="filteroption h-40 overflow-y-auto">
+                  <!-- <ul *ngFor="let location of LocationArr" value="location.id">
+                    <li class="cursor-pointer" (click)="geLocData($event,location.id,location.city)"> {{location.city}}
+                    </li>
+                  </ul> -->
+
+                  <ul value="location.id">
+                    <li *ngFor="let location of LocationArr">
+                      <mat-checkbox [(ngModel)]="location.checked" [ngModelOptions]="{standalone: true}"
+                        (click)=" onFilterSelection($event,location.city,location.id)">
+                      </mat-checkbox>
+                      <span class="cursor-pointer">
+                        {{ location.city }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+                <p class="secondary-color mb-2 cursor-pointer" (click)="getCollegeList('city')"> Apply Filters</p>
+              </div>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="isExpanded">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="font-semibold text-lg">
+                  Filter by Course
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <mat-form-field class="w-full">
+                  <input matInput placeholder="Search course" [formControl]="searchCourseControl">
+                  <img *ngIf="courseLoader" class="img-fluid " style="width: 30px" src="assets/images/Loader.gif" alt=""
+                    class=" rounded-full mx-auto" />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <ul class="filteroption h-40 overflow-y-auto">
+                  <li class="cursor-pointer" *ngFor="let course of courseDataArr">
+                    <mat-checkbox [(ngModel)]="course.checked" [ngModelOptions]="{standalone: true}"
+                      (click)="onFilterSelectionCourse(course.name,course.id)">
+                    </mat-checkbox>
+                    {{course.name}}
+                  </li>
+                </ul>
+              </div>
+              <p class="secondary-color mb-2 cursor-pointer" (click)="getCollegeList('')"> Apply Filters</p>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="isExpanded">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="font-semibold text-lg">
+                  Filter by Rating
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <ul class="filteroption h-30 overflow-y-auto">
+                  <li *ngFor="let item of RatingArr">
+                    <mat-checkbox [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"
+                      (click)="onFilterSelectionRanking(item.rate)">
+                    </mat-checkbox>
+                    {{item.rate}}
+                  </li>
+                </ul>
+              </div>
+              <p class="secondary-color mb-2 cursor-pointer" (click)="getCollegeList('')"> Apply Filters</p>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="isExpanded">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="font-semibold text-lg">
+                  Filter by Ownership
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <mat-form-field class="w-full">
+                  <input matInput placeholder="Search Ownership" [formControl]="searchOwnershipControl">
+                  <img *ngIf="ownershipLoader" class="img-fluid " style="width: 30px" src="assets/images/Loader.gif"
+                    alt="" class=" rounded-full mx-auto" />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <ul class="filteroption h-40 overflow-y-auto">
+                  <li class="cursor-pointer" *ngFor="let item of OwnershipArr" [value]="item.id">
+                    <mat-checkbox [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"
+                      (click)="onFilterSelectionOwnership(item.name,item.id)">
+                    </mat-checkbox>
+                    {{item.name}}
+                  </li>
+                </ul>
+              </div>
+              <p class="secondary-color mb-2 cursor-pointer" (click)="getCollegeList('')"> Apply Filters</p>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+
+        <div class="flex flex-col flex-auto md:col-span-3 l:col-span-3 min-w-0 bg-card rounded">
+          <div class="flex flex-wrap p-3 md:p-6 lg:p-6 md:pb-2 lg:pb-2 bg-primary-200 rounded">
+            <mat-form-field class="w-72">
+              <mat-select placeholder="Select Rank Category For Sorting" formControlName="category_id"
+                (ngModelChange)="getCollegeList('')">
+                <mat-option *ngFor="let rank of rankCatArr" [value]="rank.category_id">
+                  {{rank.title}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>&nbsp;
+            <mat-form-field class="w-72 ml-">
+              <input matInput placeholder="Search a college" [formControl]="searchCollegeControl" (keydown)="clgSearchInput($event)">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="p-3 md:p-6 lg:p-6">
+            <div *ngIf="collegeLoader" class="wrapper-loader text-center">
+              <img class="rounded-circle img-fluid mx-auto rounded-full" style="width: 100px;"
+                src="assets/images/Loader.gif" alt="">
+            </div>
+
+
+            <div *ngIf="!collegeLoader">
+              <div *ngIf="totalColleges==0" class=" text-4xl">
+                <img class="rounded-circle img-fluid mx-auto rounded-full" src="assets/images/nodata.jpg" alt="">
+              </div>
+              <fuse-card class="flex mt-3 flex-col md:flex-row justify-between w-full p-6 pb-3 filter-listing"
+                *ngFor="let item of collegeArr">
+                <div class="flex flex-col flex-auto order-2 md:order-1">
+                  <div class="text-lg font-semibold leading-tight secondary-color cursor-pointer"
+                    (click)="getCollegeDetails(item.id)">
+                    {{item.title}}</div>
+                  <div class="mt-1">
+                    <div class="flex flex-wrap items-center text-secondary mb-2">
+                      <span class="text-black">Estd</span>
+                      <span class="mx-2">:</span>
+                      <span>{{item.estd}}</span>
+                      <span class="mx-2 text-secondary-300">|</span>
+                      <span class="text-black">Place</span>
+                      <span class="mx-2">:</span>
+                      <span>{{item.city}}</span>
+                    </div>
+
+                    <div class="flex  py-2 rounded-lg text-center bg-gray-100 ranks" *ngIf="shouldShowRankDiv(item.Rank)">
+                      <div class="text-secondary-900 my-2 ml-4" *ngFor="let rank of item.Rank">
+                        <div *ngIf="rank.rank != null">
+                          <div class="font-bold mb-2">{{rank.rank}}</div>
+                          <!-- <div *ngIf="rank.rank==null" class="font-bold mb-2">Not Ranked</div> -->
+                          <div>{{rank.title}}'{{rank.year}}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="flex items-center mt-3 -mx-3">
+                    <div class="ml-2">
+                      <button class="px-2 text-md cursor-pointer" mat-button [color]="'primary'"
+                        (click)="getClgAdmInfo(item.id)">
+                        Admissions
+                      </button>
+                      <span class="mx-1 text-gray-300">|</span>
+                      <button class="px-2 text-md" mat-button [color]="'primary'" (click)="getClgCourseInfo(item.id)">
+                        Courses & Fees
+                      </button>
+                      <span class="mx-1 text-gray-300">|</span>
+                      <button class="px-2 text-md" mat-button [color]="'primary'"
+                        (click)="getClgPlacementInfo(item.id)">
+                        Placements
+                      </button>
+                    </div>
+                    <div class="ml-auto mr-3">
+                      <button class="px-3 text-md min-w-0 min-h-0 h-8" [color]="'primary'" mat-flat-button
+                        (click)="predictAdm(item.id,item.title,item.is_accept_entrance)">
+                        <mat-icon svgIcon="mat_solid:search" class="mr-1 min-w-0 w-5"></mat-icon>Predict Admission
+                      </button>
+                      <button class="px-3 ml-1 mt-2 md:mt-2 lg:mt-2 text-md secondaryButton min-w-0 min-h-0 h-8"
+                        mat-flat-button (click)="downloadBrochure(item.id)">
+                        <mat-icon svgIcon="mat_solid:download" class="mr-1 min-w-0 w-5"></mat-icon> Brochure
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="item.image != '';else noImage"
+                  class="order-1 md:order-2 w-full md:w-40 md:ml-6 mb-8 md:mb-4  overflow-hidden self-center">
+                  <img class="w-full h-full object-contain rounded-lg" [src]="item.image">
+                </div>
+
+                <div *ngIf="item.image ==''"
+                  class="order-1 md:order-2 w-full md:w-40 md:ml-6 mb-8 md:mb-4 overflow-hidden self-center">
+                  <img class="w-full h-full object-contain rounded-lg" src="assets/images/Default-College-Image-OHC.jpg">
+                </div>
+
+                <!-- <div  class="order-1 md:order-2 w-full md:w-40 md:ml-6 mb-8 md:mb-4 rounded-lg overflow-hidden">
+                  <img  class="w-full h-full object-cover" [src]="assets/images/noimage.jpg">
+                </div> -->
+              </fuse-card>
+            </div>
+            <mat-paginator *ngIf=" !collegeLoader && totalColleges>1" [length]="totalColleges" [pageSize]="pageSize"
+              (page)="onPageChange($event)"></mat-paginator>
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="popcenter">
+    <ng-template #callAPIDialogpredictAdm>
+      <mat-icon svgIcon="mat_outline:close"
+        style="color: red; cursor: pointer; position: absolute; z-index: 111;  left: 73%;" matDialogClose="yes"
+        (click)="close()"></mat-icon>
+      <div class="font-semibold text-2xl flex items-center mt-3 ml-2"><mat-icon svgIcon="mat_solid:person"
+          style="color: #2196f3" class="primary"></mat-icon> PREDICT ADMISSION</div>
+      <hr class="border-t border-gray-300 my-4">
+      <div class="p-3 border-dashed" style="height: 60vh;;">
+        <form [formGroup]="predictAdmForm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 ml-2 overflow-y-auto" style="width: 50vw;">
+
+            <mat-form-field class="w-full">
+              <mat-label>Student Name</mat-label>
+              <input matInput formControlName="name">
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+              <mat-label>Mobile Number </mat-label>
+              <input matInput formControlName="mobileno" maxlength="10" minlength="10" (keypress)="numberOnly($event)">
+
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+              <mat-label>Email </mat-label>
+              <input matInput formControlName="email">
+
+            </mat-form-field><mat-form-field class="w-full">
+              <mat-label>Course Category</mat-label>
+              <mat-select formControlName="course_category" (ngModelChange)="getCourseByCategoryClg()">
+                <mat-option *ngFor="let course of CourseCategoryArr" [value]="course.category_id">
+                  {{course.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field class="w-full">
+              <mat-label>Course </mat-label>
+              <mat-select formControlName="course">
+                <mat-option *ngFor="let course of CoursesByCatArr" [value]="course.id">
+                  {{course.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field class="w-full">
+              <mat-label>College </mat-label>
+              <input matInput formControlName="college" readonly>
+            </mat-form-field>
+
+
+
+            <mat-form-field class="w-full">
+              <mat-label>Entrance Exam </mat-label>
+              <mat-select formControlName="exam">
+                <mat-option>
+                  <ngx-mat-select-search noEntriesFoundLabel="No matching type found" placeholderLabel="Find exam ..."
+                    [formControl]="examFilterCtrl">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let course of examTypeFilter | async" [value]="course.id">
+                  {{course.title}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+              <mat-label>Expected/Secured Rank </mat-label>
+              <input matInput formControlName="expected_rank" (keypress)="numberOnly($event)">
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+              <mat-label>Expected/Secured Score </mat-label>
+              <input matInput formControlName="expected_score" (keypress)="numberOnly($event)">
+            </mat-form-field>
+
+          </div>
+        </form>
+        <button mat-raised-button color="primary" class="px-12 justify-center mt-4 mb-10"
+          (click)="savPredictAdmission($event)">Submit</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

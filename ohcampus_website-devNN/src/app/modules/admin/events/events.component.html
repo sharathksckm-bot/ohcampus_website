@@ -1,0 +1,81 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto">
+
+        <div class="heroSection relative">
+            <div class="text-white z-10 textset">
+                <div class="md:text-5xl lg:text-5xl text-4xl text-center font-bold">
+                    All Events
+                </div>
+
+                <!-- //Date 03/04/2024 -->
+                <form [formGroup]="SearchForm">
+                    <div class="flex justify-center mt-3">
+                        <mat-form-field class="md:w-1/2 w-full lg:w-1/2 h-12 bg-white rounded-md">
+                            <input matInput class="text-black" placeholder="Search here ..."
+                                [formControl]="searchControl">
+                        </mat-form-field>
+                        <button mat-flat-button color="primary" class="rounded py-6 -ml-10"><mat-icon
+                                matSuffix>search</mat-icon></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class=" mx-auto max-w-screen-lg my-6">
+            <div class="bg-card rounded-lg p-6  sm:grid md:grid-cols-2 lg:grid-cols-2 gap-4 w-full min-w-0">
+                <div *ngIf="EventLoader" class="wrapper-loader text-center">
+                    <img class="rounded-circle img-fluid mx-auto rounded-full" style="width: 100px;"
+                        src="assets/images/Loader.gif" alt="">
+                </div>
+                <!-- <div class="flex flex-col flex-auto min-w-0">
+            <div>
+                <div class="flex flex-col mt-2"> -->
+                <div class="flex border rounded p-2 hover:shadow cursor-pointer hover:border-green-300"
+                    *ngFor="let event of eventsArr  | slice: 0:itemsToShow ; let i = index">
+                    <img class="w-28 h-20 mr-4 mt-1 rounded object-cover" [src]="event.image" alt="Card cover image">
+                    <div class="flex flex-col min-w-0">
+                        <div class="font-semibold text-xl leading-normal">{{event.event_name}}</div>
+                        <div class="flex items-center mt-2">
+                            <button mat-flat-button color="primary" class="rounded"
+                                (click)="getEventDetails(event.event_id)">View
+                                Details</button>
+                            <button mat-stroked-button color="primary" class="rounded ml-2"
+                                (click)="toggleShare(i)">Share It</button>
+                        </div>
+                        <div class="share-btn" *ngIf="showShare[i]">
+                            <ul>
+                                <li (click)="shareOnFacebook(event.event_id)"><a class="facebook" target="_blank"
+                                        onclick="javascript:SocialShare('facebook',2093)"><i
+                                            class="fa-brands fa-facebook"></i></a>
+                                </li>
+                                <li (click)="shareOnTwitter(event.event_id)"><a class="twitter" target="_blank"><i
+                                            class="fa-brands fa-square-twitter"></i> </a>
+                                </li>
+                                <li (click)="shareOnWhatsApp(event.event_id)"><a class="wa1">
+                                        <i class="fa-brands fa-whatsapp"></i></a>
+                                </li>
+                                <li (click)="shareOnLinkedin(event.event_id)"><a class="li1" target="_blank"><i
+                                            class="fa-brands fa-linkedin"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- </div>
+            </div>
+        </div> -->
+
+
+            </div>
+            <div class="flex items-center justify-center mt-6">
+                <button class="px-3" mat-button [color]="'primary'" (click)="showMoreEvents()">
+                    View More Events
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

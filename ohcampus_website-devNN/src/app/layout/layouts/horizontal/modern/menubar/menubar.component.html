@@ -1,0 +1,249 @@
+<!-- START: RUBY DEMO HEADER -->
+<div class="ruby-menu-demo-header">
+  <!-- START: RUBY HORIZONTAL MENU -->
+  <div class="ruby-wrapper">
+    <button class="c-hamburger c-hamburger--htx visible-xs">
+      <span>toggle menu</span>
+    </button>
+    <ul class="ruby-menu mr-auto">
+      <li class="ruby-menu-mega-blog cursor-pointer" style="font-size: 13px;" routerLink="/home"><a>Home</a>
+        <span class="ruby-dropdown-toggle"></span>
+      </li>
+
+      <li class="ruby-menu-mega-blog cursor-pointer" style="font-size: 13px;"
+        *ngFor="let item of categoryArr | slice :0:4"><a>{{item.catname}}</a>
+        <div style="height: 500px; width: 100%;" class="">
+          <ul class="ruby-menu-mega-blog-nav">
+
+            <li class="ruby-active-menu-item"><a>Top Ranked Colleges</a>
+              <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;overflow-y: scroll;">
+                <div class="ruby-row">
+                  <div class="ruby-col-12">
+                    <span class="ruby-c-title ruby-margin-10 cursor-pointer " *ngFor="let city of cityArr"
+                      (click)="getcolleges(item.id,city.id)">Top
+                      {{item.catname}} Colleges in {{city.city}}</span>
+                  </div>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+
+            <li class="hidden-md"><a (mouseover)="getCoursesForCategory(item.id)">Popular Courses</a>
+              <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;">
+                <div class="ruby-row">
+                  <div class="ruby-col-12">
+                    <span class="ruby-c-title ruby-margin-10 cursor-pointer" *ngFor="let course of coursesArr"
+                      (click)="getCourseDetails(course.id)">{{course.name}}</span>
+                  </div>
+                </div>
+
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+            <li><a (mouseover)="getExamForCategory(item.id)">Exams</a>
+              <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;">
+                <div class="ruby-row">
+                  <div class="ruby-col-6">
+                    <span class="ruby-c-title ruby-margin-10" *ngFor="let exam of examsArr"
+                      (click)="getExamDetails(exam.id)"><a>{{exam.title}}
+                      </a></span>
+                  </div>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+            <li><a>Colleges by Location</a>
+              <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;overflow-y: scroll;">
+                <div class="ruby-row">
+                  <div class="ruby-col-12">
+                    <span class="ruby-c-title ruby-margin-10 cursor-pointer" *ngFor="let city of cityArr"><a
+                        (click)="getcolleges(item.id,city.id)">
+                        {{item.catname}} Colleges in {{city.city}}</a></span>
+                  </div>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+          </ul>
+        </div>
+        <span class="ruby-dropdown-toggle"></span>
+      </li>
+
+      <li class="ruby-menu-mega-blog cursor-pointer" style="font-size: 13px;"><a>More</a>
+        <div style="height: 600px;width: 115%;" class="">
+          <ul class="ruby-menu-mega-blog-nav">
+            <div class="d-flex justify-content-between p-2 ">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 ml-3 ">
+                <div class="text-center" (click)="showLess()"><mat-icon style="color: white;"
+                    svgIcon="mat_solid:keyboard_arrow_up"></mat-icon></div>
+                <div class="text-center" (click)="showMore()"><mat-icon style="color: white;"
+                    svgIcon="mat_solid:keyboard_arrow_down"></mat-icon></div>
+              </div>
+            </div>
+            <li>
+
+            <li *ngFor="let item of categoryArrMore.slice(startIndex, startIndex + 10)"
+              [class.ruby-active-menu-item]="item.id == 162 "><a
+                (mouseover)="getCoursesForCategory(item.id) ; getExamForCategory(item.id)">{{item.catname}}</a>
+              <div class="  grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2 mt-6 ml-3 ">
+            <li class=" "><a class="font-semibold">Top Ranked Colleges</a>
+              <div class="ruby-grid ruby-grid-lined mt-2 h-50 overflow-y-auto">
+                <div class="">
+                  <span class="ruby-c-title ruby-margin-10" *ngFor="let city of cityArr "
+                    (click)="getcolleges(item.id,city.id)"><a>{{item.catname}}
+                      Colleges in {{city.city}}</a></span>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+            <li><a class="font-semibold">Popular Courses</a>
+              <div class="ruby-grid ruby-grid-lined mt-2 h-50 overflow-y-auto">
+                <div class="">
+                  <span class="ruby-c-title ruby-margin-10" *ngFor="let course of coursesArr "
+                    (click)="getCourseDetails(course.id)"><a>{{course.name}}</a></span>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+            <li><a class="font-semibold">Popular Specilization</a>
+              <div class="ruby-grid ruby-grid-lined mt-2 h-50 overflow-y-auto">
+                <div class="">
+                  <span class="ruby-c-title ruby-margin-10" *ngFor="let item of TrendingSpecilizationArr"
+                    (click)="getcourseList(item.keyword)"><a>{{item.keyword}}</a></span>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+            <hr class="border-t border-gray-300 my-4">
+            <hr class="border-t border-gray-300 my-4">
+            <hr class="border-t border-gray-300 my-4">
+            <li><a class="font-semibold mt-2">Exams</a>
+              <div class="ruby-grid ruby-grid-lined mt-2 h-50 overflow-y-auto">
+                <div class="">
+                  <span class="ruby-c-title ruby-margin-10" *ngFor="let exam of examsArr"
+                    (click)="getExamDetails(exam.id)"><a>{{exam.title}}
+                    </a></span>
+                </div>
+              </div>
+
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+            <li><a class="font-semibold">Colleges By Location</a>
+              <div class="ruby-grid ruby-grid-lined mt-2 h-50 overflow-y-auto">
+                <div class="">
+                  <span class="ruby-c-title ruby-margin-10" *ngFor="let city of cityArr"
+                    (click)="getcolleges(item.id,city.id)"><a>
+                      {{item.catname}} Colleges in {{city.city}}</a></span>
+                </div>
+
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+            <li><a class="font-semibold">Popular Certifications</a>
+              <div class="ruby-grid ruby-grid-lined mt-2 h-50 overflow-y-auto ">
+                <div class="">
+                  <span class="ruby-c-title ruby-margin-10" *ngFor="let item of certificatesArr"
+                    (click)="getCertificate(item.id)"><a>{{item.name}}</a></span>
+                </div>
+              </div>
+              <span class="ruby-dropdown-toggle"></span>
+            </li>
+
+        </div>
+        <span class="ruby-dropdown-toggle"></span>
+      </li>
+
+    </ul>
+  </div>
+  <span class="ruby-dropdown-toggle"></span>
+  </li>
+
+
+
+  <li class="ruby-menu-mega-blog cursor-pointer" style="font-size: 13px;"><a routerLink="/study-abroad">Study Abroad</a>
+    <!-- <div style="height: 269.359px; width: 100%;" class="">
+      <ul class="ruby-menu-mega-blog-nav">
+
+        <li class="ruby-active-menu-item"><a href="#">Top Ranked Colleges</a>
+          <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;">
+            <div class="ruby-row">
+              <div class="ruby-col-12">
+                <span class="ruby-c-title ruby-margin-10"><a href="#">Top Ranked Colleges MBA</a></span>
+                <span class="ruby-c-title ruby-margin-10"><a href="#">Top Ranked Colleges MBA</a></span>
+                <span class="ruby-c-title ruby-margin-10"><a href="#">Top Ranked Colleges MBA</a></span>
+
+              </div>
+
+            </div>
+          </div>
+          <span class="ruby-dropdown-toggle"></span>
+        </li>
+
+
+        <li class="hidden-md"><a href="#">Popular Courses</a>
+          <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;">
+            <div class="ruby-row">
+
+              <div class="ruby-col-6">
+                <span class="ruby-c-title ruby-margin-10"><a href="#">Exicutive MBA</a></span>
+                <span class="ruby-c-title ruby-margin-10"><a href="#">Distance MBA</a></span>
+                <span class="ruby-c-title ruby-margin-10"><a href="#">Online MBA</a></span>
+
+              </div>
+            </div>
+
+          </div>
+          <span class="ruby-dropdown-toggle"></span>
+        </li>
+
+        <li><a href="#">Exams</a>
+          <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;">
+            <div class="ruby-row">
+              <div class="ruby-col-6">
+                <span class="ruby-c-title ruby-margin-10"><a href="#">CAT </a></span>
+                <span class="ruby-c-title ruby-margin-10"><a href="#">MAT </a></span>
+                <span class="ruby-c-title ruby-margin-10"><a href="#">CMAT </a></span>
+
+              </div>
+            </div>
+
+          </div>
+          <span class="ruby-dropdown-toggle"></span>
+        </li>
+
+        <li><a href="#">Colleges by Location</a>
+          <div class="ruby-grid ruby-grid-lined" style="height: 264.359px;">
+            <div class="ruby-row">
+              <div class="ruby-col-6">
+                <span class="ruby-c-title" style="margin-bottom:1px"> Popular Comparisons </span>
+                <div class="ruby-col-6">
+                  <span class="ruby-c-title ruby-margin-10"><a href="#">MBA Colleges in India </a></span>
+                  <span class="ruby-c-title ruby-margin-10"><a href="#">MBA Colleges in Banglore </a></span>
+                  <span class="ruby-c-title ruby-margin-10"><a href="#">MBA Colleges in Chennai </a></span>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <span class="ruby-dropdown-toggle"></span>
+        </li>
+      </ul>
+    </div> -->
+    <span class="ruby-dropdown-toggle"></span>
+  </li>
+
+
+
+  </ul>
+</div>
+<!-- END:   RUBY HORIZONTAL MENU -->
+
+</div>
+<!-- END: RUBY DEMO HEADER -->

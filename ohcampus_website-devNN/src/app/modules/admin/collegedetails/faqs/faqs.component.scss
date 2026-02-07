@@ -1,0 +1,10 @@
+.mat-accordion.clgCompAcc .mat-expansion-panel{
+    border-radius: 0!important;
+}
+.mat-accordion.clgCompAcc .mat-expansion-panel.mat-expanded, .mat-accordion .mat-expansion-panel:hover {
+    --tw-shadow: none!important;
+    box-shadow:none !important;
+}
+.mat-accordion.clgCompAcc .mat-expansion-panel{
+    margin: 1em 0em!important;
+}

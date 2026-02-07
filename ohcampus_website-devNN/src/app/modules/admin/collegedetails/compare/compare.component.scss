@@ -1,0 +1,156 @@
+.vsCrcl {
+    left: -20px;
+}
+.vsCrcl {
+    top: 26px;
+}
+.vsCrcl {
+    font-size: 12px;
+    font-weight: 600;
+    font-style: italic;
+    color: #fff;
+    width: 31px;
+    height: 30px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.34);
+    border: 0.6px solid #fff;
+    background-color: #88d834;
+    display: inline-block;
+    display: flex;
+    border-radius: 50px;
+    position: absolute;
+    left: -25px;
+    top: 30px;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    font-style: normal;
+    line-height: 1px;
+}
+
+.vsCrclnew{
+    font-size: 12px;
+    font-weight: 600;
+    font-style: italic;
+    color: #fff;
+    width: 31px;
+    height: 30px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.34);
+    border: 0.6px solid #fff;
+    background-color: #88d834;
+    display: flex;
+    border-radius: 50px;
+    position: relative;
+    left: 10px;
+    top: 40px;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    font-style: normal;
+    line-height: 1px;
+    padding: 8px;
+}
+
+.custom-icon-size {
+    font-size: 0.5em; /* Adjust the size as needed */
+  }
+
+  .rwsHead {
+    padding: 10px 30px;
+}
+.rwsTag {
+    border-radius: 4px;
+    background:#68da44;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px!important;
+    padding: 4px 12px;
+}
+h2.rwsHeading {
+    color: var(--primary-dark, #2f1238);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 30px!important;
+    margin: 12px 0 4px;
+}
+.mA {
+    align-items: center;
+}
+.cA {
+    justify-content: center;
+}
+.whiteCrcl {
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 100px;
+    border: 1px solid #cacaca;
+    cursor: pointer;
+    margin: 0 0 0 12px;
+    min-width: 0;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+}
+.iflxBox {
+    display: inline-flex;
+}
+.flxBox {
+    display: flex;
+}
+.editCase {
+    gap: 8px;
+}
+p.rwsHeadingSupportiveTxt {
+    color: #353535;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px!important;
+    max-width: calc(100% - 50px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.recoWidgetSection {
+    border-radius: 6px;
+    background: linear-gradient(310deg, rgb(215 237 255) 0.01%, rgb(252 254 255));
+    margin: 20px 0;
+    min-height: 455px;
+}
+
+.whiteWrapBox {
+    padding: 32px 28px;
+    border-radius: 15px;
+    background: #fff;
+    border: 1px solid #fff;
+    border-radius: 12px;
+}
+.newsupdate {
+    mat-icon{
+        width: 20px;
+        height: 20px;
+        min-width: 0;
+        color: #96a5b3;
+    }
+}
+
+.scroll-top-button {
+    position: fixed;
+    bottom: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    z-index: 1000;
+    display: none; /* Initially hide the button */
+  }
+  
+  .scroll-top-button.show {
+    display: block; /* Show the button when scrolling */
+  }
+  .whiteCrcl {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .whiteCrcl.highlight {
+    color: blue; /* Highlight color */
+    transform: scale(1.2); /* Slightly enlarge the icon */
+  }

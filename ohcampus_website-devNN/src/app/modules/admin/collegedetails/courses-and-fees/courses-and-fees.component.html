@@ -1,0 +1,500 @@
+<div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-6 w-full min-w-0">
+    <div class="flex flex-col col-span-2 flex-auto min-w-0">
+        <div class="flex flex-col min-w-0 mt-4">
+            <div class="bg-card rounded p-4">
+
+                <div class="flex my-3 items-center">
+                    <mat-icon svgIcon="mat_solid:book" class="secondary-color icon-size-10 mr-2"></mat-icon>
+                    <div>
+                        <h1 class="text-gray-500">{{collegename}}</h1>
+                        <h3 class="font-bold text-xl">All courses</h3>
+                    </div>
+                </div>
+                <form [formGroup]="seachform">
+                    <mat-form-field appearance="outline" class="w-full">
+                        <mat-label>Search by Courses </mat-label>
+                        <input matInput placeholder="Search here ..." [formControl]="searchCourseControl">
+                        <mat-icon matSuffix svgIcon="feather:search"></mat-icon>
+                    </mat-form-field>
+                </form>
+                <div class="mb-3">
+                    <button class="px-3 text-md min-w-0 min-h-0 h-10 mb-3" mat-stroked-button
+                        (click)="openFilter('default')">
+                        Filter<mat-icon svgIcon="mat_solid:filter_list" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button>
+                    <!-- <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10" mat-stroked-button (click)="openFilter()">
+                        Streams<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button> -->
+                    <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10 mb-2" mat-stroked-button
+                        (click)="openFilter('default')">
+                        Course<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button>
+                    <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10 mb-2" mat-stroked-button
+                        (click)="openFilter('courselevel')">
+                        Course Level<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button>
+                    <!-- <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10" mat-stroked-button (click)="openFilter('location')">
+                        Location<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button> -->
+                    <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10 mb-2" mat-stroked-button
+                        (click)="openFilter('totalfees')">
+                        Annual Fees<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button>
+                    <!-- <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10" mat-stroked-button (click)="openFilter()">
+                        Mode of Study<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button>
+                    <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10" mat-stroked-button (click)="openFilter()">
+                        Specialization<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button> -->
+                    <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10 mb-2" mat-stroked-button
+                        (click)="openFilter('default')">
+                        More<mat-icon svgIcon="mat_solid:arrow_drop_down" class="ml-1 min-w-0 w-5"></mat-icon>
+                    </button>
+                </div>
+
+                <div *ngFor="let item of courses_listArr">
+                    <div class="rounded-lg shadow p-4 mt-3" *ngIf="item.name !== null">
+                        <div class="flex justify-between">
+                            <div>
+                                <h1 class="text-lg text-primary font-semibold cursor-pointer"
+                                    (click)="AddCourseIntoTabe(item.courseid,item.name,item.categoryid)">{{item.name}}
+                                </h1>
+                                <div class="text-secondary mt-1" style="display: flex; align-items: center;">
+                                    <!-- <span class="text-md">6 Courses | </span>
+                                <mat-icon svgIcon="mat_outline:star_purple500" class="icon-size-5 text-yellow-400"
+                                    style="margin-left: 5px;"></mat-icon> -->
+                                    <span class="text-md text-secondary font-semibold " *ngIf="item.name !== null"
+                                        style="margin-left: 5px;">Duration
+                                        :{{item.duration}} years</span>
+                                </div>
+                            </div>
+                            <!-- <div><mat-icon svgIcon="mat_outline:bookmark_border"></mat-icon></div> -->
+                        </div>
+
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 border-t mt-2 items-center pt-2">
+                            <div>
+                                <p *ngIf="item.examNames !=null" class="text-md text-secondary">Exams Accepted</p>
+                                <p>{{item.examNames}}</p>
+
+
+
+                            </div>
+                            <div class="mt-2">
+                                <p class="text-md text-secondary">Annual Fees (INR)</p>
+                                <p *ngIf="item.total_fees != null || item.counselling_fees !=null; else noFee">
+                                    {{ (item.total_fees !== null ? item.total_fees : item.counselling_fees) | number }}
+                                </p>
+                                <ng-template #noFee>-</ng-template>
+                            </div>
+
+                            <div>
+
+                                <p class="text-md text-secondary"
+                                    *ngIf="(item.total_intake != null && item.total_intake != 0 ) ">Total Intake</p>
+                                <p class="text-secondary "
+                                    *ngIf="(item.total_intake != null && item.total_intake != 0 )">{{item.total_intake}}
+                                </p>
+                                <div class="mt-2" *ngIf="item.median_salary != 0">
+                                    <p class="text-md text-secondary" *ngIf="item.median_salary !=null">Median Salary
+                                    </p>
+                                    <p>{{item.median_salary}}</p>
+                                </div>
+                            </div>
+
+
+                            <div class="flex items-center flex-row md:flex-col lg:flex-col ml">
+
+                                <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10 md:mb-2 lg:mb-2"
+                                    mat-stroked-button (click)="getCompareTab()">
+                                    <mat-icon svgIcon="mat_outline:copy_all" class="min-w-0 w-5"></mat-icon> Compare
+                                </button>
+                                <button class="px-3 ml-1 text-md secondaryButton min-w-0 min-h-0 h-10" mat-flat-button
+                                    (click)="downloadBrochure()">
+                                    <mat-icon svgIcon="mat_solid:download" class="min-w-0 w-5"></mat-icon> Brochure
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="flex my-3 items-center" *ngIf="subcatId">
+                    <mat-icon svgIcon="mat_solid:book" class="secondary-color icon-size-10 mr-2"></mat-icon>
+                    <div>
+                        <h1 class="text-gray-500">{{collegename}}</h1>
+                        <h3 class="font-bold text-xl">Programs offered</h3>
+                    </div>
+                </div>
+
+                <!-- popup start -->
+
+                <div class="popcenter ">
+                    <ng-template #popupFilter>
+                        <div class="relative px-3 border-b border-dashed pb-3"
+                            style="width:70vw;max-width:100%;max-height:80vh;">
+                            <div
+                                class="flex mb-3 border-b border-dashed py-6 p-3 flex-row flex-auto items-center text-xl font-semibold leading-tight">
+                                <mat-icon svgIcon="mat_solid:filter_list" class="mr-1 text-primary"></mat-icon>
+                                All Filters
+                            </div>
+                            <mat-icon svgIcon="mat_outline:clear" class="absolute top-3 right-4 cursor-pointer z-10"
+                                (click)="popupClose()"></mat-icon>
+
+                            <div class="my-4 relative" layout="col">
+                                <mat-tab-group>
+                                    <!-- <mat-tab label="Streams">
+                                        <mat-checkbox color="primary" class="m-1">Business & Management </mat-checkbox>
+                                    </mat-tab> -->
+                                    <mat-tab label="Course">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">Certificate</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1"> Executive MBA/PGDM</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">FPM</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">MBA/PGDM</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">MMS</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">Ph.D.</mat-checkbox>
+                                        </div>
+
+                                    </mat-tab>
+                                    <!-- <mat-tab label="Mode of Study">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">Blend</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1"> Full Time</mat-checkbox>
+                                        </div>
+                                    </mat-tab>
+                                    <mat-tab label="Specialization">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">Agriculture & Food
+                                                Business</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">Business Analytics</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">Finance</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">Human Resources</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">Sales & Marketing</mat-checkbox>
+                                        </div>
+                                    </mat-tab> -->
+                                    <mat-tab label="Course Level">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">Doctorate</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1"> PG</mat-checkbox>
+                                        </div>
+                                    </mat-tab>
+                                    <!-- <mat-tab label="Location">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">Ahmedabad</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1"> Gujarat</mat-checkbox>
+                                        </div>
+                                    </mat-tab> -->
+                                    <mat-tab label="Annual Fees">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">1 - 2 Lakh</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1"> > 5 Lakh</mat-checkbox>
+                                        </div>
+                                    </mat-tab>
+                                    <mat-tab label="Exams Accepted">
+                                        <div class="flex flex-wrap">
+                                            <mat-checkbox color="primary" class="m-1">CAT</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">GATE</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">GMAT</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">ICAR AICE JRF/SRF</mat-checkbox>
+                                            <mat-checkbox color="primary" class="m-1">UGC NET</mat-checkbox>
+                                        </div>
+                                    </mat-tab>
+                                    <!-- <mat-tab label="Rating">
+                                        <mat-checkbox color="primary" class="m-1">4 - 5 Star</mat-checkbox>
+                                    </mat-tab> -->
+                                </mat-tab-group>
+                            </div>
+                            <div class="flex justify-end">
+                                <div class="hidden md:block sm:block lg:block text-left -mt-6 pl-40">
+                                    <button class="fuse-mat-button-rounded" mat-flat-button (click)="popupClose()">
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button class="fuse-mat-button-rounded ml-1" mat-flat-button [color]="'primary'"
+                                        (click)="ApplyFilter()">
+                                        <span>Apply Filters</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-template>
+                </div>
+
+                <div class="popcenter ">
+                    <ng-template #CourseFilter>
+                        <form [formGroup]="filterForm">
+                            <div class="relative px-3 border-b border-dashed pb-3"
+                                style="width:70vw;max-width:100%;max-height:80vh;">
+                                <div
+                                    class="flex mb-3 border-b border-dashed py-6 p-3 flex-row flex-auto items-center text-xl font-semibold leading-tight">
+                                    <mat-icon svgIcon="mat_solid:filter_list" class="mr-1 text-primary"></mat-icon>
+                                    All Filters
+                                </div>
+                                <mat-icon svgIcon="mat_outline:clear" class="absolute top-3 right-4 cursor-pointer z-10"
+                                    (click)="popupClose()"></mat-icon>
+                                <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-6 w-full min-w-0"></div>
+                                <div class="my-4 relative" layout="col">
+                                    <mat-tab-group [(selectedIndex)]="activeTabIndex">
+
+                                        <mat-tab label="Course">
+                                            <div class="flex flex-wrap">
+                                                <img *ngIf="FilterLoadercourse" class="img-fluid " style="width: 30px"
+                                                    src="assets/images/Loader.gif" alt="" class=" rounded-full" />
+                                                <mat-checkbox color="primary" class="m-1" formControlName="course"
+                                                    (click)="getCourses(item)"
+                                                    *ngFor="let item of SubCategoryArr">{{item.name}}
+                                                    ({{item.totalCount}})</mat-checkbox>
+                                            </div>
+
+                                        </mat-tab>
+
+                                        <mat-tab label="Course Level">
+                                            <div class="flex flex-wrap">
+                                                <img *ngIf="FilterLoadercourselevel" class="img-fluid "
+                                                    style="width: 30px" src="assets/images/Loader.gif" alt=""
+                                                    class=" rounded-full" />
+                                                <mat-checkbox color="primary" class="m-1" formControlName="courselevel"
+                                                    (click)="getCourseLevellist(item)"
+                                                    *ngFor="let item of CourseLevelArr">{{item.name}}
+                                                    ({{item.totalCount}})</mat-checkbox>
+
+                                            </div>
+                                        </mat-tab>
+
+                                        <mat-tab label="Annual Fees">
+                                            <div class="flex flex-wrap">
+                                                <img *ngIf="FilterLoaderfees" class="img-fluid " style="width: 30px"
+                                                    src="assets/images/Loader.gif" alt="" class=" rounded-full" />
+                                                <ng-container *ngFor="let item of fees_listArr">
+                                                    <mat-checkbox *ngIf="item.total_fees !== null" color="primary"
+                                                        class="m-1" (click)="getFees(item)">
+                                                        {{ item.total_fees}}
+                                                    </mat-checkbox>
+                                                </ng-container>
+
+                                                <!-- <mat-checkbox color="primary" class="m-1" formControlName="fees"
+                                                    (click)="gethighFees( highest_fee)">
+                                                    {{highest_fee}}</mat-checkbox>
+                                                <mat-checkbox color="primary" class="m-1"
+                                                    (click)="getlowFees(lowest_fee)"> >
+                                                    {{lowest_fee}}</mat-checkbox> -->
+
+                                            </div>
+                                        </mat-tab>
+                                        <mat-tab label="Exams Accepted">
+                                            <div class="flex flex-wrap">
+                                                <mat-checkbox color="primary" class="m-1" formControlName="examAccepted"
+                                                    *ngFor="let item of ExamAcceptedArr"
+                                                    (click)="getExamAcceptedlist(item)">{{item.title}}
+                                                    ({{item.totalCount}})</mat-checkbox>
+                                            </div>
+                                        </mat-tab>
+                                    </mat-tab-group>
+                                </div>
+                                <div class="flex justify-end">
+                                    <div class="flex md:block sm:block lg:block text-left -mt-6 md:pl-40 mb-4">
+                                        <button class="fuse-mat-button-rounded" mat-flat-button (click)="popupClose()">
+                                            <span>Cancel</span>
+                                        </button>
+                                        <button class="fuse-mat-button-rounded ml-1" mat-flat-button [color]="'primary'"
+                                            (click)="ApplyFilter()">
+                                            <span>Apply Filters</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </ng-template>
+                </div>
+
+                <!-- popup end -->
+
+                <div *ngIf="subcatId">
+                    <div class="rounded-lg shadow p-4 mt-3" *ngFor="let item of CoursesArr">
+
+                        <div class="flex justify-between">
+                            <div>
+                                <h1 class="text-lg text-primary font-semibold cursor-pointer"
+                                    (click)="getcourses(item.sub_category) ">{{ item.sub_category_name}}
+                                    ({{item.course_category_name}})</h1>
+                                <div class="text-secondary mt-1" style="display: flex; align-items: center;">
+                                    <span class="text-md">{{item.total_courses}} Courses | </span>
+                                    <mat-icon svgIcon="mat_outline:star_purple500" class="icon-size-5 text-yellow-400"
+                                        style="margin-left: 5px;"></mat-icon>
+                                    <span class="text-md text-secondary" style="margin-left: 5px;"> {{item.duration}}
+                                        Years</span>
+                                </div>
+                            </div>
+                            <!-- <div><mat-icon svgIcon="mat_outline:bookmark_border"></mat-icon></div> -->
+                        </div>
+
+                        <div class="flex flex-wrap flex justify-between border-t mt-2 pt-2 ">
+                            <div>
+                                <p *ngIf="item.entrance_exam_names != null" class="text-md text-secondary">Exams
+                                    Accepted
+                                </p>
+                                <p>{{item.entrance_exam_names}}</p>
+                                <!-- <p *ngIf="item.entrance_exam_names ==null"> -/- </p> -->
+                            </div>
+                            <!-- <div>
+                            <p class="text-md text-secondary">Total Tuition Fees</p>
+                            <p>₹3.15 L - 10 L</p>
+                            <p class="text-primary border-b text-md cursor-pointer">Get Fee Details</p>
+                        </div>
+                        <div>
+                            <p class="text-md text-secondary">Median Salary</p>
+                            <p>₹15 - 17 LPA</p>
+                        </div> -->
+                            <div class="flex items-center ">
+                                <button class="px-3 ml-1 text-md min-w-0 min-h-0 h-10 mr-1" mat-stroked-button
+                                    (click)="getCompareTab()">
+                                    <mat-icon svgIcon="mat_outline:copy_all" class="min-w-0 w-5"></mat-icon> Compare
+                                </button>
+
+                                <button class="px-3 ml-1 text-md secondaryButton min-w-0 min-h-0 h-10" mat-flat-button
+                                    (click)="downloadBrochure()">
+                                    <mat-icon svgIcon="mat_solid:download" class="min-w-0 w-5"></mat-icon> Brochure
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Q-section -->
+
+                <div class="flex items-center mt-6 mb-2" *ngIf="CoursesFeesFaqsArr !=''">
+                    <!-- <div class="w-7 h-7">
+                        <mat-icon svgIcon="mat_outline:question_answer"></mat-icon>
+                    </div> -->
+                    <div class="w-10 h-10">
+                        <img src="assets/images/QA.jpg">
+                    </div>
+                    <div class="ml-2">
+                        <h1 class="font-semibold text-xl">{{collegename}} Courses & Fees FAQs 2024</h1>
+                    </div>
+                </div>
+
+                <mat-accordion class="clgCompAcc">
+                    <mat-expansion-panel *ngFor="let item of CoursesFeesFaqsArr">
+                        <mat-expansion-panel-header class="h-22 md:h-12 lg:h-12">
+                            <mat-panel-title>
+                                <div class="py-2">
+                                    <h1 class="font-semibold">Q: {{item.question}}</h1>
+                                </div>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <p [innerHTML]="item.answere"></p>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- left box end -->
+    <div class="flex flex-col flex-auto min-w-0">
+        <div>
+            <div class="bg-card rounded mt-4 pb-2" *ngIf="campusImagesArr !=''">
+                <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Photos & Videos </h1>
+                <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" color="#000" background="#fff"
+                    maxWidth="auto" proportion="40" slides="3" [loop]="true" [hideArrows]="false"
+                    [hideIndicators]="true" [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr"
+                    style="background: #fff;" class="cstomslide">
+
+                    <mat-carousel-slide *ngFor="let item of campusImagesArr">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 ml-2">
+                            <div class="p-3 " *ngFor="let college of item">
+                                <img [src]="college.image" (click)="openImageDialog(college.image)"
+                                    class="rounded-lg h-30">
+                            </div>
+                        </div>
+                    </mat-carousel-slide>
+                </mat-carousel>
+            </div>
+
+            <div class="flex flex-col min-w-0 mt-4" *ngIf="NotificationArr != ''">
+                <div class="bg-card rounded">
+                    <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr">
+                        {{collegename}} Notifications</h1>
+                    <ul class="p-4 leading-8 secondary-color">
+                        <li class="border-b mb-3 cursor-pointer" *ngFor="let item of NotificationArr"
+                            (click)="getExamDetails(item.examId)">{{item.notification}}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col min-w-0 mt-4" *ngIf="latest_blogsArr != '' && popular_blogsArr !=''">
+                <div class="bg-card rounded">
+                    <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Articles &
+                        Updates
+                    </h1>
+                    <mat-tab-group class="mt-2 ">
+                        <mat-tab label="Latest" *ngIf="latest_blogsArr != ''">
+
+                            <ul class="leading-8 h60 overflow-y-auto">
+                                <li class="border-b mb-3 flex justify-between" *ngFor="let item of latest_blogsArr">
+                                    <a>
+                                        <p class="cursor-pointer" (click)="getArticleDetails(item.id)">{{item.title}}
+                                        </p>
+                                    </a>
+                                    <img class="ml-auto p-1" style="width: 30%;" [src]="item.image">
+                                    <!-- <p class="text-sm">Satyendra Singh - <span
+                                            class="ml-1 text-sm text-secondary">Jan 26, 2024 7L views</span>
+                                    </p> -->
+                                </li>
+
+                            </ul>
+                        </mat-tab>
+                        <mat-tab label="Popular" *ngIf="popular_blogsArr != ''">
+                            <ul class="leading-8 h60 overflow-y-auto">
+                                <li class="border-b mb-3 flex justify-between" *ngFor="let item of popular_blogsArr">
+                                    <a>
+                                        <p class="cursor-pointer" (click)="getArticleDetails(item.id)">{{item.title}}
+                                        </p>
+                                    </a>
+                                    <img class="ml-auto p-1" style="width: 30%;" [src]="item.image">
+                                    <!-- <p class="text-sm">Satyendra Singh - <span
+                                                 class="ml-1 text-sm text-secondary">Jan 26, 2024 7L views</span>
+                                         </p> -->
+                                </li>
+                            </ul>
+                        </mat-tab>
+                    </mat-tab-group>
+
+                </div>
+            </div>
+
+            <div class="flex flex-col min-w-0 mt-4" *ngIf="SameCourseInSameCityArr != ''">
+                <div class="bg-card rounded">
+                    <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Other colleges
+                        offering Same Courses in {{location}}</h1>
+                    <ul class="p-4 leading-8 ">
+                        <li class="border-b mb-3 cursor-pointer hover" *ngFor="let item of SameCourseInSameCityArr"
+                            (click)="getCollegeDetails(item.id)">
+                            {{item.title}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popcenter">
+        <ng-template #callAPIDialog1>
+            <div class="flex flex-auto justify-between overflow-hidden relative ">
+                <h2 matDialogTitle class="font-medium text-xl"></h2>
+            </div>
+            <div class="p-6 overflow-hidden max-w-full popwidth relative">
+                <mat-icon svgIcon="mat_outline:close"
+                    style="color: red; cursor: pointer; position: absolute; z-index: 111;right: 6px; top:6px"
+                    matDialogClose="yes" (click)="close()"></mat-icon>
+                <div class="max-w-10xl">
+                    <img style="height: 350px;" class="position-relative shadow-sm maxwh cursorpointer" title=""
+                        src="{{image}} " accept="image" />
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div>

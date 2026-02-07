@@ -1,0 +1,269 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto">
+
+        <div class="heroSection relative" *ngIf="activeTabIndex==0">
+            <div class="text-white z-10 textset">
+                <div class="md:text-5xl lg:text-5xl text-4xl text-center font-bold">
+                    All Exams
+                </div>
+
+                <!-- //Date 03/04/2024 -->
+                <form [formGroup]="SearchExamForm">
+                    <div class="flex justify-center mt-3">
+                        <mat-form-field class="md:w-1/2 w-full lg:w-1/2 h-12 bg-white rounded-md">
+                            <input matInput class="text-black" placeholder="Search Exams ..."
+                                [formControl]="ExamsearchControl">
+                        </mat-form-field>
+                        <!-- <button mat-flat-button color="primary" class="rounded py-6 -ml-10 " (click)="searchExamList()"><mat-icon
+                                matSuffix>search</mat-icon></button> -->
+                        <button mat-flat-button color="primary" class="rounded py-6 -ml-10"><mat-icon
+                                matSuffix>search</mat-icon></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="heroSection relative" *ngIf="activeTabIndex==1">
+            <div class="text-white z-10 textset">
+                <div class="md:text-5xl lg:text-5xl text-4xl text-center font-bold">
+                    All Articles
+                </div>
+
+                <!-- //Date 03/04/2024 -->
+                <form [formGroup]="SearchArticleForm">
+                    <div class="flex justify-center mt-3">
+                        <mat-form-field class="md:w-1/2 w-full lg:w-1/2 h-12 bg-white rounded-md">
+                            <input matInput class="text-black" placeholder="Search Articles ..."
+                                [formControl]="ArticlesearchControl">
+                        </mat-form-field>
+                        <button mat-flat-button color="primary" class="rounded py-6 -ml-10"><mat-icon matSuffix>search
+                            </mat-icon></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class=" mx-auto max-w-screen-lg my-6">
+            <mat-tab-group class="greenTab" [(selectedIndex)]="activeTabIndex">
+                <mat-tab label="EXAMS ">
+                    <div
+                        class="bg-card s_btn rounded-lg p-6  sm:grid md:grid-cols-2 lg:grid-cols-2 gap-4 w-full min-w-0">
+                        <!-- <div class="flex flex-col flex-auto min-w-0"> -->
+                        <!-- <div> -->
+                        <!-- <div class="flex flex-col mt-2"> -->
+                        <div *ngIf="ExamLoader" class="wrapper-loader text-center">
+                            <img class="rounded-circle img-fluid mx-auto rounded-full " style="width: 100px;"
+                                src="assets/images/Loader.gif" alt="">
+                        </div>
+                        <div class="md:flex sm:flex lg:flex border mt-5 rounded p-2 hover:shadow cursor-pointer hover:border-green-300"
+                            *ngFor="let item of examListArr | slice: 0:itemsToShow ; let i = index">
+                            <img class="md:w-28 sm:w-28 lg:w-28 h-20 mr-4 mt-5 rounded object-cover" [src]="item.image"
+                                alt="">
+                            <div class="flex flex-col min-w-0">
+                                <div class="font-semibold text-xl leading-normal text-center md:text-left lg:text-left">
+                                    {{item.title}}</div>
+                                <!-- <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 mt-2"> -->
+                                <div class="md:flex lg:flex items-center mt-2">
+                                    <a [href]="item.syllabus" target="_blank"> <button mat-stroked-button
+                                            style="color: #88d834;" class="rounded">
+                                            <mat-icon svgIcon="mat_solid:menu_book" style="color: #88d834;"></mat-icon>
+                                            Syllabus
+                                        </button>
+                                    </a>
+                                    <a [href]="item.preparation" target="_blank"> <button mat-stroked-button
+                                            style="color: #88d834;" class="rounded  ml-2 ">
+                                            <mat-icon svgIcon="mat_solid:edit_note" style="color: #88d834;"></mat-icon>
+                                            Pattern
+                                        </button>
+                                    </a>
+                                    <a target="_blank" (click)="openDialogQuePpaers(item)"> <button mat-stroked-button
+                                            style="color: #88d834;" class="rounded ml-2"><mat-icon
+                                                svgIcon="mat_solid:library_books" style="color: #88d834;"></mat-icon>
+                                            Question Papers
+                                        </button>
+                                    </a>
+                                    <!-- <a [href]="item.questionpaper" target="_blank"> <button mat-stroked-button
+                                            style="color: #88d834;" class="rounded ml-2"><mat-icon
+                                                svgIcon="mat_solid:library_books" style="color: #88d834;"></mat-icon>
+                                            Question Papers
+                                        </button>
+                                    </a> -->
+                                </div>
+                                <!-- </div> -->
+                                <div class="md:flex lg:flex items-center mt-3">
+                                    <button mat-flat-button color="primary" class="rounded"
+                                        (click)="getExamDetails(item.id)"><mat-icon
+                                            svgIcon="mat_solid:menu_open"></mat-icon>View Details</button>
+                                    <button mat-stroked-button color="primary" class="rounded ml-2"
+                                        (click)="toggleShare(i)"><mat-icon svgIcon="mat_solid:share"></mat-icon>Share
+                                        It</button>
+                                    <button mat-stroked-button color="primary" class="rounded ml-2"
+                                        (click)="openDialog(item.notification)"><mat-icon svgIcon="mat_solid:date_range"
+                                            class=""></mat-icon>Important
+                                        Dates</button>
+
+                                </div>
+                                <div class="share-btn" *ngIf="showShare[i]">
+                                    <ul>
+                                        <li (click)="examshareOnFacebook(item.id)"><a class="facebook" target="_blank"
+                                                onclick="javascript:SocialShare('facebook',2093)"><i
+                                                    class="fa-brands fa-facebook"></i></a>
+                                        </li>
+                                        <li (click)="examshareOnTwitter(item.id)"><a class="twitter" target="_blank"><i
+                                                    class="fa-brands fa-square-twitter"></i> </a>
+                                        </li>
+                                        <li (click)="examshareOnWhatsApp(item.id)"> <a class="wa1">
+
+                                                <i class="fa-brands fa-whatsapp"></i></a>
+                                        </li>
+                                        <li (click)="examshareOnLinkedin(item.id)"><a class="li1" target="_blank"><i
+                                                    class="fa-brands fa-linkedin"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="flex items-center justify-center mt-6">
+                        <button class="px-3" mat-button [color]="'primary'" (click)="showMoreExams()">
+                            View More Exams
+                        </button>
+                    </div>
+
+                </mat-tab>
+                <mat-tab label="ARTICLES">
+                    <div class="bg-card rounded-lg p-6 sm:grid md:grid-cols-2 lg:grid-cols-2 gap-4 w-full min-w-0">
+                        <!-- <div class="flex flex-col flex-auto min-w-0">
+                    <div>
+                        <div class="flex flex-col mt-2"> -->
+                        <div *ngIf="ArticleLoader" class="wrapper-loader text-center">
+                            <img class="rounded-circle img-fluid mx-auto rounded-full" style="width: 100px;"
+                                src="assets/images/Loader.gif" alt="">
+                        </div>
+                        <div class="flex border mt-5 rounded p-2 hover:shadow cursor-pointer hover:border-green-300"
+                            *ngFor="let item of articlesArr |  slice :0:ArticlesToShow  ; let i = index">
+                            <img class="w-28 h-20 mr-4 mt-1 rounded object-cover" [src]="item.image"
+                                alt="Card cover image">
+                            <div class="flex flex-col min-w-0">
+                                <div class="font-medium leading-normal">{{item.title}}
+                                </div>
+                                <div *ngIf="item.updated_date!= ''" class="text-sm truncate leading-none mt-1">
+                                    {{item?.updated_date}}</div>
+                                <div *ngIf="item.updated_date== ''" class="text-sm truncate leading-none mt-1">
+                                    {{item?.created_date}}</div>
+                                <div *ngIf="item.views !=''"
+                                    class="text-md flex items-center leading-none text-secondary mt-2"><mat-icon
+                                        svgIcon="mat_solid:remove_red_eye" class="icon-size-4 mr-1"></mat-icon>
+                                    {{item.views}}
+                                    Views
+                                    <!-- <mat-icon svgIcon="mat_solid:share" class="icon-size-4 mr-1 ml-2"></mat-icon> -->
+                                    <!-- 1.6K Shares -->
+                                </div>
+                                <div *ngIf="item.views==''"
+                                    class="text-md flex items-center leading-none text-secondary mt-2"><mat-icon
+                                        svgIcon="mat_solid:remove_red_eye" class="icon-size-4 mr-1"></mat-icon> 0 Views
+                                    <!-- <mat-icon svgIcon="mat_solid:share" class="icon-size-4 mr-1 ml-2"></mat-icon> -->
+                                    <!-- 1.6K Shares -->
+                                </div>
+
+                                <div class="flex items-center mt-2">
+                                    <button mat-flat-button color="primary" class="rounded"
+                                        (click)="getArticleDetails(item.id)">View Details</button>
+                                    <button mat-stroked-button color="primary" class="rounded ml-2"
+                                        (click)="toggleShare(i)">Share It</button>
+
+                                </div>
+                                <div class="share-btn" *ngIf="showShare[i]">
+                                    <ul>
+                                        <li (click)="ArticleshareOnFacebook(item.id)"><a class="facebook"
+                                                target="_blank" onclick="javascript:SocialShare('facebook',2093)"><i
+                                                    class="fa-brands fa-facebook"></i></a>
+                                        </li>
+                                        <li (click)="ArticleshareOnTwitter(item.id)"><a class="twitter"
+                                                target="_blank"><i class="fa-brands fa-square-twitter"></i> </a>
+                                        </li>
+                                        <li (click)="ArticleshareOnWhatsApp(item.id)"><a class="wa1">
+                                                <i class="fa-brands fa-whatsapp"></i></a>
+                                        </li>
+                                        <li (click)="ArticleshareOnLinkedin(item.id)"><a class="li1" target="_blank"><i
+                                                    class="fa-brands fa-linkedin"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- </div>
+                            </div>
+                          
+                        </div> -->
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="flex items-center justify-center mt-6">
+                        <button class="px-3" mat-button [color]="'primary'" (click)="showMoreArticles()">
+                            View More Articles
+                        </button>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+
+        <div class="popcenter">
+            <ng-template #callAPIDialog1>
+                <div class="flex flex-auto justify-between overflow-hidden relative ">
+                    <h2 matDialogTitle class="font-medium text-xl"></h2>
+                </div>
+                <div class="p-6 overflow-hidden max-w-full popup">
+
+                    <mat-icon svgIcon="mat_outline:close"
+                        style="color: red; cursor: pointer; position: absolute; z-index: 111;  left: 73%;"
+                        matDialogClose="yes" (click)="close()"></mat-icon>
+                    <div class="font-semibold text-2xl flex items-center"><mat-icon svgIcon="mat_solid:date_range"
+                            style="color: #2196f3" class="primary"></mat-icon> Important Dates</div>
+                    <hr class="border-t border-gray-300 my-4">
+                    <div class="max-w-10xl pattern mt-2" [innerHTML]="notification">
+                        <!-- <img style="height: 270px;" class="position-relative shadow-sm maxwh cursorpointer" title=""
+                            src="{{image}} " accept="image" /> -->
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="popcenter" >
+           
+            <ng-template #callAPIDialogQuePapers>
+                <div  style="max-width: 30vw;">
+                <div class="flex flex-auto justify-between overflow-hidden relative " >
+                    <h2 matDialogTitle class="font-medium text-xl"></h2>
+                    <button mat-icon-button (click)="close()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="pt-4 pl-8 pb-2 text-xl" style="color: #1666a5;font-weight: bold;">List of question papers</h1>
+                <div class="p-6 h-72
+                max-w-full popup border bg-gray-50 shadow-lg rounded-lg overflow-y-scroll">
+                   
+                    <div class=" p-2 px-4 rounded cursor-pointer hover:bg-gray-200 flex justify-between" *ngFor="let item of questionpaper; let i = index">
+                    <p *ngFor="let item2 of item.documents">
+                        <span class="text-lg font-medium">   <a>{{ i + 1 }}.</a> {{item.docs_title}}  </span>
+
+                        <a href="{{item2.path}}" target="_blank" class="text-blue-600 flex items-center space-x-2"  matTooltip="Download">
+                            <!-- <span>Download</span> -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 4v12m0 0l-3-3m3 3l3-3" />
+                              </svg>
+                            </a>
+                    </p>
+                </div>
+                </div>
+              
+                </div>
+                  
+            </ng-template>
+        </div>
+    </div>
+</div>

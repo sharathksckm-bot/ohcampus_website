@@ -1,0 +1,82 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-6">
+        <form [formGroup]="studyabroadform" (ngSubmit)="saveStudyAbroad($event)" class="form">
+            <div class="text-5xl text-center font-bold headStyle">Study Abroad</div>
+            <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 mt-12 ">
+                <div class="md:col-start-2 lg:col-start-2 md:col-span-2 lg:col-span-2 relative">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="name">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Email</mat-label>
+                            <input matInput type="email" formControlName="email">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Contact No</mat-label>
+                            <input matInput formControlName="contactNo" maxlength="10" minlength="10">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>State</mat-label>
+                            <mat-select formControlName="state" (ngModelChange)="getCityByState()">
+                                <mat-option *ngFor="let state of stateArr" [value]="state">
+                                    {{ state.statename }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>City</mat-label>
+                            <mat-select formControlName="city">
+                                <mat-option *ngFor="let city of cityArr" [value]="city.city">
+                                    {{ city.city }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Country</mat-label>
+                            <mat-select formControlName="country">
+                                <mat-option *ngFor="let country of countryArr" [value]="country">
+                                    {{ country }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Course Category</mat-label>
+                            <mat-select formControlName="course_category" (ngModelChange)="getCourseByCategory()">
+                                <mat-option *ngFor="let course of CourseCategoryArr" [value]="course">
+                                    {{course.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Course</mat-label>
+                            <mat-select formControlName="course">
+                                <mat-option *ngFor="let course of CoursesArr" [value]="course">
+                                    {{ course.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+
+                    </div>
+
+                    <div class="flex justify-center"><button mat-raised-button color="primary"
+                            [disabled]="studyabroadform.invalid">
+                            Submit
+                        </button></div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>

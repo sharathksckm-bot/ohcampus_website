@@ -1,0 +1,54 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto">
+
+        <div class="heroSection relative">
+            <div class="text-white z-10 textset">
+                <div class="md:text-5xl lg:text-5xl text-4xl text-center font-bold">
+                    Search Courses
+                </div>
+
+                <!-- //Date 03/04/2024 -->
+                <form [formGroup]="searchCourseForm">
+                    <div class="flex justify-center mt-3">
+                        <mat-form-field class="md:w-1/2 w-full lg:w-1/2 h-12 bg-white rounded-md">
+                            <input matInput class="text-black" [formControl]="searchControl"
+                                placeholder="Search here ...">
+                        </mat-form-field>
+                        <button mat-flat-button color="primary" class="rounded py-6 -ml-10"><mat-icon
+                                matSuffix>search</mat-icon></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class=" mx-auto max-w-screen-lg my-6">
+
+            <div class="bg-card rounded-lg p-6 sm:grid md:grid-cols-2 lg:grid-cols-2 gap-4 w-full min-w-0">
+                <!-- <div class="flex flex-col flex-auto min-w-0">
+                    <div>
+                        <div class="flex flex-col mt-2"> -->
+                <div class="md:flex  lg:flex border rounded p-3" *ngFor="let item of courseListArr">
+                    <img *ngIf="item.image !=''" class="w-30  rounded " [src]="item.image" alt="">
+
+                    <!-- //Date 03/04/2024 -->
+                    <img *ngIf="item.image ==''" class="w-30  rounded " src="assets/images/course.jpeg" alt="">
+                    <div class="flex flex-col min-w-0 mx-2">
+                        <div class="font-semibold text-lg leading-normal">{{item.name}}</div>
+                        <div class="text-md my-1 font-semibold text-primary"> Duration : {{item.duration}}</div>
+                        <div class="text-md mb-1 font-semibold"> Course Level : {{item.type}} </div>
+                    </div>
+                    <div class="flex items-center ml-auto">
+                        <button mat-flat-button color="primary" class="rounded" (click)="getAllColleges(item.id)">Search
+                            College</button>
+                    </div>
+                </div>
+
+            </div>
+            <mat-paginator [length]="recordsTotal" [pageSize]="pageSize" (page)="onPageChange($event)"></mat-paginator>
+        </div>
+
+
+    </div>
+</div>

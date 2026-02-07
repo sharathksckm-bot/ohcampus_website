@@ -1,0 +1,598 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto">
+
+        <!-- CONTENT GOES HERE -->
+        <!-- <div class="animate seven">
+			<span>c</span><span>s</span><span>s</span><span>3</span> &nbsp;
+			<span>a</span><span>n</span><span>i</span><span>m</span><span>a</span><span>t</span><span>i</span><span>o</span><span>n</span><span>s</span>
+        </div> -->
+
+        <div class="heroSection relative color-overlay ">
+            <img [src]="imageSrc" class="herosecimg">
+            <div class="text-white z-10 textset">
+                <div class="md:text-8xl lg:text-8xl sm:text-7xl text-3xl text-center animate three">
+                    <span>T</span> <span>h</span> <span>e</span> &nbsp;<span>F</span> <span>u</span> <span>t</span>
+                    <span>u</span> <span>r</span> <span>e</span>
+                    &nbsp;<span>B</span> <span>e</span> <span>g</span> <span>i</span> <span>n</span> <span>s</span>
+                    &nbsp;<span>H</span> <span>e</span> <span>r</span> <span>e</span> <span>!</span>
+                </div>
+                <div class="text-md sm:text-xl text-gray-300 text-center mb-2 lg:mb-12 md:mb-12 sm:mb-8">Working
+                    collaboratively to ensure
+                    student achieves
+                    academically, <br> socially, and emotionally</div>
+                <div class="md:w-1/2 w-full lg:w-1/2 mx-auto ">
+                    <button mat-flat-button
+                        class="rounded md:p-3 lg:p-3 p-1 text-md md:text-lg lg:text-lg md:-ml-2 lg:-ml-2 hover:bg-primary hover:text-white"
+                        style="background-color: #9bd61e;" [class.active-button]="activeButton === 'colleges'"
+                        (click)="SearchData('colleges')">Colleges</button>
+                    <button mat-flat-button
+                        class="rounded md:p-3 lg:p-3 p-1 text-md md:text-lg lg:text-lg mx-2 hover:bg-primary hover:text-white"
+                        style="background-color: #9bd61e;" [class.active-button]="activeButton === 'exams'"
+                        (click)="SearchData('exams')">Exams</button>
+                    <button mat-flat-button
+                        class="rounded md:p-3 lg:p-3 p-1 text-md md:text-lg lg:text-lg hover:bg-primary hover:text-white"
+                        style="background-color: #9bd61e;" [class.active-button]="activeButton === 'events'"
+                        (click)="SearchData('events')">Events</button>
+                    <button mat-flat-button
+                        class="rounded md:p-3 lg:p-3 p-1 text-md md:text-lg lg:text-lg mx-2 ml-2 hover:bg-primary hover:text-white"
+                        style="background-color: #9bd61e;" [class.active-button]="activeButton === 'articles'"
+                        (click)="SearchData('articles')">Articles</button>
+                </div>
+                <form [formGroup]="SearchForm">
+                    <div class="flex justify-center mt-2 sm:mt-0 md:mt-0 ">
+
+                        <mat-form-field class="md:w-1/2 w-full lg:w-1/2 h-12 bg-white rounded-md">
+                            <input matInput class="text-black" [placeholder]="placeholderText"
+                                formControlName="searchtext">
+                        </mat-form-field>
+                        <button mat-flat-button class="rounded py-6 -ml-10  " style="background-color: #9bd61e;"
+                            (click)="searchAllData()"><mat-icon matSuffix>search</mat-icon></button>
+
+
+                    </div>
+                </form>
+                <div class="d-flex justify-content-between p-2 lg:my-4 md:my-4">
+                    <div
+                        class="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-3 gap-4 test text-white fs-5 lg:w-1/2  md:w-1/2 mx-auto border-gray-300">
+
+                        <div (click)="getColleges()"
+                            class="flex flex-col color items-center justify-center py-2 rounded-lg cursor-pointer border-1 border-gray-300 transition-colors duration-150 ease-in-out">
+                            <span><mat-icon class="icon" svgIcon="mat_solid:home_work"></mat-icon></span>
+                            <span class="size">Total Colleges</span>
+                            <span class="total">{{Clgcount}}</span>
+                            <!-- <span class="total">{{projectcount}}</span> -->
+                        </div>
+
+                        <div (click)="getCourses()"
+                            class="flex flex-col color items-center justify-center py-2 rounded-lg cursor-pointer border-1 border-gray-300 transition-colors duration-150 ease-in-outflex flex-col color items-center justify-center py-2 rounded-lg cursor-pointer border-1 border-gray-300  transition-colors duration-150 ease-in-out">
+                            <span><mat-icon class="icon" svgIcon="mat_solid:library_books"></mat-icon></span>
+                            <span class="size">Total Courses</span>
+                            <span class="total">{{Coursescount}}</span>
+                        </div>
+
+                        <div (click)="getAllExams()"
+                            class="flex flex-col color items-center justify-center py-2 rounded-lg cursor-pointer border-1 border-gray-300  transition-colors duration-150 ease-in-out">
+                            <span><mat-icon class="icon" svgIcon="mat_solid:menu_book"></mat-icon></span>
+                            <span class="size">Total Exams</span>
+                            <span class="total">{{Examcount}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 sm:px-14 md:px-30 lg:px-30">
+            <div class="text-5xl mt-8 text-center font-bold headStyle">Featured Colleges</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                <fuse-card class="flex flex-col w-full filter-article" *ngFor="let item of featuredClgArr ">
+                    <img *ngIf="item.image !=''" class="object-cover update-image cursor-pointer"
+                        (click)="getCollegeDetails(item.id)" [src]="item.image">
+                    <img *ngIf="item.image ==''" class="object-cover update-image cursor-pointer"
+                        src="assets/images/noimage1.jpg">
+                    <div class="m-8 mb-4 mt-3 serachBtn1">
+                        <div class="text-md mb-2 text-primary"></div>
+                        <div class=" font-semibold leading-tight hover cursor-pointer"
+                            (click)="getCollegeDetails(item.id)">
+                            {{item.title}} </div>
+                        <div class="mt-2"><mat-icon class="icon-size-4  font-semibold "
+                                style="color: red; bottom: 9px; line-height: 1.2;"
+                                svgIcon="mat_solid:location_on"></mat-icon>
+                            <span style="margin-left: 5px;" class="font-semibold text-primary">{{item.city}}
+                                ({{item.statename}}) </span>
+                        </div>
+                        <div class="mt-2 font-semibold leading-tight hover " style="margin-left: 5px;"
+                            class="font-semibold" style="line-height: 1.2;">
+                            Total Courses : {{item.totalCourseCount}}
+                        </div>
+                        <div *ngIf="item.estd !='' && item.estd != '0' " class="mt-2 font-semibold leading-tight hover "
+                            style="margin-left: 5px;" class="font-semibold" style="line-height: 1.2;">
+                            Estd: {{item.estd}}
+                        </div>
+                        <div *ngIf="item.estd =='' || item.estd== '0'" class="mt-2 font-semibold leading-tight hover "
+                            style="margin-left: 5px;" class="font-semibold" style="line-height: 1.2;">
+                            Estd: NA
+                        </div>
+                        <div *ngIf="item.accreditation != ''" class="mt-2 font-semibold leading-tight hover"
+                            style=" line-height: 1.2;" class="font-semibold">Accreditation : {{item.accreditation}}
+                        </div>
+                        <div *ngIf="item.accreditation == ''" class="mt-2 font-semibold leading-tight hover "
+                            style="line-height: 1.2;" class="font-semibold">Accreditation : NA
+                        </div>
+                        <!-- <div class="text-secondary text-md mt-3 ">
+                            {{ expandedStates[i] ? item.description : (item.description | slice: 0:100) }}
+                            <span *ngIf="!expandedStates[i]">...</span>
+                            <a *ngIf="!expandedStates[i]" class="description font-semibold" (click)="onShow(i)">[Show
+                                More]</a>
+                            <a *ngIf="expandedStates[i]" class="description font-semibold" (click)="onShow(i)">[Show
+                                Less]</a>
+                        </div> -->
+                    </div>
+                    <div class="flex w-full">
+                        <!-- <div *ngIf="item.notification!=null" class=" mt-3 text-slider-container p-1 text-center"
+                            style="background-color: #adff00; width: 100%;" onmouseover="this.stop();"
+                            onmouseout="this.start();">
+                            <a [href]="item.notification_link" target="_blank"><span
+                                    class="ml-3 font-semibold text-slide"> {{item.notification}}</span></a>
+                        </div> -->
+                        <div *ngIf="item.notification!=null" class=" mt-3 text-slider-container p-1 text-center"
+                            style="background-color: #adff00; width: 100%;">
+                            <a [href]="item.notification_link" target="_blank"><span
+                                    class="ml-3 font-semibold text-slide"> {{item.notification}}</span></a>
+                        </div>
+                        <div *ngIf="item.notification==null" class="mt-3 text-slider-container p-1 text-center"
+                            style="background-color: #adff00; width: 100%;">
+                            <a [href]="item.notification_link" target="_blank"><span
+                                    class="ml-3 font-semibold text-slide text-center">No Notification</span></a>
+                        </div>
+                    </div>
+                </fuse-card>
+            </div>
+        </div>
+
+
+        <div class="p-6 sm:px-14 md:px-30 lg:px-30">
+            <div class="text-5xl mt-8 text-center font-bold headStyle">Main Courses</div>
+            <mat-tab-group class="tabpadding" mat-align-tabs="start" class="mt-6"
+                (selectedTabChange)="onTabChange($event)">
+                <mat-tab *ngFor="let category of categoryArr" [value]="category.id" label="{{category.catname}}">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <fuse-card class="flex flex-col w-full filter-article"
+                            *ngFor="let course of CourseByCatArr ; let i = index">
+                            <img *ngIf="course.imagepath!='https://win.k2key.in/ohcampus//uploads/courses/'"
+                                class="object-cover update-image" [src]="course.imagepath">
+                            <img *ngIf="course.imagepath=='https://win.k2key.in/ohcampus//uploads/courses/'"
+                                class="object-cover update-image " src="assets/images/noimage1.jpg">
+                            <div class="m-8 mb-4 mt-3 serachBtn">
+                                <div class=" font-semibold leading-tight mb-1">{{course.name}}</div>
+                                <div class="text-md mb-1  font-semibold text-primary" style="line-height: 1.2;">
+                                    Duration : {{course.duration}}
+                                    Years</div>
+                                <div class="text-md mb-1  font-semibold " style="line-height: 1.2;"> Course Level :
+                                    {{course.courseLevel}} </div>
+                                <!-- <div class="text-secondary text-md mt-3 ">
+                                    {{ expandedStatesCourse[i] ? course.course_description : (course.course_description
+                                    | slice: 0:100) }}
+                                    <span
+                                        *ngIf="!expandedStatesCourse[i] && course.course_description !=null">...</span>
+                                    <a *ngIf="!expandedStatesCourse[i] && course.course_description !=null"
+                                        class="description font-semibold" (click)="onShowCourse(i)">[Show
+                                        More]</a>
+                                    <a *ngIf="expandedStatesCourse[i] && course.course_description !=null"
+                                        class="description font-semibold" (click)="onShowCourse(i)">[Show
+                                        Less]</a>
+                                </div> -->
+
+                                <!-- <div class="mt-4">From rocky mountains to crystal clear lakes, there are the places you must see and enjoy.</div> -->
+                                <div class="mt-3 ">
+                                    <button class="" style="bottom: 9px;" mat-flat-button [color]="'primary'"
+                                        (click)="getAllColleges(course.id)">
+                                        Search College
+                                    </button> &nbsp;
+
+                                </div>
+                            </div>
+                        </fuse-card>
+                    </div>
+                    <div class="container mt-2 "><button class="secondaryButton" mat-stroked-button
+                            [color]="'secondaryButton'" (click)="getAllCourses(category.id)">
+                            View All Courses
+                        </button>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+
+
+        </div>
+
+        <div class="p-6 sm:px-14 text-center mb-8 md:p-22 lg:p-22 bg-white">
+            <!-- <div class="text-5xl font-bold mb-12 headStyle">Trending Colleges & Universities </div> -->
+            <!-- date 05/04/2024 -->
+            <div class="text-5xl font-bold mb-12 headStyle"> Trending Colleges & Universities </div>
+
+            <div class="contentSec">
+                <ul class="taglist">
+                    <li *ngFor="let item of trendingClgArr" matTooltip="{{ item.title }}" matTooltipPosition="above">
+                        <a class="capsule capsule--blue ripple" (click)="getCollegeDetails(item.id)">{{item.tag}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="p-6 sm:px-14 md:px-30 lg:px-30">
+            <!-- <div class="text-5xl mt-8 text-center font-bold headStyle"> Events</div> -->
+            <div class="text-5xl mt-8 text-center font-bold headStyle"> Articles & Events</div>
+            <mat-tab-group mat-align-tabs="start" class="mt-6">
+                <mat-tab label="Articles">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0">
+                        <div
+                            class=" bg-card rounded-lg shadow flex md:col-span-2 lg:col-span-2 flex-auto overflow-hidden">
+                            <div class="relative">
+                                <img class="rounded object-cover articleimg" [src]="articleimage">
+                                <div class="text-lg overtxt  cursor-pointer " (click)="getArticleDetails(articleId)">
+                                    {{articleTitle}}
+                                    <br> <span class="text-gray-300 text-lg">{{articlepost_rate_date}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col flex-auto lg:col-span-1 md:col-span-2">
+                            <fuse-card class="flex flex-col w-full px-3 md:px-8 md:px-8 pt-6 pb-4 filter-list">
+                                <div class="flex flex-col overflow-y-auto" style="height:500px;">
+                                    <div class="flex items-center mt-6" *ngFor="let article of ArticleArr | slice:0:5">
+                                        <img class="w-14 h-14 mr-4 rounded object-cover" [src]="article?.image">
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="font-medium leading-none cursor-pointer article"
+                                                (click)="getArticleDetails(article.id)">{{article?.title}}
+
+                                            </div>
+                                            <div *ngIf="article.updated_date!= ''"
+                                                class="text-md leading-none text-secondary mt-2">
+                                                {{article?.updated_date}}</div>
+                                            <div *ngIf="article.updated_date== ''"
+                                                class="text-md leading-none text-secondary mt-2">
+                                                {{article?.created_date}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="px-3 ml-1 text-md rounded min-w-0 min-h-0 h-10 secondaryButton"
+                                    (click)="getAllArticles()">View More </button>
+                            </fuse-card>
+                        </div>
+                    </div>
+
+                </mat-tab>
+                <mat-tab label="Events">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0 mt-6">
+                        <div
+                            class="bg-card rounded-lg shadow flex md:col-span-2 lg:col-span-2 flex-auto overflow-hidden">
+                            <div class="  relative">
+                                <img class="rounded object-cover articleimg" [src]="eventImage">
+                                <div class="text-lg overtxt cursor-pointer" (click)="getEventDetails(eventId)">
+                                    {{eventName}}
+                                    <br> <span class="text-gray-300 text-lg">{{eventStartDate}} To
+                                        {{eventEndDate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col flex-auto lg:col-span-1 md:col-span-2">
+                            <fuse-card class="flex flex-col w-full px-8 pt-6 pb-4 filter-list">
+
+                                <div class="flex flex-col overflow-y-auto" style="height:500px;">
+                                    <div class="flex items-center  mt-6 " *ngFor="let event of  eventsArr | slice :0:5">
+                                        <img class="w-14 h-14 mr-4 rounded object-cover" [src]="event?.image">
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="font-semibold leading-none cursor-pointer article"
+                                                (click)="getEventDetails(event.event_id)">{{event?.event_name}}</div>
+                                            <div class="text-md leading-none text-secondary mt-2">
+                                                {{event?.event_start_date}} To
+                                                {{event?.event_end_date}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="px-3 ml-1 text-md rounded min-w-0 min-h-0 h-10 secondaryButton"
+                                    (click)="getAllEvents()">View
+                                    More</button>
+                            </fuse-card>
+                        </div>
+                    </div>
+                </mat-tab>
+
+            </mat-tab-group>
+        </div>
+
+
+        <div>
+            <div class="text-5xl mt-10 text-center font-bold ">Trending Specializations & Certifications.</div>
+            <p class="text-md text-secondary my-3 text-center headStyle">Upskill and reskill to empower your career
+                journey withOnline <br>Courses and Certifications</p>
+            <div class="md:flex lg:flex flex-wrap mt-12">
+
+                <div class="md:w-1/2 lg:w-1/2 md:relative lg:relative" style="right: -130px; align-self: center;">
+                    <div class="contentSec bg-card rounded-lg p-8 py-10 ">
+                        <p class="text-3xl font-semibold">Trending Specializations</p>
+                        <p>Elevate your skill game with more than 11,000 courses from 470+ Specializations</p>
+                        <ul class="taglist mt-2">
+                            <li *ngFor="let item of TrendingSpecilizationArr| slice: 0:itemsToShow ; let i = index">
+                                <a class="capsule capsule--blue ripple"
+                                    (click)="getcourseList(item.keyword)">{{item.keyword}}</a>
+                            </li>
+                        </ul>
+                        <div>
+                            <!-- <button class="px-5 mt-3" color="primary" mat-button (click)="getAllSpecilizations()">
+                                View All
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+                <img src="assets/images/showsome.jpg" class="md:w-1/2 lg:w-1/2 leftRound">
+            </div>
+        </div>
+
+        <div>
+            <div class="md:flex lg:flex flex-wrap mt-12">
+                <img src="assets/images/topper.jpg" class="md:w-1/2 lg:w-1/2 rightRound">
+                <div class="md:w-1/2 lg:w-1/2 md:relative lg:relative" style="left: -130px; align-self: center;">
+                    <div class="contentSec bg-card rounded-lg p-8 py-10">
+                        <p class="text-3xl font-semibold">Trending Certifications</p>
+                        <p>Gain Professional expertise with online courses to amplify your employbility</p>
+                        <ul class="taglist mt-2">
+                            <li *ngFor="let item of certificatesArr| slice: 0:certificateToShow ; let i = index">
+                                <a class="capsule capsule--blue ripple"
+                                    (click)="getCertificate(item.id)">{{item.name}}</a>
+                            </li>
+                        </ul>
+                        <div>
+                            <!-- <button class="px-5 mt-3" mat-button color="primary" (click)="getAllCertificate()">
+                                View All
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-cover bg-center rounded-lg"
+                style="background-image: url('assets/images/Thumbnail.png');">
+
+                <!-- Heading -->
+                <div class="flex flex-col sm:flex-row sm:items-center  sm:ml-16 mb-8 sm:mb-12 mt-6"
+                    style="padding-left: 24px !important;">
+                    <div class="max-w-2xl text-center sm:text-left">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mt-3 mb-3">
+                            Download our mobile app
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="flex flex-col lg:flex-row items-center lg:items-start gap-10">
+
+                    <!-- Left Column -->
+                    <div class="w-full mb-20 lg:w-1/2 space-y-8 px-4 sm:px-8  sm:pb-16">
+
+                        <!-- Feature 1 -->
+                        <div class="flex items-start">
+                            <div class="rounded-full p-3" style="background-color: rgb(32, 32, 45);">
+                                <i class="fa-solid fa-magnifying-glass text-xl text-white"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg sm:text-xl font-semibold text-gray-800">Convenient College Search
+                                </h4>
+                                <p class="text-gray-600 text-sm sm:text-base">
+                                    OhCampus lets you explore and compare colleges with ease to find the best match for
+                                    your future.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="flex items-start">
+                            <div class="rounded-full p-3" style="background-color: rgb(32, 32, 45);">
+                                <i class="fa-solid fa-bell text-xl text-white"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg sm:text-xl font-semibold text-gray-800">Real-time Updates</h4>
+                                <p class="text-gray-600 text-sm sm:text-base">
+                                    Get the latest information on college admissions, events, and application deadlines
+                                    instantly.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="flex items-start">
+                            <div class="rounded-full p-3" style="background-color: rgb(32, 32, 45);">
+                                <i class="fa-solid fa-user-cog text-xl text-white"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg sm:text-xl font-semibold text-gray-800">Personalized Dashboard</h4>
+                                <p class="text-gray-600 text-sm sm:text-base">
+                                    Update your preferences and profile to get recommendations tailored to your
+                                    interests.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- App Store Buttons -->
+                        <div class="flex justify-center sm:justify-start items-center mb-6 space-x-6 "
+                            style="margin-top: 90px !important; padding-left: 60px !important;">
+                            <a href="https://play.google.com/store/apps/details?id=com.app.ohcampus" target="_blank"
+                                rel="noopener noreferrer">
+                                <img src="assets/images/play-store.png" alt="Play Store" class="w-36 sm:w-40">
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+
+
+        <div class="p-6 sm:px-14 md:px-30 lg:px-30 bgContact md:mt-12 lg:mt-12">
+            <div class="text-5xl text-center font-bold headStyle">Quick Enquiry</div>
+            <form [formGroup]="EnquiryForm" #EnquiryNgForm="ngForm">
+                <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 mt-12 ">
+                    <div class="md:col-start-2 lg:col-start-2 md:col-span-2 lg:col-span-2 relative">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                            <mat-form-field class="w-full">
+                                <mat-label>Name </mat-label>
+                                <input matInput formControlName="fname">
+                                <mat-error *ngIf="EnquiryForm.get('fname').invalid">First Name is required</mat-error>
+                            </mat-form-field>
+
+                            <!-- <mat-form-field class="w-full">
+                                <mat-label>Last Name </mat-label>
+                                <input matInput formControlName="lname">
+                                <mat-error *ngIf="EnquiryForm.get('lname').invalid">Last Name is required</mat-error>
+                            </mat-form-field> -->
+
+                            <mat-form-field class="w-full">
+                                <mat-label>Email </mat-label>
+                                <input matInput formControlName="email">
+                                <mat-error *ngIf="EnquiryForm.get('email').invalid">Email Address is
+                                    required</mat-error>
+                                <!-- <mat-error *ngIf="EnquiryForm.get('email').hasError('pattern')">Email Address is Invalid</mat-error> -->
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full">
+                                <mat-label>Phone Number </mat-label>
+                                <input matInput formControlName="phone_number" maxlength="10" minlength="10"
+                                    (keypress)="numberOnly($event)">
+                                <mat-error *ngIf="EnquiryForm.get('phone_number').invalid">Phone Number is
+                                    required</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full">
+                                <mat-label>State </mat-label>
+                                <mat-select formControlName="state" (ngModelChange)="getCityByState()">
+                                    <!-- <mat-option *ngFor="let state of stateArr" [value]="state.id">
+                                        {{state.statename}}
+                                    </mat-option> -->
+                                    <mat-option>
+                                        <ngx-mat-select-search noEntriesFoundLabel="No matching type found"
+                                            placeholderLabel="Find state ..." [formControl]="stateFilterCtrl">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let course of stateTypeFilter | async" [value]="course.id">
+                                        {{course.statename}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full">
+                                <mat-label>City </mat-label>
+                                <mat-select formControlName="city">
+                                    <!-- <mat-option *ngFor="let city of cityArr" [value]="city.id">
+                                        {{city.city}}
+                                    </mat-option> -->
+                                    <mat-option>
+                                        <ngx-mat-select-search noEntriesFoundLabel="No matching type found"
+                                            placeholderLabel="Find city ..." [formControl]="cityFilterCtrl">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let course of cityTypeFilter | async" [value]="course.id">
+                                        {{course.city}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full">
+                                <mat-label>Select Course Category </mat-label>
+                                <mat-select formControlName="course_category" (ngModelChange)="getCourseByCategory()">
+                                    <mat-option *ngFor="let course of CourseCategoryArr" [value]="course.category_id">
+                                        {{course.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="EnquiryForm.get('course_category').invalid"> Category is
+                                    required</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full">
+                                <mat-label>Select Course </mat-label>
+                                <mat-select formControlName="course" matTooltip="{{selectedcourse}}"
+                                    matTooltipPosition="above" (ngModelChange)="getCourseselected($event)">
+                                    <!-- <img *ngIf="courseLoader" class="img-fluid " style="width: 30px"
+                                        src="assets/images/Loader.gif" alt="" class=" rounded-full mx-auto" /> -->
+                                    <mat-option>
+                                        <ngx-mat-select-search noEntriesFoundLabel="No matching type found"
+                                            placeholderLabel="Find course ..." [formControl]="courseFilterCtrl">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let course of courseTypeFilter | async" [value]="course.id">
+                                        {{course.name}}
+                                    </mat-option>
+
+                                </mat-select>
+                                <mat-error *ngIf="EnquiryForm.get('course').invalid">Select course</mat-error>
+                            </mat-form-field>
+
+                            <!-- <mat-form-field class="w-full md:col-span-2 lg:col-span-2"> -->
+                            <mat-form-field class="w-full ">
+                                <mat-label>Interested In</mat-label>
+                                <!-- <input matInput placeholder="Type here ..." formControlName="interstedIn"> -->
+                                <mat-select formControlName="interstedIn">
+                                    <mat-option *ngFor="let courses of interstedIn" [value]="courses.viewValue">
+                                        {{courses.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="EnquiryForm.get('interstedIn').invalid">choose Interest</mat-error>
+                            </mat-form-field>
+
+                            <div class="mt-4 text-center">
+                                <div class="flex justify-center items-center gap-4">
+                                    <div
+                                        class="px-6 py-2 text-xl font-bold tracking-widest bg-gray-200 rounded select-none">
+                                        {{ captchaText }}
+                                    </div>
+
+                                    <button type="button" mat-icon-button color="primary" (click)="generateCaptcha()">
+                                        <mat-icon>refresh</mat-icon>
+                                    </button>
+                                </div>
+
+                                <mat-form-field class="w-full mt-3">
+                                    <mat-label>Enter Captcha</mat-label>
+                                    <input matInput formControlName="captcha">
+                                    <!-- <mat-error *ngIf="EnquiryForm.get('captcha')?.hasError('required')">
+                                        Captcha is required
+                                    </mat-error> -->
+                                    <mat-error *ngIf="EnquiryForm.get('captcha')?.hasError('captchaMismatch')">
+                                        Captcha does not match
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                        <div class="text-center">
+                            <button mat-raised-button color="primary" class="px-12 justify-center mt-4"
+                                (click)="submitEnquiry()">Submit</button>
+                        </div>
+                        <div class="mt-2 text-center s_btn font-semibold" style="color: #88d834;">
+                            <!-- <button mat-stroked-button color="secondaryButton" class="rounded ml-2"
+                                style="color: #88d834;"> -->
+                            {{showInquiryMsg}}
+                            <!-- </button> -->
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+
+
+        <!-- <div class="fixed text-center" style="width: 100%;bottom:3%;z-index: 111;">
+           <button class="btn-primary px-10" mat-flat-button color="primary"> <a href="https://predictor.ohcampus.com" target="_blank" >KCET 2025 College Predictor For Free</a></button>
+       </div> -->
+        <a *ngIf="footernotoficationArr != ''"   [href]="footernotoficationArr.link" target="_blank"
+            class="botomtxt">{{footernotoficationArr.notification_text}}</a>
+    </div>
+</div>

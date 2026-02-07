@@ -1,0 +1,74 @@
+
+.list{
+    list-style: unset;
+    margin: 1rem;
+}
+.listdecimal{
+    list-style: decimal;
+    margin: 1rem;
+}
+::ng-deep .custwidth .mat-horizontal-stepper-header-container{
+    width: 65%;
+}
+::ng-deep .mat-form-field.fieldleft.mat-form-field-appearance-fill .mat-form-field-wrapper .mat-form-field-flex{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+::ng-deep .mat-form-field.fieldright.mat-form-field-appearance-fill .mat-form-field-wrapper .mat-form-field-flex{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+@media only screen and (max-width: 600px) {
+    ::ng-deep .custwidth .mat-horizontal-stepper-header-container{
+        width: 100%;
+    }  
+}
+.rateview{
+    display: flex;
+    text-align: center;
+    margin-top: 1rem;
+    li{
+        cursor: pointer;
+    }
+}
+
+  ::ng-deep .mat-tooltip {
+    color: #fff!important;
+    background: #6fbf1b!important;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  
+  .btn {
+    border: 1px dashed #c5cbd1;
+    color: #a5a5a5;
+    background-color: white;
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    background: #f0f5f9;
+  }
+  
+  .upload-btn-wrapper input[type="file"] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+  .rateview li {
+    cursor: pointer;
+  }
+  
+  .rateview li.mat-tooltip {
+    display: inline-block;
+    margin: 0 5px;
+  }
+  
+  .rateview li.filled mat-icon {
+    color: gold; /* or any other color to indicate filled star */
+  }

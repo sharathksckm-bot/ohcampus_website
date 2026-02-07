@@ -1,0 +1,383 @@
+<div class="bg-card rounded-lg p-6 w-full">
+    <div class="md:grid lg:grid grid-cols-4">
+        <div class="col-span-3">
+            <div class="bg-card rounded-lg w-full">
+                <h1 class="text-2xl font-bold">{{collegename}} Answered
+                    Questions</h1>
+                <h1 class="text-xl text-secondary">({{totalQuestion}})</h1>
+            </div>
+        </div>
+        <!-- <div class="flex items-center justify-end">
+            <mat-icon svgIcon="mat_solid:star_border"></mat-icon>
+            <div class="m-1 font-medium">
+                <p>Shortlist</p>
+            </div>
+        </div> -->
+
+        <div class="col-span-3">
+            <p class="flex items-center">Established {{Estd}} | {{Collage_category}} <mat-icon
+                    svgIcon="mat_outline:error_outline" class="ml-1 cursor-pointer icon-size-4"
+                    matTooltip="Autonomous Institute is one which is independent of State control over day-to-day operations and curriculum. Such an institute falls under the administrative control of the Department of Higher Education but is free from external control over its academic matters."></mat-icon>
+            </p>
+            <p class="text-sm">Get the latest answers on cutoff, courses, placements, admission, fees, ranking &
+                eligibility. All answers have been submitted by students, alumni & experts.</p>
+        </div>
+
+        <div>
+            <div class="flex justify-end items-center">
+                <div>
+                    <button mat-icon-button [matMenuTriggerFor]="menu1"> <mat-icon>more_vert</mat-icon></button>
+                    <mat-menu #menu1="matMenu">
+                        <button mat-menu-item (click)="scrollToQuestion()">Ask Question </button>
+                        <button mat-menu-item>Get Contact Details </button>
+                    </mat-menu>
+                </div>
+                <!-- <div (click)="onLoginButtonClick()">
+                    <button mat-flat-button class="ml-1" color="primary">
+                        <span >Apply Now</span>
+                    </button>
+                </div> -->
+                <div>
+                    <button mat-flat-button class="ml-1" color="primary" (click)="apply()">
+                        <span>Apply Now</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="border-t border-gray-300 mt-3 mb-6"></div>
+    </div>
+    <form [formGroup]="QAform" #QAformNgForm="ngForm">
+        <div class="md:grid lg:grid grid-cols-2 gap-6">
+            <div class="flex flex-col flex-auto overflow-hidden">
+                <div class="">
+                    <label class="mr-2">Course Level </label>
+                    <mat-form-field class="w-full mt-1">
+                        <mat-select placeholder="Select Course Level" formControlName="course_category"
+                            (ngModelChange)="getCourseByCategoryClg()">
+                            <mat-option *ngFor="let course of CourseCategoryArr" [value]="course.category_id">
+                                {{course.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto overflow-hidden ">
+                <div class=" ">
+                    <label class="mr-4">Course </label>
+                    <mat-form-field class="w-full mt-1">
+                        <mat-select placeholder="Select Course " formControlName="course">
+                            <mat-option *ngFor="let course of CoursesArr" [value]="course.id">
+                                {{course.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+        <div class="bg-card rounded-lg w-full" id="1" #questionSection>
+            <div class="flex flex-col flex-auto overflow-hidden">
+                <mat-form-field class="w-full">
+                    <mat-label>Get our experts to answer your question</mat-label>
+                    <textarea matInput formControlName="questionInput"
+                        placeholder="Write your question here ...."></textarea>
+                </mat-form-field>
+            </div>
+            <button mat-flat-button class="ml-1" color="primary">
+                <span (click)="postQuestion()">Post Question </span><img *ngIf="submitLoader" class="img-fluid mr-2"
+                    style="width: 30px" src="assets/images/Loader.gif" alt="" class=" rounded-full mx-auto" />
+            </button>
+            <div *ngIf="showmsg" class="mt-2  s_btn font-semibold" style="color: #88d834;">
+                <!-- <button mat-stroked-button color="secondaryButton" class="rounded ml-2"
+                    style="color: #88d834;"> -->
+                "Your question has been posted successfully we will get back to you soon"
+                <!-- </button> -->
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="md:grid lg:grid grid-cols-3 gap-x-6 mt-4">
+    <div class="flex flex-col col-span-2 flex-auto overflow-hidden ">
+        <!-- <div class="bg-card rounded-lg p-6 w-full">
+            <div class="flex flex-col flex-auto overflow-hidden">
+                <mat-form-field class="w-full">
+                    <mat-label>Get our experts to answer your question</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+        </div> -->
+
+        <div class="bg-card rounded-lg pt-6 w-full ">
+            <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+                <mat-tab label="Questions">
+                    <div *ngIf="QaCollegeArr==''" class=" text-4xl">
+                        <img class="rounded-circle img-fluid mx-auto rounded-full" style="height: 500px;"
+                            src="assets/images/nodata.jpg" alt="">
+                    </div>
+                    <div class="bg-card rounded-md p-4 w-full shadow mb-4"
+                        *ngFor="let item of QaCollegeArr, let i=index">
+
+                        <div class="flex">
+                            <div class="w-full mr-2 font-semibold">
+                                <p>{{item.question}}</p>
+                            </div>
+                            <div class="ml-10 text-sm w-30 text-right">
+                                <p>{{item.question_asked}}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-3">
+                            <div>
+                                <p>{{item.QuestionFollowCount}} Follower {{item.views}} Views</p>
+                            </div>
+                            <div class="flex items-center">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" class="mr-1">
+                                    <mat-icon svgIcon="mat_solid:share"></mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item>
+                                        <a href="https://www.facebook.com/OhCampus/" target="_blank">
+                                            <mat-icon svgIcon="mat_solid:facebook" style="color:#3b5998;"></mat-icon>
+                                            <span>Facebook</span>
+                                        </a>
+                                    </button>
+                                    <button mat-menu-item>
+                                        <a href="https://twitter.com/OhCampus/" target="_blank">
+                                            <mat-icon svgIcon="feather:twitter" style="color: #00aced;"></mat-icon>
+                                            <span>Twitter</span>
+                                        </a>
+                                    </button>
+                                </mat-menu>
+                                <button class="px-3 text-md min-w-0 min-h-0 h-8" mat-stroked-button
+                                    (click)="followQuestion(isFollowing[i] ? 'unfollow' : 'follow', item.question_id, i)">
+                                    {{ isFollowing[i] ? 'Unfollow' : 'Follow' }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start mb-4">
+                            <img class="mr-3" [src]="item.que_askby_image"
+                                style="width: 64px; height: 64px;object-fit: cover;">
+                            <!-- <div *ngIf="item.Answeres == '' ">Not Answered</div> -->
+                            <div class="media-body" *ngFor="let answer of item.Answeres | slice:0:1">
+                                <h5 class="mt-0 text-lg font-semibold">{{answer.answerby}}</h5>
+                                <!-- <p class="text-gray-600"> PRIYA Contributor-Level 10</p> -->
+                                <p class="text-gray-600">{{answer.answer}}</p>
+
+                                <div class="flex items-center mt-3">
+                                    <mat-icon svgIcon="mat_outline:thumb_up"
+                                        class=" mr-1 icon-size-7 cursor-pointer border rounded-full p-1"
+                                        [ngClass]="{'icon-hover': isHovered[i], 'icon-click': isClicked[i]}"
+                                        (mouseenter)="isHovered[i] = true" (mouseleave)="isHovered[i] = false"
+                                        (click)="voteAnswere('like',answer.answer_id,i)">
+                                    </mat-icon>
+                                    <h1 class="mx-3 text-sm">{{answer.like}}</h1>
+                                    <mat-icon svgIcon="mat_outline:thumb_down"
+                                        class="mx-1 icon-size-7 cursor-pointer  border rounded-full p-1"
+                                        [ngClass]="{'icon-hover-dislike': isHovered2[i], 'icon-click-dislike': isClicked2[i]}"
+                                        (mouseenter)="isHovered2[i] = true" (mouseleave)="isHovered2[i] = false"
+                                        (click)="voteAnswere('dislike',answer.answer_id,i)">
+                                    </mat-icon>
+                                    <h1 class="mx-3 text-sm">{{answer.dis_like}}</h1>
+
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr *ngIf="item.Answeres.length>1" class="border-t border-gray-300 my-4">
+                        <div *ngIf="item.Answeres.length>1" class=" text-primary text-center w-full"
+                            (click)="getAllanswers(item.question_id )">
+                            <p class="ans cursor-pointer">View All Answers</p>
+                        </div>
+                    </div>
+                    <mat-paginator [length]="QaCollegeArr.length" [pageSize]="pageSize"
+                        (page)="onPageChange($event)"></mat-paginator>
+                </mat-tab>
+
+
+                <mat-tab label="Unanswered Questions">
+                    <div *ngIf="UnAnsweredQueArr==''" class=" text-4xl">
+                        <img class="rounded-circle img-fluid mx-auto rounded-full" style="height: 500px;"
+                            src="assets/images/nodata.jpg" alt="">
+                    </div>
+                    <div class="bg-card rounded-md p-4 w-full shadow mt-2"
+                        *ngFor="let item of UnAnsweredQueArr, let i=index">
+
+                        <div class="flex">
+                            <div class="w-full mr-2 font-semibold cursor-pointer "
+                                (click)="getAllanswers(item.question_id )">
+                                <p>{{item.question}}</p>
+                            </div>
+                            <div class="ml-10 text-sm w-30 text-right">
+                                <p>{{item.question_asked}}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-3">
+                            <div>
+                                <p>{{item.QuestionFollowCount}} Follower {{item.views}} Views</p>
+                            </div>
+                            <div class="flex items-center">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" class="mr-1">
+                                    <mat-icon svgIcon="mat_solid:share"></mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item>
+                                        <a href="https://www.facebook.com/OhCampus/" target="_blank">
+                                            <mat-icon svgIcon="mat_solid:facebook" style="color:#3b5998;"></mat-icon>
+                                            <span>Facebook</span>
+                                        </a>
+                                    </button>
+                                    <button mat-menu-item>
+                                        <a href="https://twitter.com/OhCampus/" target="_blank">
+                                            <mat-icon svgIcon="feather:twitter" style="color: #00aced;"></mat-icon>
+                                            <span>Twitter</span>
+                                        </a>
+                                    </button>
+                                </mat-menu>
+                                <button class="px-3 text-md min-w-0 min-h-0 h-8" mat-stroked-button
+                                    (click)="followUnAnsQuestion(isFollowing[i] ? 'unfollow' : 'follow', item.question_id, i)">
+                                    {{ isFollowing[i] ? 'Unfollow' : 'Follow' }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <mat-paginator [length]="UnAnsweredQueArr.length" [pageSize]="pageSize"
+                        (page)="onPageChangeUn($event)"></mat-paginator>
+
+                </mat-tab>
+
+            </mat-tab-group>
+
+        </div>
+
+    </div>
+
+    <!-- right side content-->
+    <div>
+        <div class="bg-card rounded-lg p-2 w-full ">
+            <div class="bg-card rounded">
+                <h1 class="text-lg font-medium p-4 pb-0 pt-1 mb-1 "> Other college information</h1>
+                <ul class="p-4 leading-8 cursor-pointer secondary-color ">
+                    <li class="ans" (click)="getCollegeInfo()">College info</li>
+                    <li class="ans" (click)="getCourseFees()">Courses & Fees</li>
+                    <li class="ans" (click)="getReviews()">Reviews</li>
+                    <li class="ans" (click)="getAdmTab()">Admission</li>
+                    <li class="ans" (click)="getPlacementTab()">Placements</li>
+                    <li class="ans" (click)="getCuoffTab()">Cut-Offs</li>
+                    <!-- <li class="ans" (click)="getHostelTab()">Hostel & Campus</li> -->
+                    <li class="ans" (click)="getcompareTab()">Compare</li>
+                    <li class="ans" (click)="getScholorshipTab()">Scholorships</li>
+                    <li class="ans" (click)="getArticleTab()">Articles</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="popcenter">
+        <ng-template #callAPIDialogapply>
+
+            <!-- <div class="flex flex-auto justify-between overflow-hidden relative ">
+                    <h2 matDialogTitle class="font-medium text-xl">dsfsdfs</h2>
+                </div> -->
+            <mat-icon svgIcon="mat_outline:close"
+                style="color: red; cursor: pointer; position: absolute; z-index: 111;  left: 73%;" matDialogClose="yes"
+                (click)="close()"></mat-icon>
+            <div class="font-semibold text-2xl flex items-center mt-3 ml-2"><mat-icon svgIcon="mat_solid:person"
+                    style="color: #2196f3" class="primary"></mat-icon> APPLY NOW</div>
+            <hr class="border-t border-gray-300 my-4">
+            <div class="p-3 border-dashed" style="height:70vh;">
+                <form [formGroup]="applicationForm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 ml-2 overflow-y-auto"
+                        style="width: 50vw;">
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Student Name </mat-label>
+                            <input matInput formControlName="name">
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Mobile Number </mat-label>
+                            <input matInput formControlName="mobileno" maxlength="10" minlength="10"
+                                (keypress)="numberOnly($event)">
+
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Email </mat-label>
+                            <input matInput formControlName="email">
+
+                        </mat-form-field><mat-form-field class="w-full">
+                            <mat-label>Course Category</mat-label>
+                            <!-- <input matInput formControlName="caste_category"> -->
+                            <mat-select formControlName="course_category" (ngModelChange)="getCourseByCategorybyClg()">
+                                <mat-option *ngFor="let course of CourseCategoryArr" [value]="course.category_id">
+                                    {{course.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Course </mat-label>
+                            <!-- <input matInput formControlName="course"> -->
+                            <img *ngIf="courseLoader" class="img-fluid " style="width: 30px"
+                                src="assets/images/Loader.gif" alt="" class=" rounded-full mx-auto" />
+                            <mat-select formControlName="course">
+                                <mat-option *ngFor="let course of CourseByCatArr" [value]="course.id">
+                                    {{course.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+
+                        <mat-form-field class="w-full">
+                            <mat-label>College </mat-label>
+                            <input matInput formControlName="college" readonly>
+                        </mat-form-field>
+
+
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Entrance Exam </mat-label>
+                            <!-- <input matInput formControlName="exam"> -->
+                            <mat-select formControlName="exam">
+                                <mat-option>
+                                    <ngx-mat-select-search noEntriesFoundLabel="No matching type found"
+                                        placeholderLabel="Find exam ..." [formControl]="examFilterCtrl">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let course of examTypeFilter | async" [value]="course.id">
+                                    {{course.title}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Expected/Secured Rank </mat-label>
+                            <input matInput formControlName="expected_rank" (keypress)="numberOnly($event)">
+
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Expected/Secured Score </mat-label>
+                            <input matInput formControlName="expected_score" (keypress)="numberOnly($event)">
+
+                        </mat-form-field>
+
+                    </div>
+                </form>
+                <button mat-raised-button color="primary" class="px-12 justify-center mt-4 mb-10"
+                    (click)="savCourseApplication()">Submit</button>
+            </div>
+        </ng-template>
+    </div>
+
+</div>

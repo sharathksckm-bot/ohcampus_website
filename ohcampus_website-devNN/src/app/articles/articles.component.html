@@ -1,0 +1,58 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto">
+    
+    <div class="heroSection relative">
+        <div class="text-white z-10 textset">
+        <!-- <div class="md:text-5xl lg:text-5xl text-4xl text-center font-bold">
+           All Exams
+        </div> -->
+        <div class="flex justify-center mt-3">
+            <mat-form-field class="md:w-1/2 w-full lg:w-1/2 h-12 bg-white rounded-md">
+                <input matInput class="text-black" placeholder="Search College ...">
+            </mat-form-field>
+            <button mat-flat-button color="primary" class="rounded py-6 -ml-10"><mat-icon matSuffix>search</mat-icon></button>
+        </div>
+        </div>
+    </div>
+    
+    
+    <div class=" mx-auto max-w-screen-lg my-6">
+        <!-- <h2 class="md:text-5xl lg:text-5xl text-4xl text-center font-bold mb-4">
+            All <span class="" style="color: #007fdc;"></span>Blogs
+        </h2> -->
+        <div class="con-title">
+            <h2 style="font-size: 36px;">Blog <span> Posts</span></h2>
+        </div>
+                <div class="bg-card rounded-lg p-6 sm:grid md:grid-cols-2 lg:grid-cols-2 gap-4 w-full min-w-0">
+                    <!-- <div class="flex flex-col flex-auto min-w-0">
+                        <div>
+                            <div class="flex flex-col mt-2"> -->
+                                <div class="flex border mt-5 rounded p-2 hover:shadow cursor-pointer hover:border-green-300" *ngFor="let item of articlesArr |  slice :0:ArticlesToShow">
+                                    <img class="w-28 h-20 mr-4 mt-1 rounded object-cover"
+                                        [src]="item.image"
+                                        alt="Card cover image">
+                                    <div class="flex flex-col min-w-0">
+                                        <div class="font-medium leading-normal" routerLink="/articledetails">{{item.title}}</div>
+                                        <div *ngIf="item.updated_date!= ''"  class="text-sm truncate leading-none mt-1">{{item.updated_date}}</div>
+                                        <div *ngIf="item.updated_date== ''"  class="text-sm truncate leading-none mt-1">{{item.created_date}}</div>
+                                        
+                                        <div class="text-md flex items-center leading-none text-secondary mt-2"><mat-icon svgIcon="mat_solid:remove_red_eye" class="icon-size-4 mr-1"></mat-icon> 2.5L Views <mat-icon svgIcon="mat_solid:share" class="icon-size-4 mr-1 ml-2"></mat-icon> 1.6K Shares</div>
+                                    <!-- </div>
+                                </div>
+                              
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center mt-6">
+                    <button class="px-3" mat-button [color]="'primary'" (click)="showMoreArticles()">
+                        View More Articles
+                    </button>
+                </div>
+        
+    </div>
+    
+    </div>
+    </div>

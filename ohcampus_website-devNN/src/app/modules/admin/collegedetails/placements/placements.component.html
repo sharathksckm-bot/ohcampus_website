@@ -1,0 +1,530 @@
+<div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-6 w-full min-w-0">
+    <div class="flex flex-col col-span-2 flex-auto min-w-0">
+        <div class="flex flex-col min-w-0 mt-4">
+
+            <!-- <div class="bg-card rounded p-4 mb-3" *ngIf="whats_new !='' && placementlistArr != ''"> -->
+            <div class="bg-card rounded p-4 mb-3" *ngIf="whats_new !=''">
+
+                <div class="border p-3 pb-0 mt-3 rounded bg-green-50" [innerHTML]="whats_new">
+
+                </div>
+            </div>
+
+            <div class="bg-card rounded p-4 mb-3 mt-3 " *ngIf="placementlistArr != ''">
+                <h1 class="text-xl font-semibold">{{collegename}} Placement Report</h1>
+                <p>The key highlights of {{collegename}} placements are
+                    presented below:</p>
+                <div class="overflow-x-auto">
+                    <table class="mt-2 tblBorder">
+                        <tr>
+                            <th>Course Category</th>
+                            <th>Year</th>
+                            <th>No. of Companies Visited</th>
+                            <th>No. of Students Placed</th>
+                            <th>Median Salary</th>
+                            <th>No. of students selected for higher education</th>
+
+                        </tr>
+                        <tr *ngFor="let item of placementlistArr">
+                            <td>{{item.course_category_name}}</td>
+                            <td>{{item.year}}</td>
+                            <td *ngIf="item.no_of_companies_visited != 0">{{item.no_of_companies_visited}}</td>
+                            <td *ngIf="item.no_of_companies_visited == 0">NA</td>
+                            <td>{{item.no_of_students_placed}}</td>
+                            <td>{{item.median_salary}}</td>
+                            <td>{{item.no_of_student_selected}}</td>
+                        </tr>
+
+                    </table>
+
+                    <div class="flex items-center mt-5 mb-3" *ngIf="Commonaly_Asked_QuestionsArr != ''">
+                        <div class="w-10 h-10">
+                            <img src="assets/images/QA.jpg">
+                        </div>
+                        <div class="ml-2">
+                            <h1 class="font-semibold text-xl">Commonly asked questions</h1>
+                        </div>
+                    </div>
+
+                    <mat-accordion class="clgCompAcc">
+                        <mat-expansion-panel *ngFor="let item of Commonaly_Asked_QuestionsArr">
+                            <mat-expansion-panel-header class="h-12">
+                                <mat-panel-title>
+                                    <div class="py-2">
+                                        <h1 class="font-semibold">Q:{{item.question}}</h1>
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <p [innerHTML]="item.answere">
+                            </p>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                </div>
+
+            </div>
+
+            <div class="bg-card rounded p-4">
+                <h1 class="text-xl font-semibold">Placement Reviews</h1>
+                <div class="sm:grid md:grid-cols-2 lg:grid-cols-2 gap-4 w-full min-w-0 border-t pt-4">
+                    <div class="flex flex-col flex-auto min-w-0 text-center">
+                        <h1 class="font-semibold mt-4">Overall Placement Rating <span
+                                class="font-normal text-secondary">(Out of 5)</span></h1>
+                        <h1 class="font-bold text-4xl my-2">{{placementCount}}</h1>
+                        <div class="reviewrate">
+
+                            <mat-icon *ngFor="let star of generateStars(placementCount)" [svgIcon]="star"></mat-icon>
+
+                        </div>
+                        <p class="text-md text-secondary">Based on 45 Verified Reviews</p>
+                    </div>
+
+                    <div class="flex flex-col self-center flex-auto min-w-0" style="line-height: 2;">
+                        <div class="flex items-center justify-between"><span class="block w-18"> >4-5 star
+                            </span><span><mat-progress-bar mode="determinate" [value]="four2fiveRate"
+                                    class="w-28 mx-2"></mat-progress-bar></span>
+                            <span class="block w-10">{{four2fiveRate}}%</span>
+                        </div>
+                        <div class="flex items-center justify-between"><span class="block w-18"> >3-4 star
+                            </span><span><mat-progress-bar mode="determinate" [value]="three2fourRate"
+                                    class="w-28 mx-2"></mat-progress-bar></span>
+                            <span class="block w-10">{{three2fourRate}}%</span>
+                        </div>
+                        <div class="flex items-center justify-between"><span class="block w-18"> >2-3 star
+                            </span><span><mat-progress-bar mode="determinate" [value]="two2threeRate"
+                                    class="w-28 mx-2"></mat-progress-bar></span>
+                            <span class="block w-10">{{two2threeRate}}%</span>
+                        </div>
+                        <div class="flex items-center justify-between"><span class="block w-18"> 1-2 star
+                            </span><span><mat-progress-bar mode="determinate" [value]="one2twoRate"
+                                    class="w-28 mx-2"></mat-progress-bar></span>
+                            <span class="block w-10">{{one2twoRate}}%</span>
+                        </div>
+                    </div>
+
+                </div>
+                <p class="verifyuser mt-4 text-sm border-t pt-2">The <mat-icon svgIcon="mat_solid:verified_user"
+                        class="text-green-500"></mat-icon> Verified badge indicates that the reviewer's details have
+                    been verified by OhCampus, and reviewers are bona fide students of this college. These reviews and
+                    ratings have been given by students. OhCampus does not endorse the same. Out of 60 published
+                    reviews,
+                    45 reviews are verified.</p>
+            </div>
+
+            <div class="bg-card rounded mt-4 p-4" *ngIf="placemeneratingreviewsArr != ''">
+                <h1 class="text-xl font-semibold mb-4">What students say about {{collegename}}</h1>
+                <mat-tab-group>
+                    <mat-tab label="Placements">
+                        <div>
+                            <!-- <h1 class="text-lg font-semibold flex"><mat-icon svgIcon="mat_solid:circle"
+                                    class="font-size-5 text-green-500 mr-2"></mat-icon> Likes</h1> -->
+                            <ul class="ullist">
+                                <li *ngFor="let item of placemeneratingreviewsArr">{{item.placement_desc}}<span
+                                        class="text-md text-secondary"></span></li>
+                            </ul>
+
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Infrastructure">
+                        <div>
+                            <!-- <h1 class="text-lg font-semibold flex"><mat-icon svgIcon="mat_solid:circle"
+                                    class="font-size-5 text-green-500 mr-2"></mat-icon> Likes</h1> -->
+                            <ul class="ullist">
+                                <li *ngFor="let item of placemeneratingreviewsArr">{{item.infrastructure_desc}}<span
+                                        class="text-md text-secondary"> </span></li>
+
+                            </ul>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Faculty">
+                        <div>
+                            <!-- <h1 class="text-lg font-semibold flex"><mat-icon svgIcon="mat_solid:circle"
+                                    class="font-size-5 text-green-500 mr-2"></mat-icon> Likes</h1> -->
+                            <ul class="ullist">
+                                <li *ngFor="let item of placemeneratingreviewsArr">{{item.faculty_desc}}<span
+                                        class="text-md text-secondary"> </span></li>
+                            </ul>
+                        </div>
+                    </mat-tab>
+
+                </mat-tab-group>
+            </div>
+
+
+            <div id="recoWidget_0" class="recoWidgetSection" *ngIf="popularClgByLocArr != ''">
+                <div class="rwsHead mt-3 mb-5"><span class="rwsTag">Recommended Colleges</span>
+                    <h2 class="rwsHeading">Explore popular similar colleges</h2>
+                    <div class="flxBox editCase mA">
+                        <p class="rwsHeadingSupportiveTxt font-bold">By Location</p>
+                    </div>
+                </div>
+                <div class="rwsBody">
+                    <div class="sliderBox hidden md:block lg:block">
+                        <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="43"
+                            slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false" [useKeyboard]="true"
+                            [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                            <mat-carousel-slide *ngFor="let item of popularClgByLocArr">
+                                <div class="grid grid-cols-3 gap-6 mx-6 items-center h-full">
+                                    <div *ngFor="let clg of item.popularColleges; let i=index"
+                                        class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow carousel-slide-content "
+                                        style="height: 300px;">
+                                        <div class="flex justify-between">
+                                            <div class="mr-2 ">
+                                                <div *ngIf="clg.image !=null" class="border rounded p-1"><img
+                                                        [src]="clg.image" class=" h-20"></div>
+                                                <div *ngIf="clg.image ==null" class="border rounded p-1"><img
+                                                        [src]="logo1" class=" h-20"></div>
+                                                <div style="height: 100px; font-size: 13px;">
+                                                    <!-- <h2 class="font-medium mt-2">{{clg.title}} </h2> -->
+                                                      <a [routerLink]="['/collegeDetails', clg.collegeid]"
+                                                            class="text-blue-600 hover:underline cursor-pointer">
+                                                            {{ clg.title }}
+                                                        </a>
+                                                    <!-- <p class="cardTxtSmall">City : {{clg.cityname}}</p> -->
+                                                    <p *ngIf="clg.rank != null" class="secondary-color"># NIRF :
+                                                        {{clg.rank}}</p>
+                                                    <!-- <p *ngIf="clg.rank == null"
+                                                        class="secondary-color display-none"># NIRF : </p> -->
+                                                    <p *ngIf="clg.accreditation != ''" class="cardTxtSmall"><span
+                                                            class="font-medium">Accreditation
+                                                            :</span>{{clg.accreditation}}</p>
+                                                    <!-- <div class="font-bold">
+                                                                {{ expandedStatesCourse[i] ? clg.accreditation : (clg.accreditation
+                                                                | slice: 0:100) }}
+                                                                <span
+                                                                    *ngIf="!expandedStatesCourse[i] && clg.accreditation !=null">...</span>
+                                                                <a *ngIf="!expandedStatesCourse[i] && clg.accreditation !=null"
+                                                                    class="description font-bold" (click)="onShowCourse(i)">[Show
+                                                                    More]</a>
+                                                                <a *ngIf="expandedStatesCourse[i] && clg.accreditation !=null"
+                                                                    class="description font-semibold" (click)="onShowCourse(i)">[Show
+                                                                    Less]</a>
+                                                            </div> -->
+                                                    <!-- <p class="cardTxtSmall"><span class="font-bold">Address :</span> {{clg.address}}</p> -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-3"
+                                            (click)="getCompareTab(clg.collegeid)">
+                                            Compare
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </mat-carousel-slide>
+
+                        </mat-carousel>
+                    </div>
+
+                    <div class="sliderBox block md:hidden lg:hidden">
+                        <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="100"
+                            slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false" [useKeyboard]="true"
+                            [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                            <mat-carousel-slide *ngFor="let item of popularClgByLocArr">
+                                <div class="grid grid-cols-1 gap-6 mx-6 items-center h-full">
+                                    <div *ngFor="let clg of item.popularColleges; let i=index"
+                                        class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow carousel-slide-content ">
+                                        <div class="flex justify-between">
+                                            <div class="mr-2 ">
+                                                <div class="border rounded p-1"><img [src]="clg.image" class=" h-20">
+                                                </div>
+                                                <div style="height: 100px; font-size: 13px;">
+                                                    <h2 class="font-medium mt-2">{{clg.title}} </h2>
+                                                    <!-- <p class="cardTxtSmall">City : {{clg.cityname}}</p> -->
+                                                    <p *ngIf="clg.rank != null" class="secondary-color"># NIRF :
+                                                        {{clg.rank}}</p>
+                                                    <!-- <p *ngIf="clg.rank == null"
+                                                        class="secondary-color display-none"># NIRF : </p> -->
+                                                    <p *ngIf="clg.accreditation != ''" class="cardTxtSmall"><span
+                                                            class="font-medium">Accreditation
+                                                            :</span>{{clg.accreditation}}</p>
+                                                    <!-- <div class="font-bold">
+                                                                {{ expandedStatesCourse[i] ? clg.accreditation : (clg.accreditation
+                                                                | slice: 0:100) }}
+                                                                <span
+                                                                    *ngIf="!expandedStatesCourse[i] && clg.accreditation !=null">...</span>
+                                                                <a *ngIf="!expandedStatesCourse[i] && clg.accreditation !=null"
+                                                                    class="description font-bold" (click)="onShowCourse(i)">[Show
+                                                                    More]</a>
+                                                                <a *ngIf="expandedStatesCourse[i] && clg.accreditation !=null"
+                                                                    class="description font-semibold" (click)="onShowCourse(i)">[Show
+                                                                    Less]</a>
+                                                            </div> -->
+                                                    <!-- <p class="cardTxtSmall"><span class="font-bold">Address :</span> {{clg.address}}</p> -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-3"
+                                            (click)="getCompareTab(clg.collegeid)">
+                                            Compare
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </mat-carousel-slide>
+
+                        </mat-carousel>
+                    </div>
+                </div>
+                <!-- <div class="flxBox mA cA my-3 px-4"><strong class="quesTxt">Is this recommendation relevant?</strong>
+                    <div class="w-32 text-right">
+                        <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_up"></mat-icon>
+                        <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_down"></mat-icon>
+                    </div>
+                </div> -->
+
+                <div class="flxBox mA cA my-3">
+                    <strong class="quesTxt">Is this recommendation relevant?</strong>
+                    <div>
+                        <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'up'"
+                            svgIcon="mat_solid:thumb_up" (click)="selectThumb('up')">
+                        </mat-icon>
+                        <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'down'"
+                            svgIcon="mat_solid:thumb_down" (click)="selectThumb('down')">
+                        </mat-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-card rounded mt-4 p-4" *ngFor="let item of placemeneratingreviewsArr">
+                <div class="flex mb-3 justify-between">
+                    <span class="flex">
+                        <div *ngIf="item.reviewedByName != null"
+                            class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2">
+                            {{item.reviewedByName.charAt(0)}}
+                        </div>
+                        <!-- <div class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2">N
+                        </div> -->
+                        <p> <span class="text-md font-medium"> {{item.reviewedByName}} </span><br>
+                            <!-- <p> <span class="text-md font-medium" *ngIf="item.user_name ==null"> No</span><br> -->
+                            <span class="text-sm">{{item.coursename}}</span>
+                        </p>
+                    </span>
+                    <div>
+                        <p class="flex items-center"><mat-icon svgIcon="mat_solid:verified_user"
+                                class="text-green-500 icon-size-5 mr-1"></mat-icon> Verified </p>
+                    </div>
+                </div>
+
+                <p class="text-xl font-semibold my-3">{{item.title}}</p>
+                <p>
+                    <span class="font-semibold text-lg">Placements: </span> {{item.placement_desc}}
+                </p>
+                <p><span class="font-semibold text-lg">Infrastructure: </span> {{item.infrastructure_desc}}.</p>
+                <p><span class="font-semibold text-lg">Faculty: </span> {{item.faculty_desc}}</p>
+                <p><span class="font-semibold text-lg">Campus Life: </span> {{item.campus_desc}}</p>
+                <p><span class="font-semibold text-lg">Value For Money: </span> {{item.money_desc}}</p>
+
+                <div class="mt-2 pt-2 border-t border-dashed flex">
+                    <span class="flex flex-wrap">Was this review helpful
+                        <p class="cursor-pointer mx-1"
+                            [ngClass]="item.vote === 0 ? 'text-blue-600 font-semibold' : 'text-gray-500'"
+                            (click)="onVote(item, 0)">
+                            Yes
+                        </p>
+
+                        <span class="text-gray-400 mr-1">|</span>
+
+                        <!-- No -->
+                        <p class="cursor-pointer"
+                            [ngClass]="item.vote === 1 ? 'text-blue-600 font-semibold' : 'text-gray-500'"
+                            (click)="onVote(item, 1)">
+                            No
+                        </p>
+                    </span>
+                    <!-- <span class="flex ml-auto items-center text-lg font-normal"><mat-icon svgIcon="mat_outline:share"
+                            class="icon-size-5 ml-1"></mat-icon> Share</span> -->
+                </div>
+            </div>
+
+            <div id="recoWidget_0" class="recoWidgetSection" *ngIf="CollegesAccordingCategoryArr != ''">
+                <div class="rwsHead mt-3 mb-5"><span class="rwsTag">Popular Colleges</span>
+                    <h2 class="rwsHeading">Best-suited colleges for you</h2>
+                    <div class="flxBox editCase mA">
+                        <p class="rwsHeadingSupportiveTxt">Because you showed interest in {{category}} at
+                            {{collegename}}</p>
+                    </div>
+                </div>
+                <div class="rwsBody">
+                    <div class="sliderBox hidden md:block lg:block">
+                        <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="38"
+                            slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false" [useKeyboard]="true"
+                            [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                            <mat-carousel-slide *ngFor="let item of CollegesAccordingCategoryArr">
+                                <div class="grid grid-cols-3 gap-6 mx-6 items-center h-full">
+                                    <div *ngFor="let college of item.bestColleges" style="height: 270px;"
+                                        class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow carousel-slide-content">
+                                        <div class="flex justify-between">
+                                            <div class="mr-2">
+                                                <div class="border rounded p-1"><img [src]="college.image"
+                                                        class=" h-20"></div>
+                                                <div style="height: 90px; font-size: 13px;">
+                                                    <h2 class="font-medium mt-2">{{college.title}}</h2>
+                                                    <p *ngIf="college.accreditation != ''" class=""> <span
+                                                            class="font-medium">Accreditation
+                                                            :</span>{{college.accreditation}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-2"
+                                            (click)="getCompareTab(college.id)">
+                                            Compare
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-carousel-slide>
+                        </mat-carousel>
+                    </div>
+                    <div class="sliderBox block md:hidden lg:hidden">
+                        <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="90"
+                            slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false" [useKeyboard]="true"
+                            [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                            <mat-carousel-slide *ngFor="let item of CollegesAccordingCategoryArr">
+                                <div class="grid grid-cols-1 gap-6 mx-6 items-center h-full">
+                                    <div *ngFor="let college of item.bestColleges"
+                                        class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow carousel-slide-content">
+                                        <div class="flex justify-between">
+                                            <div class="mr-2">
+                                                <div class="border rounded p-1"><img [src]="college.image"
+                                                        class=" h-20"></div>
+                                                <div style="height: 90px; font-size: 13px;">
+                                                    <h2 class="font-medium mt-2">{{college.title}}</h2>
+                                                    <p *ngIf="college.accreditation != ''" class=""> <span
+                                                            class="font-medium">Accreditation
+                                                            :</span>{{college.accreditation}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-2"
+                                            (click)="getCompareTab(college.id)">
+                                            Compare
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </mat-carousel-slide>
+
+
+
+                        </mat-carousel>
+                    </div>
+                </div>
+                <!-- <div class="flxBox mA cA my-3 px-4"><strong class="quesTxt">Is this recommendation relevant?</strong>
+                    <div class="w-32 text-right">
+                        <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_up"></mat-icon>
+                        <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_down"></mat-icon>
+                    </div>
+                </div> -->
+
+                <div class="flxBox mA cA my-3">
+                    <strong class="quesTxt">Is this recommendation relevant?</strong>
+                    <div>
+                        <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'up'"
+                            svgIcon="mat_solid:thumb_up" (click)="selectThumb('up')">
+                        </mat-icon>
+                        <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'down'"
+                            svgIcon="mat_solid:thumb_down" (click)="selectThumb('down')">
+                        </mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- left box end -->
+    <div class="flex flex-col flex-auto min-w-0">
+        <div>
+            <div class="bg-card rounded mt-4 pb-2" *ngIf="campusImagesArr !=''">
+                <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Photos & Videos </h1>
+                <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" color="#000" background="#fff"
+                    maxWidth="auto" proportion="40" slides="3" [loop]="true" [hideArrows]="false"
+                    [hideIndicators]="true" [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr"
+                    style="background: #fff;" class="cstomslide">
+
+                    <mat-carousel-slide *ngFor="let item of campusImagesArr">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 ml-2">
+                            <div class="p-3 " *ngFor="let college of item">
+                                <img [src]="college.image" (click)="openImageDialog(college.image)"
+                                    class="rounded-lg h-30">
+                            </div>
+                        </div>
+                    </mat-carousel-slide>
+                </mat-carousel>
+
+            </div>
+
+            <div class="flex flex-col min-w-0 mt-4" *ngIf="NotificationArr != ''">
+                <div class="bg-card rounded">
+                    <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> {{collegename}}
+                        Notifications</h1>
+                    <ul class="p-4 leading-8 secondary-color">
+                        <li class="border-b mb-3 cursor-pointer" *ngFor="let item of NotificationArr"
+                            (click)="getExamDetails(item.examId)">{{item.notification}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col min-w-0 mt-4" *ngIf="latest_blogsArr !='' && popular_blogsArr !=''">
+                <div class="bg-card rounded">
+                    <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Articles & Updates
+                    </h1>
+                    <mat-tab-group class="mt-2">
+                        <mat-tab label="Latest" *ngIf="latest_blogsArr !=''">
+
+                            <ul class="leading-8 h60 overflow-y-auto">
+                                <li class="border-b mb-3 flex justify-between" *ngFor="let item of latest_blogsArr">
+                                    <a>
+                                        <p class="cursor-pointer" (click)="getArticleDetails(item.id)">{{item.title}}
+                                        </p>
+                                    </a>
+                                    <img class="ml-auto p-1" style="width: 30%;" [src]="item.image">
+
+                                </li>
+
+                            </ul>
+                        </mat-tab>
+                        <mat-tab label="Popular" *ngIf="popular_blogsArr !=''">
+                            <ul class="leading-8 h60 overflow-y-auto">
+                                <li class="border-b mb-3 flex justify-between" *ngFor="let item of popular_blogsArr">
+                                    <a>
+                                        <p class="cursor-pointer" (click)="getArticleDetails(item.id)">{{item.title}}
+                                        </p>
+                                    </a>
+                                    <img class="ml-auto p-1" style="width: 30%;" [src]="item.image">
+                                    <!-- <p class="text-sm">Satyendra Singh - <span
+                                                 class="ml-1 text-sm text-secondary">Jan 26, 2024 7L views</span>
+                                         </p> -->
+                                </li>
+                            </ul>
+                        </mat-tab>
+                    </mat-tab-group>
+
+                </div>
+            </div>
+
+
+            <div class="popcenter">
+                <ng-template #callAPIDialog1>
+                    <div class="flex flex-auto justify-between overflow-hidden  ">
+                        <h2 matDialogTitle class="font-medium text-xl"></h2>
+                    </div>
+                    <div class="p-6 relative overflow-hidden max-w-full popwidth">
+                        <mat-icon svgIcon="mat_outline:close"
+                            style="color: red; cursor: pointer; position: absolute; z-index: 111; right: 6px;top:6px;"
+                            matDialogClose="yes" (click)="close()"></mat-icon>
+                        <div class="max-w-10xl">
+                            <img style="height: 350px;" class="position-relative shadow-sm maxwh cursorpointer" title=""
+                                src="{{image}} " accept="image" />
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+/* login-popup.component.css */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  /* Ensure it's above other content */
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+layout {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  /* Base styles for individual layouts */
+  >* {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  /* Base styles for components that load as a route */
+  router-outlet {
+
+    +* {
+      position: relative;
+      display: flex;
+      flex: 1 1 auto;
+      width: 100%;
+    }
+  }
+
+  .socialBtns {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.fuse-mat-button-large {
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  background-color: #2196f3;
+}
+
+.fuse-mat-button {
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  border-color: #e2e8f0;
+  // background-color:#2196f3 ;
+}
+
+.popuplogin {
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  .popuplogin {
+    width: 100%;
+  }
+
+
+}
+
+.signin {
+  width: 22vw;
+  height: 90vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

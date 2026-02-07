@@ -1,0 +1,129 @@
+
+.list{
+    list-style: unset !important;
+    margin: 1rem!important;
+    li{
+        margin: 1rem 0!important;
+    }
+}
+.related-que {
+    display: block;
+    border-radius: 6px;
+    padding: 20px 0;
+    border: 1px solid transparent;
+    background: #fff;
+    padding: 20px;
+}
+.related-que ul li a {
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 21px;
+    color: #000;
+    word-wrap: break-word;
+    max-width: 650px;
+    margin: 0;
+}
+.related-que ul li {
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+}
+.related-que ul li span {
+    display: inline-block;
+    color: #666;
+    font-size: 12px;
+    text-transform: capitalize;
+    min-width: 65px;
+}
+.signup-h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.inf-txts {
+    font-size: 13px;
+    color: #000;
+    font-weight: 400;
+}
+.background-brdr {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin: 0 0 9px;
+}
+.background-brdr:before {
+    border-top: 1px solid #dfdfdf;
+    content: "";
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    z-index: -1;
+}
+.inf-li {
+    width: 354px;
+    margin: 10px auto 0;
+}
+.inf-li>li:first-child {
+    padding-left: 0;
+}
+.inf-li>li {
+    display: inline-block;
+    padding: 0 16px 0 25px;
+    font-size: 11px;
+    color: #666;
+    position: relative;
+}
+.inf-li>li strong {
+    font-size: 14px;
+    display: block;
+    font-weight: 600;
+    color: #000;
+    line-height: 19px;
+}
+.background-brdr>span {
+    background: #fff;
+    padding: 0 8px;
+    color: #666;
+}
+.inf-li>li:before {
+    content: '';
+    position: absolute;
+    width: 5px;
+    border-left: 1px solid #ccc;
+    background: 0 0;
+    left: 0;
+    border-radius: 0;
+    top: 6px;
+    height: 77%;
+}
+ .inf-li>li:first-child:before {
+    width: 0;
+    height: 0;
+    border: transparent;
+}
+
+.comment:hover {
+    // color: #2196f3;
+    background-color: transparent;
+    text-decoration: underline;
+}
+.icon-hover {
+    background-color: lightgreen; /* Change to your desired hover color */
+  }
+  
+  .icon-click {
+    background-color: lightgreen; /* Change to your desired click color */
+  }
+
+.icon-hover-dislike {
+    background-color: lightcoral; /* Change to your desired hover color */
+  }
+  
+  .icon-click-dislike {
+    background-color: lightcoral; /* Change to your desired click color */
+  }

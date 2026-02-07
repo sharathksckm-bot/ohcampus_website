@@ -1,0 +1,584 @@
+<!-- <div class="flex flex-col flex-auto min-w-0"> -->
+<!-- Header -->
+<div class="flex flex-col flex-0 lg:flex-row items-center max-w-7xl w-full mx-auto py-8">
+
+    <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-6 w-full min-w-0 p-3">
+        <div class="flex flex-col col-span-2 flex-auto min-w-0">
+            <div class="flex flex-col min-w-0" *ngIf=" description != ''">
+                <div class="bg-card rounded p-4">
+                    <!-- <p *ngIf="description !=''" class="desc" [innerHTML]="description"></p> -->
+                    <div *ngIf="description != ''">
+                        <div class="flex">
+                            <div class="w-14 h-16 p-2 pl-0">
+                                <mat-icon svgIcon="mat_outline:today"
+                                    class="secondary-color w-10 h-10 min-w-0"></mat-icon>
+                            </div>
+                            <div class="text-gray-500 text-center p-4 font-bold">
+                                {{collegename}}
+                            </div>
+                        </div>
+                        <div class="angular-editor-textarea" [innerHTML]="description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col min-w-0 mt-4">
+                <div class="bg-card rounded p-6" *ngIf="is_accept_entrance == 1">
+                    <div class="py-2 p-4">
+                        <h1 class="font-semibold text-xl">{{collegename}} KCET Cutoff </h1>
+                    </div>
+
+                    <mat-accordion>
+                        <mat-expansion-panel class="rounds" expanded="false">
+                            <mat-expansion-panel-header style="background-color:#88d834" class="h-12 rounded-none">
+                                <mat-panel-title>
+                                    <div class="py-2">
+                                        <h1 class="font-semibold">ROUND 1</h1>
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div>
+
+                                <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-0 w-full min-w-0 pb-4 text-black  "
+                                    *ngFor="let item of round1;index as i">
+                                    <div class="flex flex-row  flex-auto min-w-0 border p-2 pb-4 bg-primary-200"
+                                        *ngFor="let data of item">
+                                        <div class="w-20 mr-2">
+                                            <b>{{data.label.charAt(0).toUpperCase()}}{{data.label.slice(1)}}</b>
+                                        </div>
+                                        &nbsp;&nbsp; : {{data.value}}
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel class="rounds" expanded="false">
+                            <mat-expansion-panel-header style="background-color:#88d834" class="h-12 rounded-none">
+                                <mat-panel-title>
+                                    <div class="py-2">
+                                        <h1 class="font-semibold">ROUND 2</h1>
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div>
+
+                                <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-0 w-full min-w-0 pb-4 text-black  "
+                                    *ngFor="let item of round2;index as i">
+                                    <div class="flex flex-row  flex-auto min-w-0 border p-2 pb-4 bg-primary-200"
+                                        *ngFor="let data of item">
+                                        <div class="w-20 mr-2">
+                                            <b>{{data.label.charAt(0).toUpperCase()}}{{data.label.slice(1)}}</b>
+                                        </div>
+                                        &nbsp;&nbsp; : {{data.value}}
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel class="rounds" expanded="false">
+                            <mat-expansion-panel-header style="background-color:#88d834" class="h-12 rounded-none">
+                                <mat-panel-title>
+                                    <div class="py-2">
+                                        <h1 class="font-semibold">ROUND 3</h1>
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div>
+
+                                <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-0 w-full min-w-0 pb-4 text-black  "
+                                    *ngFor="let item of round3;index as i">
+                                    <div class="flex flex-row  flex-auto min-w-0 border p-2 pb-4 bg-primary-200"
+                                        *ngFor="let data of item">
+                                        <div class="w-20 mr-2">
+                                            <b>{{data.label.charAt(0).toUpperCase()}}{{data.label.slice(1)}}</b>
+                                        </div>
+                                        &nbsp;&nbsp; : {{data.value}}
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div class="flex flex-col min-w-0 mt-4">
+                    <div class="bg-card rounded p-6" *ngIf="is_accept_entrance == 1">
+                        <div class="py-2 p-4">
+                            <h1 class="font-semibold text-xl">{{collegename}} COMEDK Cutoff </h1>
+                        </div>
+
+                        <mat-accordion>
+                            <mat-expansion-panel class="rounds" expanded="false">
+                                <mat-expansion-panel-header style="background-color:#88d834" class="h-12 rounded-none">
+                                    <mat-panel-title>
+                                        <div class="py-2">
+                                            <h1 class="font-semibold">ROUND 1</h1>
+                                        </div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div>
+
+                                    <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-0 w-full min-w-0 pb-4 text-black  "
+                                        *ngFor="let item of COMEDKround1;index as i">
+                                        <div class="flex flex-row  flex-auto min-w-0 border p-2 pb-4 bg-primary-200"
+                                            *ngFor="let data of item">
+                                            <div class="w-20 mr-2">
+                                                <b>{{data.label.charAt(0).toUpperCase()}}{{data.label.slice(1)}}</b>
+                                            </div>
+                                            &nbsp;&nbsp; : {{data.value}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel class="rounds" expanded="false">
+                                <mat-expansion-panel-header style="background-color:#88d834" class="h-12 rounded-none">
+                                    <mat-panel-title>
+                                        <div class="py-2">
+                                            <h1 class="font-semibold">ROUND 2</h1>
+                                        </div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div>
+
+                                    <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-0 w-full min-w-0 pb-4 text-black  "
+                                        *ngFor="let item of COMEDKround2;index as i">
+                                        <div class="flex flex-row  flex-auto min-w-0 border p-2 pb-4 bg-primary-200"
+                                            *ngFor="let data of item">
+                                            <div class="w-20 mr-2">
+                                                <b>{{data.label.charAt(0).toUpperCase()}}{{data.label.slice(1)}}</b>
+                                            </div>
+                                            &nbsp;&nbsp; : {{data.value}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+
+                    </div>
+                </div>
+
+                <div id="recoWidget_0" class="recoWidgetSection" *ngIf="popularClgByLocArr != ''">
+                    <div class="rwsHead mt-3 mb-5"><span class="rwsTag">Recommended Colleges</span>
+                        <h2 class="rwsHeading">Explore popular similar colleges</h2>
+                        <div class="flxBox editCase mA">
+                            <p class="rwsHeadingSupportiveTxt font-bold">By Location</p>
+                        </div>
+                    </div>
+                    <div class="rwsBody">
+                        <div class="sliderBox hidden md:block lg:block">
+                            <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="43"
+                                slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false"
+                                [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                                <mat-carousel-slide *ngFor="let item of popularClgByLocArr">
+                                    <div class="grid grid-cols-3 gap-6 mx-6 items-center h-full">
+                                        <div *ngFor="let clg of item.popularColleges; let i=index"
+                                            class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow carousel-slide-content "
+                                            style="height: 300px;">
+                                            <div class="flex justify-between">
+                                                <div class="mr-2 ">
+                                                    <div *ngIf="clg.image !=null" class="border rounded p-1"><img
+                                                            [src]="clg.image" class=" h-20"></div>
+                                                    <div *ngIf="clg.image ==null" class="border rounded p-1"><img
+                                                            [src]="logo1" class=" h-20"></div>
+                                                    <div style="height: 100px; font-size: 13px;">
+                                                        <!-- <h2 class="font-medium mt-2">{{clg.title}} </h2> -->
+                                                        <a [routerLink]="['/collegeDetails', clg.collegeid]"
+                                                            class="text-blue-600 hover:underline cursor-pointer">
+                                                            {{ clg.title }}
+                                                        </a>
+                                                        <!-- <p class="cardTxtSmall">City : {{clg.cityname}}</p> -->
+                                                        <p *ngIf="clg.rank != null" class="secondary-color"># NIRF :
+                                                            {{clg.rank}}</p>
+                                                        <!-- <p *ngIf="clg.rank == null"
+                                                            class="secondary-color display-none"># NIRF : </p> -->
+                                                        <p *ngIf="clg.accreditation != ''" class="cardTxtSmall"><span
+                                                                class="font-medium">Accreditation
+                                                                :</span>{{clg.accreditation}}</p>
+                                                        <!-- <div class="font-bold">
+                                                                    {{ expandedStatesCourse[i] ? clg.accreditation : (clg.accreditation
+                                                                    | slice: 0:100) }}
+                                                                    <span
+                                                                        *ngIf="!expandedStatesCourse[i] && clg.accreditation !=null">...</span>
+                                                                    <a *ngIf="!expandedStatesCourse[i] && clg.accreditation !=null"
+                                                                        class="description font-bold" (click)="onShowCourse(i)">[Show
+                                                                        More]</a>
+                                                                    <a *ngIf="expandedStatesCourse[i] && clg.accreditation !=null"
+                                                                        class="description font-semibold" (click)="onShowCourse(i)">[Show
+                                                                        Less]</a>
+                                                                </div> -->
+                                                        <!-- <p class="cardTxtSmall"><span class="font-bold">Address :</span> {{clg.address}}</p> -->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-3"
+                                                (click)="getCompareTab(clg.collegeid)">
+                                                Compare
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </mat-carousel-slide>
+
+                            </mat-carousel>
+                        </div>
+
+                        <div class="sliderBox block md:hidden lg:hidden">
+                            <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="100"
+                                slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false"
+                                [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                                <mat-carousel-slide *ngFor="let item of popularClgByLocArr">
+                                    <div class="grid grid-cols-1 gap-6 mx-6 items-center h-full">
+                                        <div *ngFor="let clg of item.popularColleges; let i=index"
+                                            class="flex flex-col flex-auto min-w-0 border rounded-lg my-3 p-3 shadow carousel-slide-content "
+                                            style="height: 300px;">
+                                            <div class="flex justify-between">
+                                                <div class="mr-2 ">
+                                                    <div class="border rounded p-1"><img [src]="clg.image"
+                                                            class=" h-20">
+                                                    </div>
+                                                    <div style="height: 100px; font-size: 13px;">
+                                                        <h2 class="font-medium mt-2">{{clg.title}} </h2>
+                                                        <!-- <p class="cardTxtSmall">City : {{clg.cityname}}</p> -->
+                                                        <p *ngIf="clg.rank != null" class="secondary-color"># NIRF :
+                                                            {{clg.rank}}</p>
+                                                        <p *ngIf="clg.accreditation != ''" class="cardTxtSmall"><span
+                                                                class="font-medium">Accreditation
+                                                                :</span>{{clg.accreditation}}</p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-3"
+                                                (click)="getCompareTab(clg.collegeid)">
+                                                Compare
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </mat-carousel-slide>
+
+                            </mat-carousel>
+                        </div>
+
+                    </div>
+                    <!-- <div class="flxBox mA cA my-3"><strong class="quesTxt">Is this recommendation relevant?</strong>
+                        <div>
+                            <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_up"></mat-icon>
+                            <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_down"></mat-icon>
+                        </div>
+                    </div> -->
+
+                    <div class="flxBox mA cA my-3">
+                        <strong class="quesTxt">Is this recommendation relevant?</strong>
+                        <div>
+                            <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'up'"
+                                svgIcon="mat_solid:thumb_up" (click)="selectThumb('up')">
+                            </mat-icon>
+                            <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'down'"
+                                svgIcon="mat_solid:thumb_down" (click)="selectThumb('down')">
+                            </mat-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col min-w-0 " *ngIf="Commonaly_Asked_QuestionsCutOff !=''">
+                    <div class="bg-card rounded">
+                        <mat-accordion>
+                            <mat-expansion-panel [expanded]="true">
+                                <mat-expansion-panel-header class="h-16">
+                                    <mat-panel-title>
+                                        <div class="py-2">
+
+                                            <h1 class="font-semibold text-xl">{{collegename}} Cutoff FAQs</h1>
+                                        </div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <hr class="border-t border-gray-300 my-4">
+                                <mat-accordion class="clgCompAcc">
+                                    <mat-expansion-panel *ngFor="let item of Commonaly_Asked_QuestionsCutOff">
+                                        <mat-expansion-panel-header class="h-22 md:h-16 lg:h-16">
+                                            <mat-panel-title>
+                                                <div class="py-2">
+                                                    <h1 class="font-semibold ">Q: {{item.question}}</h1>
+                                                </div>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <p [innerHTML]="item.answere">
+                                        </p>
+                                    </mat-expansion-panel>
+
+                                </mat-accordion>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+
+                    <div class="bg-card rounded mt-4 p-4" *ngFor="let item of infraReviewsArr">
+                        <div class="flex mb-3 justify-between">
+                            <span class="flex">
+                                <div *ngIf="item.reviewedByName != null"
+                                    class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2">
+                                    {{item.reviewedByName.charAt(0)}}
+                                </div>
+                                <!-- <div class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2">N
+                        </div> -->
+                                <p> <span class="text-md font-medium"> {{item.reviewedByName}} </span><br>
+                                    <!-- <p> <span class="text-md font-medium" *ngIf="item.user_name ==null"> No</span><br> -->
+                                    <span class="text-sm">{{item.coursename}}</span>
+                                </p>
+                            </span>
+                            <div>
+                                <p class="flex items-center"><mat-icon svgIcon="mat_solid:verified_user"
+                                        class="text-green-500 icon-size-5 mr-1"></mat-icon> Verified </p>
+                            </div>
+                        </div>
+                        <div class="shortRiew">
+                            <span><mat-icon svgIcon="mat_solid:star"></mat-icon> {{item.placement_rate}}
+                                Placements</span>
+                            <span><mat-icon svgIcon="mat_solid:star"></mat-icon> {{item.infrastructure_rate}}
+                                Infrastructure</span>
+                            <span><mat-icon svgIcon="mat_solid:star"></mat-icon> {{item.faculty_rate}} Faculty</span>
+                            <span><mat-icon svgIcon="mat_solid:star"></mat-icon> {{item.campus_rate}} Crowd & Campus
+                                Life</span>
+                            <span><mat-icon svgIcon="mat_solid:star"></mat-icon> {{item.money_rate}} Value for
+                                Money</span>
+                        </div>
+                        <p class="text-xl font-semibold my-3">{{item.title}}</p>
+                        <p>
+                            <span class="font-semibold text-lg">Placements: </span> {{item.placement_desc}}
+                        </p>
+                        <p><span class="font-semibold text-lg">Infrastructure: </span> {{item.infrastructure_desc}}.</p>
+                        <p><span class="font-semibold text-lg">Faculty: </span> {{item.faculty_desc}}</p>
+                        <p><span class="font-semibold text-lg">Campus Life: </span> {{item.campus_desc}}</p>
+                        <p><span class="font-semibold text-lg">Value For Money: </span> {{item.money_desc}}</p>
+
+                        <div class="mt-2 pt-2 border-t border-dashed flex">
+                            <span class="flex">Was this review helpful
+                                <p class="cursor-pointer mx-1"
+                                    [ngClass]="item.vote === 0 ? 'text-blue-600 font-semibold' : 'text-gray-500'"
+                                    (click)="onVote(item, 0)">
+                                    Yes
+                                </p>
+
+                                <span class="text-gray-400 mr-1">|</span>
+
+                                <!-- No -->
+                                <p class="cursor-pointer"
+                                    [ngClass]="item.vote === 1 ? 'text-blue-600 font-semibold' : 'text-gray-500'"
+                                    (click)="onVote(item, 1)">
+                                    No
+                                </p>
+                            </span>
+                            <span class="flex ml-auto items-center text-lg font-normal"><mat-icon
+                                    svgIcon="mat_outline:share" class="icon-size-5 ml-1"></mat-icon> Share</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="recoWidget_0" class="recoWidgetSection mt-4" *ngIf="CollegesAccordingCategoryArr != ''">
+                    <div class="rwsHead mt-3 mb-5"><span class="rwsTag">Popular Colleges</span>
+                        <h2 class="rwsHeading">Best-suited colleges for you</h2>
+                        <div class="flxBox editCase mA">
+                            <p class="rwsHeadingSupportiveTxt">Because you showed interest in {{category}} at
+                                {{collegename}}</p>
+                        </div>
+                    </div>
+                    <div class="rwsBody">
+                        <div class="sliderBox hidden md:block lg:block">
+                            <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="38"
+                                slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false"
+                                [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                                <mat-carousel-slide *ngFor="let item of CollegesAccordingCategoryArr">
+                                    <div class="grid grid-cols-3 gap-6 mx-6 items-center h-full">
+                                        <div *ngFor="let college of item.bestColleges" style="height: 270px;"
+                                            class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow carousel-slide-content">
+                                            <div class="flex justify-between">
+                                                <div class="mr-2">
+                                                    <div class="border rounded p-1"><img [src]="college.image"
+                                                            class=" h-20"></div>
+                                                    <div style="height: 90px; font-size: 13px;">
+                                                        <h2 class="font-medium mt-2">{{college.title}}</h2>
+                                                        <p *ngIf="college.accreditation != ''" class=""> <span
+                                                                class="font-medium">Accreditation
+                                                                :</span>{{college.accreditation}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-2"
+                                                (click)="getCompareTab(college.id)">
+                                                Compare
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </mat-carousel-slide>
+
+
+
+                            </mat-carousel>
+                        </div>
+
+                        <div class="sliderBox block md:hidden lg:hidden">
+                            <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" proportion="100"
+                                slides="3" [loop]="true" [hideArrows]="false" [hideIndicators]="false"
+                                [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr" class="cstomslide">
+
+                                <mat-carousel-slide *ngFor="let item of CollegesAccordingCategoryArr">
+                                    <div class="grid grid-cols-1 gap-6 mx-6 items-center h-full">
+                                        <div *ngFor="let college of item.bestColleges" style="height: 270px;"
+                                            class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 my-3 shadow carousel-slide-content">
+                                            <div class="flex justify-between">
+                                                <div class="mr-2">
+                                                    <div class="border rounded p-1"><img [src]="college.image"
+                                                            class=" h-20"></div>
+                                                    <div style="height: 90px; font-size: 13px;">
+                                                        <h2 class="font-medium mt-2">{{college.title}}</h2>
+                                                        <p *ngIf="college.accreditation != ''" class=""> <span
+                                                                class="font-medium">Accreditation
+                                                                :</span>{{college.accreditation}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-2"
+                                                (click)="getCompareTab(college.id)">
+                                                Compare
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-carousel-slide>
+                            </mat-carousel>
+                        </div>
+                    </div>
+                    <!-- <div class="flxBox mA cA my-3"><strong class="quesTxt">Is this recommendation relevant?</strong>
+                        <div>
+                            <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_up"></mat-icon>
+                            <mat-icon class="whiteCrcl dislike iflxBox" svgIcon="mat_solid:thumb_down"></mat-icon>
+                        </div>
+                    </div> -->
+
+                    <div class="flxBox mA cA my-3">
+                        <strong class="quesTxt">Is this recommendation relevant?</strong>
+                        <div>
+                            <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'up'"
+                                svgIcon="mat_solid:thumb_up" (click)="selectThumb('up')">
+                            </mat-icon>
+                            <mat-icon class="whiteCrcl iflxBox" [class.highlight]="selectedThumb === 'down'"
+                                svgIcon="mat_solid:thumb_down" (click)="selectThumb('down')">
+                            </mat-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="askQ mt-4">
+                    <div class="rwsHead mt-3 mb-5"><span class="rwsTag">{{collegename}}</span>
+                        <h2 class="rwsHeading">Student Forum</h2>
+                        <form [formGroup]="studentForum">
+                            <div class="whiteWrapBox font-semibold"><mat-icon svgIcon="mat_solid:edit"
+                                    class="relative top-1 icon-size-5 text-primary"></mat-icon> Anything you would want
+                                to ask experts?
+                                <div class="mt-2">
+                                    <input matInput placeholder="write here" formControlName="studentque">
+                                </div>
+                                <p class="border-t border-gray-300 my-4">
+                                    <button class="mt-2 secondaryButton ml-auto" mat-stroked-button
+                                        (click)="postQuestion()">Submit
+                                    </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <!-- ------------------------------left side content end------------------------ -->
+
+
+        <div class="flex flex-col flex-auto min-w-0">
+            <div>
+                <div class="bg-card rounded pb-2" *ngIf="campusImagesArr !=''">
+                    <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Photos & Videos </h1>
+
+                    <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" color="#000"
+                        background="#fff" maxWidth="auto" proportion="40" slides="3" [loop]="true" [hideArrows]="false"
+                        [hideIndicators]="true" [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr"
+                        style="background: #fff;" class="cstomslide">
+
+                        <mat-carousel-slide *ngFor="let item of campusImagesArr">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 ml-2">
+                                <div class="p-3 " *ngFor="let college of item">
+                                    <img [src]="college.image" (click)="openImageDialog(college.image)"
+                                        class="rounded-lg h-30">
+                                </div>
+                            </div>
+                        </mat-carousel-slide>
+                    </mat-carousel>
+                </div>
+
+                <div class="flex flex-col min-w-0 mt-4" *ngIf="NotificationArr != ''">
+                    <div class="bg-card rounded">
+                        <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> {{collegename}}
+                            Notifications</h1>
+                        <ul class="p-4 leading-8 secondary-color">
+                            <li class="border-b mb-3 cursor-pointer " *ngFor="let item of NotificationArr"
+                                (click)="getExamDetails(item.examId)">{{item.notification}}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flex flex-col min-w-0 mt-4" *ngIf="latest_blogsArr !='' && popular_blogsArr!= ''">
+                    <div class="bg-card rounded">
+                        <h1 class="text-lg font-medium p-4 py-2 bg-primary-200 rounded-tl rounded-tr"> Articles &
+                            Updates
+                        </h1>
+                        <mat-tab-group class="mt-2">
+                            <mat-tab label="Latest" *ngIf="latest_blogsArr !=''">
+                                <ul class="leading-8 h60 overflow-y-auto">
+                                    <li class="border-b mb-3 flex justify-between" *ngFor="let item of latest_blogsArr">
+                                        <a>
+                                            <p class="cursor-pointer" (click)="getArticleDetails(item.id)">
+                                                {{item.title}}</p>
+                                        </a>
+                                        <img class="ml-auto p-1" style="width: 30%;" [src]="item.image">
+                                    </li>
+                                </ul>
+                            </mat-tab>
+                            <mat-tab label="Popular" *ngIf="popular_blogsArr !=''">
+                                <ul class="leading-8 h60 overflow-y-auto">
+                                    <li class="border-b mb-3 flex justify-between"
+                                        *ngFor="let item of popular_blogsArr">
+                                        <a>
+                                            <p class="cursor-pointer" (click)="getArticleDetails(item.id)">
+                                                {{item.title}}</p>
+                                        </a>
+                                        <img class="ml-auto p-1" style="width: 30%;" [src]="item.image">
+
+                                    </li>
+                                </ul>
+                            </mat-tab>
+                        </mat-tab-group>
+
+                    </div>
+                </div>
+                <div class="popcenter">
+                    <ng-template #callAPIDialog1>
+                        <div class="flex flex-auto justify-between overflow-hidden relative ">
+                            <h2 matDialogTitle class="font-medium text-xl"></h2>
+                        </div>
+                        <div class="p-6 overflow-hidden max-w-full" style="width: 50vw;">
+                            <mat-icon svgIcon="mat_outline:close"
+                                style="color: red; cursor: pointer; position: absolute; z-index: 111;  left: 74%;"
+                                matDialogClose="yes" (click)="close()"></mat-icon>
+                            <div class="max-w-10xl">
+                                <img style="height: 270px;" class="position-relative shadow-sm maxwh cursorpointer"
+                                    title="" src="{{image}} " accept="image" />
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

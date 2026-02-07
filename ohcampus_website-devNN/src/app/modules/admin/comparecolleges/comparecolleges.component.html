@@ -1,0 +1,1191 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto">
+
+        <div class="max-w-7xl w-full mx-auto mt-6">
+            <div class="bg-card rounded-lg p-4 pt-4">
+                <h1 class="text-xl font-semibold mb-2">Compare Colleges</h1>
+                <p>Compare Colleges on the basis of their Fees, Placements, Cut Off, Reviews, Seats, Courses and other
+                    details. Download free information on Admission details, Placement report, Eligibility criteria etc.
+                </p>
+            </div>
+
+            <div class="bg-card rounded-lg p-4 mb-4 mt-3" *ngIf="popularcollegestocampare != undefined">
+                <h1 class="text-xl font-semibold mb-2">Popular comparisons with {{collegeName}}</h1>
+                <div class="">
+                    <mat-carousel timings="350ms ease-in" [autoplay]="false" interval="5000" color="#000"
+                        background="#fff" maxWidth="auto" proportion="26" slides="3" [loop]="true" [hideArrows]="false"
+                        [hideIndicators]="false" [useKeyboard]="true" [useMouseWheel]="false" orientation="ltr"
+                        style="background: #fff;" class="cstomslide">
+
+                        <mat-carousel-slide *ngFor="let item of popularcollegestocampare">
+                            <div class="grid grid-cols-3 gap-6 mx-6 items-center h-full">
+                                <div class="flex flex-col flex-auto min-w-0 border rounded-lg p-3 shadow"
+                                    *ngFor="let college of item">
+                                    <div class="flex justify-between">
+                                        <div class="mr-2 " style="width: 45%;">
+                                            <div class="border rounded p-1"><img [src]="collegeimage"
+                                                    class="object-contain h-20"></div>
+                                            <h2 class="font-semibold mt-2 break-words">{{collegeName}}
+                                            </h2>
+                                            <p class="cardTxtSmall">{{Collage_category}}</p>
+                                            <div class="flex flex-wrap justify-between items-center"><span
+                                                    class="text-md">{{totalRateCount}}</span> <span>
+                                                    <span>
+                                                        <ul class="clgratings">
+                                                            <li *ngIf="totalRateCount > 0">
+                                                                <ng-container
+                                                                    *ngFor="let star of getStars(totalRateCount)">
+                                                                    <mat-icon [svgIcon]="star.icon"
+                                                                        class="text-yellow-400"></mat-icon>
+                                                                </ng-container>
+                                                            </li>
+                                                        </ul>
+                                                    </span>
+                                                </span>
+                                                <span class="text-md">({{totalReview}} Reviews)</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="ml-2 relative"> <span class="vsCrcl">VS</span>
+                                            <div class="border rounded p-1">
+                                                <img [src]="college.image" class="object-contain h-20">
+                                            </div>
+                                            <h2 class="font-semibold mt-2">{{college.title}}
+                                            </h2>
+                                            <p class="cardTxtSmall">{{college.name}}</p>
+                                            <div class="flex flex-wrap justify-between items-center">
+                                                <span class="text-md"
+                                                    *ngIf="college.total_rate.totalRateCount > 0">{{college.total_rate.totalRateCount}}</span>
+                                                <span>
+                                                    <ul class="clgratings">
+                                                        <li *ngIf="college.total_rate.totalRateCount > 0">
+                                                            <ng-container
+                                                                *ngFor="let star of getStars(college.total_rate.totalRateCount)">
+                                                                <mat-icon [svgIcon]="star.icon"
+                                                                    class="text-yellow-400"></mat-icon>
+                                                            </ng-container>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                                <span class="text-md"
+                                                    *ngIf="college.total_rate.totalReview > 0">({{college.total_rate.totalReview}}
+                                                    Reviews)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-2"
+                                        (click)="compareClg(college.id)">
+                                        Compare
+                                    </button>
+                                </div>
+                            </div>
+                        </mat-carousel-slide>
+                    </mat-carousel>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-lg p-4 mb-4" *ngIf="latest_blogsArr != ''">
+                <h1 class="text-xl font-semibold mb-2">Latest Articles on {{collegeName}}</h1>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 gap-y-4">
+                    <div class="flex flex-row flex-auto min-w-0 mt-4" *ngFor="let item of latest_blogsArr">
+                        <img class="w-26 h-16 mr-4 rounded object-cover" [src]="item.image">
+                        <div class="flex flex-col min-w-0">
+                            <div class="font-medium leading-none text-primary truncate"> <a
+                                    class="font-medium leading-normal" [href]="item.post_url" target="_blank">
+                                    <p>{{item.title}}</p>
+                                </a></div>
+                            <div class="text-md leading-none text-secondary mt-2">{{item.created_date}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div #compareSection
+                class="sm:grid md:grid lg:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 mt-4 mb-8 bg-card rounded-lg p-4">
+                <div class="flex flex-col flex-auto min-w-0 border p-3 relative" *ngIf="comparedata==true">
+                    <div
+                        class="flex flex-col my-auto items-center justify-center h-30 rounded-lg cursor-pointer border-2 border-gray-300 border-dashed transition-colors duration-150 ease-in-out">
+                        <mat-icon svgIcon="mat_solid:add" class="icon-size-10 text-secondary"
+                            (click)="AddClg('one')"></mat-icon>
+                        <span class="text-secondary">Add College</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-xl">or</span>
+                    </div>
+                    <div class="text-center">
+                        <button mat-stroked-button [color]="'primary'" class="text-md mt-2" (click)="AddClg('one')">
+                            Add similar college
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col flex-auto min-w-0 border relative" *ngIf="!comparedata">
+                    <span class="crossCrcl" (click)="toggleDivs('first')">×</span>
+                    <div class="border-b p-3"><img [src]="collegeLogo" class="w-20 h-20 object-contain mx-auto">
+                    </div>
+                    <div class="p-3">
+                        <h1 class="font-semibold text-primary break-words">{{collegeName}}</h1>
+                        <p class="text-md mt-1 -ml-1 flex"><span><mat-icon style="color: red;"
+                                    svgIcon="mat_solid:location_on"
+                                    class="icon-size-4"></mat-icon></span>{{collegeLocation}}</p>
+                        <p class="text mt-2">{{FirstCourse}}</p>
+                        <div class="text-center">
+                            <button mat-flat-button [color]="'primary'" class="mx-auto text-md mt-2"
+                                (click)="modifySelection('one')">
+                                Modify Selection <img *ngIf="getDAtaLoader" class="img-fluid " style="width: 40px"
+                                    src="assets/images/page_loader_default.gif" alt="" class=" rounded-full mx-auto" />
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="flex flex-col flex-auto min-w-0 border p-3 relative" *ngIf="comparedata1==true">
+                    <div
+                        class="flex flex-col my-auto items-center justify-center h-30 rounded-lg cursor-pointer border-2 border-gray-300 border-dashed transition-colors duration-150 ease-in-out">
+                        <mat-icon svgIcon="mat_solid:add" class="icon-size-10 text-secondary"
+                            (click)="AddClg('two')"></mat-icon>
+                        <span class="text-secondary">Add College</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-xl">or</span>
+                    </div>
+                    <div class="text-center"><button mat-stroked-button [color]="'primary'" class="text-md mt-2"
+                            (click)="AddClg('two')">
+                            Add similar college
+                        </button></div>
+                </div>
+
+                <div class="flex flex-col flex-auto min-w-0 border relative" *ngIf="!comparedata1">
+                    <span class="crossCrcl" (click)="toggleDivs('second')">×</span>
+                    <span class="vsCrcl ml-2 mt-2">VS</span>
+                    <div class="border-b p-3"><img [src]="selectedcollegeLogo" class="w-20 h-20 object-contain mx-auto">
+                    </div>
+                    <div class="p-3">
+                        <h1 class="font-semibold text-primary">{{selectedcollegeName}}</h1>
+                        <p class="text-md mt-1 -ml-1 flex"><span><mat-icon style="color: red;"
+                                    svgIcon="mat_solid:location_on"
+                                    class="icon-size-4"></mat-icon></span>{{selectedcollegeLocation}}</p>
+                        <p class="text mt-2">{{selectedFirstCourse}}</p>
+                        <div class="text-center"><button mat-flat-button [color]="'primary'"
+                                class="mx-auto text-md mt-2" (click)="modifySelection('two')">
+                                Modify Selection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="flex flex-col flex-auto min-w-0 border p-3 relative" *ngIf="comparedata2==true">
+                    <div
+                        class="flex flex-col my-auto items-center justify-center h-30 rounded-lg cursor-pointer border-2 border-gray-300 border-dashed transition-colors duration-150 ease-in-out">
+                        <mat-icon svgIcon="mat_solid:add" class="icon-size-10 text-secondary"
+                            (click)="AddClg('three')"></mat-icon>
+                        <span class="text-secondary">Add College</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-xl">or</span>
+                    </div>
+                    <div class="text-center"><button mat-stroked-button [color]="'primary'" class="text-md mt-2"
+                            (click)="AddClg('three')">
+                            Add similar college
+                        </button></div>
+                </div>
+
+                <div class="flex flex-col flex-auto min-w-0 border relative" *ngIf="comparedata2==false">
+                    <span class="crossCrcl" (click)="toggleDivs('third')">×</span>
+                    <div class="border-b p-3"><img [src]="college3collegeLogo" class="w-20 h-20 object-contain mx-auto">
+                    </div>
+                    <div class="p-3">
+                        <h1 class="font-semibold text-primary">{{college3Name}}</h1>
+                        <p class="text-md mt-1 -ml-1 flex"><span><mat-icon style="color: red;"
+                                    svgIcon="mat_solid:location_on"
+                                    class="icon-size-4"></mat-icon></span>{{college3collegeLocation}}</p>
+                        <!-- <p class="text mt-2">{{FirstCourse}}</p> -->
+                        <div class="text-center"><button mat-flat-button [color]="'primary'"
+                                class="mx-auto text-md mt-2" (click)="modifySelection('three')">
+                                Modify Selection <img *ngIf="getDAtaLoader" class="img-fluid " style="width: 40px"
+                                    src="assets/images/page_loader_default.gif" alt="" class=" rounded-full mx-auto" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col flex-auto min-w-0 border p-3 relative" *ngIf="comparedata3==true">
+                    <div
+                        class="flex flex-col my-auto items-center justify-center h-30 rounded-lg cursor-pointer border-2 border-gray-300 border-dashed transition-colors duration-150 ease-in-out">
+                        <mat-icon svgIcon="mat_solid:add" class="icon-size-10 text-secondary"
+                            (click)="AddClg('four')"></mat-icon>
+                        <span class="text-secondary">Add College</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-xl">or</span>
+                    </div>
+                    <div class="text-center"><button mat-stroked-button [color]="'primary'" class="text-md mt-2"
+                            (click)="AddClg('four')">
+                            Add similar college
+                        </button></div>
+                </div>
+
+                <div class="flex flex-col flex-auto min-w-0 border relative" *ngIf="comparedata3==false">
+                    <span class="crossCrcl" (click)="toggleDivs('fourth')">×</span>
+                    <span class="vsCrcl ml-2 mt-2">VS</span>
+                    <div class="border-b p-3"><img [src]="college4collegeLogo" class="w-20 h-20 object-contain mx-auto">
+                    </div>
+                    <div class="p-3">
+                        <h1 class="font-semibold text-primary">{{college4Name}}</h1>
+                        <p class="text-md mt-1 -ml-1 flex"><span><mat-icon style="color: red;"
+                                    svgIcon="mat_solid:location_on"
+                                    class="icon-size-4"></mat-icon></span>{{college4collegeLocation}}</p>
+                        <div class="text-center"><button mat-flat-button [color]="'primary'"
+                                class="mx-auto text-md mt-2" (click)="modifySelection('four')">
+                                Modify Selection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col flex-auto min-w-0 col-span-4">
+                    <div class="bg-card border">
+                        <mat-accordion multi class="clgCompAcc">
+                            <mat-expansion-panel class="rounded-none p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Institute Information
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Established Year</label>
+                                                <span class="value">{{estd}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Ownership</label>
+                                                <span class="value capitalize-text">{{Collage_category}}</span>
+                                            </div>
+                                            <strong class="contentHeading topSpace">Total Courses
+                                                <span>({{Courses_Count}})</span></strong>
+                                            <!-- <div class="flx-box-sb"><label class="label">B.Tech</label><span
+                                                    class="value">18 Courses</span></div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Established Year</label>
+                                                <span class="value">{{selectedestd}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Ownership</label>
+                                                <span class="value capitalize-text">{{selectedCollage_category}}</span>
+                                            </div>
+                                            <strong class="contentHeading topSpace">Total Courses
+                                                <span>({{selectedCourses_Count}})</span></strong>
+                                            <!-- <div class="flx-box-sb"><label class="label">B.Tech</label><span
+                                                    class="value">18 Courses</span></div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Established Year</label>
+                                                <span class="value">{{college3estd}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Ownership</label>
+                                                <span class="value capitalize-text">{{college3Collage_category}}</span>
+                                            </div>
+                                            <strong class="contentHeading topSpace">Total Courses
+                                                <span>({{college3Courses_Count}})</span></strong>
+                                            <!-- <div class="flx-box-sb"><label class="label">B.Tech</label><span
+                                                    class="value">18 Courses</span></div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Established Year</label>
+                                                <span class="value">{{college4estd}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Ownership</label>
+                                                <span class="value capitalize-text">{{college4Collage_category}}</span>
+                                            </div>
+                                            <strong class="contentHeading topSpace">Total Courses
+                                                <span>({{college4Courses_Count}})</span></strong>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                            <!-- *ngIf="!comparedata" -->
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Course Details
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Course Credential</label>
+                                                <span class="value">Degree</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb">
+                                                <label class="label">Course Name</label>
+                                                <span class="value">{{FirstCourse}}</span>
+                                            </div> -->
+                                            <div class="flx-box-sb"><label class="label">Course Level</label>
+                                                <span class="value">{{level}}</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Duration</label>
+                                                <span class="value">{{duration}} years</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Mode</label>
+                                                <span class="value">Full Time</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Course Credential</label>
+                                                <span class="value">Degree</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb">
+                                                <label class="label">Course Name</label>
+                                                <span class="value">{{selectedFirstCourse}}</span>
+                                            </div> -->
+                                            <div class="flx-box-sb"><label class="label">Course Level</label>
+                                                <span class="value">{{selectedlevel}}</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Duration</label>
+                                                <span class="value">{{selectedduration}} years</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Mode</label>
+                                                <span class="value">Full Time</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Course Credential</label>
+                                                <span class="value">Degree</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Course Level</label>
+                                                <span class="value">{{college3level}}</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Duration</label>
+                                                <span class="value">{{college3duration}} years</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Mode</label>
+                                                <span class="value">Full Time</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Course Credential</label>
+                                                <span class="value">Degree</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Course Level</label>
+                                                <span class="value">{{college4level}}</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Duration</label>
+                                                <span class="value">{{college4duration}} years</span>
+                                            </div>
+                                            <div class="flx-box-sb"><label class="label">Mode</label>
+                                                <span class="value">Full Time</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Student Rating & Reviews
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <strong class="contentHeading bottomSpace">Overall Rating</strong>
+                                            <div class="ratingBox flx-box mt-3"><span
+                                                    class="ratingVal">{{Rating}}</span>
+                                                <div class="flx-box colm">
+                                                    <mat-icon *ngFor="let star of generateStars(Rating)"
+                                                        [svgIcon]="star" class="text-orange-500"></mat-icon>
+                                                    <span class="ratingTxt">Based on {{totalReview}} verified
+                                                        reviews</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="rtng-box"><label class="label">Placements <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Infrastructure<mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Faculty <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Crowd &amp; Campus <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Value for Money <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <strong class="contentHeading bottomSpace">Overall Rating</strong>
+                                            <div class="ratingBox flx-box mt-3"><span
+                                                    class="ratingVal">{{selectedclgRating}}</span>
+                                                <div class="flx-box colm">
+                                                    <mat-icon *ngFor="let star of generateStars(selectedclgRating)"
+                                                        [svgIcon]="star" class="text-orange-500"></mat-icon>
+                                                    <span class="ratingTxt">Based on {{selectedclgtotalReview}} verified
+                                                        reviews</span>
+                                                </div>
+                                            </div>
+                                            <div class="rtng-box"><label class="label">Placements <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Infrastructure<mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Faculty <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Crowd &amp; Campus <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Value for Money <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <strong class="contentHeading bottomSpace">Overall Rating</strong>
+                                            <div class="ratingBox flx-box mt-3"><span
+                                                    class="ratingVal">{{college3Rating}}</span>
+                                                <div class="flx-box colm">
+                                                    <mat-icon *ngFor="let star of generateStars(college3Rating)"
+                                                        [svgIcon]="star" class="text-orange-500"></mat-icon>
+                                                    <span class="ratingTxt">Based on 36 verified reviews</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="rtng-box"><label class="label">Placements <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Infrastructure<mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Faculty <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Crowd &amp; Campus <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Value for Money <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <strong class="contentHeading bottomSpace">Overall Rating</strong>
+                                            <div class="ratingBox flx-box mt-3"><span
+                                                    class="ratingVal">{{college4Rating}}</span>
+                                                <div class="flx-box colm">
+                                                    <mat-icon *ngFor="let star of generateStars(college4Rating)"
+                                                        [svgIcon]="star" class="text-orange-500"></mat-icon>
+                                                    <span class="ratingTxt">Based on 36 verified reviews</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="rtng-box"><label class="label">Placements <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Infrastructure<mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Faculty <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Crowd &amp; Campus <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                            <div class="rtng-box"><label class="label">Value for Money <mat-icon
+                                                        class="icon-size-3 text-orange-500"
+                                                        [svgIcon]="'mat_outline:star'"></mat-icon></label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Ranking
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <div class="flx-box-sb" *ngFor="let item of RankArr">
+                                                <label class="label">{{item.title}} </label>
+                                                <span class="value">{{item.rank}}</span>
+                                                <span class="value" *ngIf="item.rank==null">Not Ranked</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb"><label class="label">India Today</label>
+                                                <span class="value">{{indiaTodayRank}}</span>
+                                                <span class="value"
+                                                    *ngIf="indiaTodayRank==null">{{indiaTodayRank}}</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <div class="flx-box-sb" *ngFor="let rank of selectedclgRankArr">
+                                                <label class="label">{{rank.title}} </label>
+                                                <span class="value">{{rank.rank}}</span>
+                                                <span class="value" *ngIf="rank.rank==null">Not Ranked</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb"><label class="label">India Today</label>
+                                                <span class="value">{{indiaTodayRank}}</span>
+                                                <span class="value"
+                                                    *ngIf="indiaTodayRank==null">{{indiaTodayRank}}</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <div class="flx-box-sb" *ngFor="let rank of college3RankArr">
+                                                <label class="label">{{rank.title}} </label>
+                                                <span class="value">{{rank.rank}}</span>
+                                                <span class="value" *ngIf="rank.rank==null">Not Ranked</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb"><label class="label">India Today</label>
+                                                <span class="value">{{indiaTodayRank}}</span>
+                                                <span class="value"
+                                                    *ngIf="indiaTodayRank==null">{{indiaTodayRank}}</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <div class="flx-box-sb" *ngFor="let rank of college4RankArr">
+                                                <label class="label">{{rank.title}} </label>
+                                                <span class="value">{{rank.rank}}</span>
+                                                <span class="value" *ngIf="rank.rank==null">Not Ranked</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Placement
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Median Salary</label>
+                                                <span class="value">{{median_salary}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of companies visited</label>
+                                                <span class="value">{{no_of_companies_visited}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student selected</label>
+                                                <span class="value">{{no_of_student_selected}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student placed</label>
+                                                <span class="value">{{no_of_students_placed}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Year</label>
+                                                <span class="value">{{year}}</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb"><label class="label">% Batch Placed</label>
+                                                <span class="value">87.69%</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Median Salary</label>
+                                                <span class="value">{{selectedclgmedian_salary}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of companies visited</label>
+                                                <span class="value">{{selectedclgno_of_companies_visited}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student selected</label>
+                                                <span class="value">{{selectedclgno_of_student_selected}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student placed</label>
+                                                <span class="value">{{selectedclgno_of_students_placed}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Year</label>
+                                                <span class="value">{{selectedclgyear}}</span>
+                                            </div>
+                                            <!-- <div class="flx-box-sb"><label class="label">India Today '23</label>
+                                                <span class="value">87.69%</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Median Salary</label>
+                                                <span class="value">{{college3median_salary}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of companies visited</label>
+                                                <span class="value">{{college3no_of_companies_visited}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student selected</label>
+                                                <span class="value">{{college3no_of_student_selected}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student placed</label>
+                                                <span class="value">{{college3no_of_students_placed}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Year</label>
+                                                <span class="value">{{college3year}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <div class="flx-box-sb">
+                                                <label class="label">Median Salary</label>
+                                                <span class="value">{{college4median_salary}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of companies visited</label>
+                                                <span class="value">{{college4no_of_companies_visited}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student selected</label>
+                                                <span class="value">{{college4no_of_student_selected}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">No of student placed</label>
+                                                <span class="value">{{college4no_of_students_placed}}</span>
+                                            </div>
+                                            <div class="flx-box-sb">
+                                                <label class="label">Year</label>
+                                                <span class="value">{{college4year}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Course Fees
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <div *ngFor="let item of coursesandfeesArr">
+                                                <div class="flx-box-sb">
+                                                    <!-- <label class="label">Name</label> -->
+                                                    <span
+                                                        class="value font-semibold secondary-color">{{item.name}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">SubCategory </label>
+                                                    <span class="value">{{item.subCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Category</label>
+                                                    <span class="value">{{item.courseCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span *ngIf="item.total_fees != ''"
+                                                        class="value">{{item.total_fees}}(for {{item.duration}}
+                                                        years)</span>
+                                                </div>
+                                                <!-- <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span class="value">INR 8.00 Lakh<br>(for 4 years)</span>
+                                                </div> -->
+                                            </div>
+                                            <a (click)="getcoursesFees(college1Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">Get
+                                                Fee Details <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <div *ngFor="let item of selectedclgcoursesandfeesArr">
+                                                <div class="flx-box-sb">
+                                                    <!-- <label class="label">Name</label> -->
+                                                    <span
+                                                        class="value font-semibold secondary-color ">{{item.name}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">SubCategory </label>
+                                                    <span class="value">{{item.subCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Category </label>
+                                                    <span class="value">{{item.courseCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span *ngIf="item.total_fees != ''"
+                                                        class="value">{{item.total_fees}}(for {{item.duration}}
+                                                        years)</span>
+                                                </div>
+                                                <!-- <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span class="value">INR 8.00 Lakh<br>(for 4 years)</span>
+                                                </div> -->
+                                            </div><a (click)="getcoursesFeesForselectedclg(college2Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">Get
+                                                Fee Details <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <div *ngFor="let item of college3coursesandfeesArr">
+                                                <div class="flx-box-sb">
+                                                    <!-- <label class="label">Name</label> -->
+                                                    <span
+                                                        class="value font-semibold secondary-color ">{{item.name}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">SubCategory </label>
+                                                    <span class="value">{{item.subCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Category </label>
+                                                    <span class="value">{{item.courseCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span *ngIf="item.total_fees != ''"
+                                                        class="value">{{item.total_fees}}(for {{item.duration}}
+                                                        years)</span>
+                                                </div>
+                                                <!-- <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span class="value">INR 8.00 Lakh<br>(for 4 years)</span>
+                                                </div> -->
+                                            </div><a (click)="getcoursesFeesForcollege3(college3Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer mt-120">Get
+                                                Fee Details <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <div *ngFor="let item of college4coursesandfeesArr">
+                                                <div class="flx-box-sb">
+                                                    <!-- <label class="label">Name</label> -->
+                                                    <span
+                                                        class="value font-semibold secondary-color ">{{item.name}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">SubCategory </label>
+                                                    <span class="value">{{item.subCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Category </label>
+                                                    <span class="value">{{item.courseCategoryName}}</span>
+                                                </div>
+                                                <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span *ngIf="item.total_fees != ''"
+                                                        class="value">{{item.total_fees}}(for {{item.duration}}
+                                                        years)</span>
+                                                </div>
+                                                <!-- <div class="flx-box-sb">
+                                                    <label class="label">Total Fees</label>
+                                                    <span class="value">INR 8.00 Lakh<br>(for 4 years)</span>
+                                                </div> -->
+                                            </div><a (click)="getcoursesFeesForcollege4(college4Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">Get
+                                                Fee Details <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Admission Info
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <div *ngFor="let item of AdminssionprocessArr">
+                                                <div class="flx-box-sb"><label class="label">SubCategory </label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.subCatName}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+                                                <div class="flx-box-sb"><label class="label">Accepted Exams</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.Accepting_Exams}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+
+                                                <!-- <hr class="border-t border-gray-300 my-4"> -->
+                                            </div>
+                                            <a (click)="getadmissiontab(college1Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">View
+                                                Admission Details
+                                                <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <div *ngFor="let item of selectedclgAdminssionprocessArr">
+                                                <div class="flx-box-sb"><label class="label">SubCategory</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.subCatName}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+                                                <div class="flx-box-sb"><label class="label">Accepted Exams</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.Accepting_Exams}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+
+                                                <!-- <hr class="border-t border-gray-300 my-4"> -->
+                                            </div>
+                                            <a (click)="getadmissiontabForselectedclg(college2Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">View
+                                                Admission Details
+                                                <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <div *ngFor="let item of college3AdminssionprocessArr">
+                                                <div class="flx-box-sb"><label class="label">SubCategory</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.subCatName}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+                                                <div class="flx-box-sb"><label class="label">Accepted Exams</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.Accepting_Exams}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+
+                                                <!-- <hr class="border-t border-gray-300 my-4"> -->
+                                            </div>
+                                            <a (click)="getcollege3adm(college3Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">View
+                                                Admission Details
+                                                <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <div *ngFor="let item of college4AdminssionprocessArr">
+                                                <div class="flx-box-sb"><label class="label">SubCategory</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.subCatName}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+                                                <div class="flx-box-sb"><label class="label">Accepted Exams</label>
+                                                    <div class="value text-right w-40">
+                                                        <a class="ripple text-primary">{{item.Accepting_Exams}}</a>,
+                                                        <!-- <a class="ripple text-primary">JEE Advanced</a> -->
+                                                    </div>
+                                                </div>
+
+                                                <!-- <hr class="border-t border-gray-300 my-4"> -->
+                                            </div>
+                                            <a (click)="getcollege4adm(college4Id)"
+                                                class="viewAllLink text-primary flex items-center cursor-pointer">View
+                                                Admission Details
+                                                <mat-icon svgIcon="mat_solid:arrow_forward_ios"
+                                                    class="icon-size-4 text-primary"></mat-icon></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel class="rounded-none -mt-4 p-0" [expanded]="true">
+                                <mat-expansion-panel-header class="bg-primary-100 rounded-none">
+                                    <mat-panel-title class="font-semibold justify-center ">
+                                        Infrastructure & Facilities
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0 bg-card rounded-lg">
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata">
+                                            <ul class="amenityList">
+                                                <li *ngFor="let item of facilitiesArr"><mat-icon
+                                                        [svgIcon]="item.icon"></mat-icon> {{item.name}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col flex-auto min-w-0 border-l relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata1">
+                                            <ul class="amenityList">
+                                                <li *ngFor="let item of selectedclgfacilities"><mat-icon
+                                                        [svgIcon]="item.icon"></mat-icon> {{item.name}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata2">
+                                            <ul class="amenityList">
+                                                <li *ngFor="let item of college3facilitiesArr"><mat-icon
+                                                        [svgIcon]="item.icon"></mat-icon> {{item.name}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col flex-auto min-w-0 relative p-4">
+                                        <div class="_subcontainer" *ngIf="!comparedata3">
+                                            <ul class="amenityList">
+                                                <li *ngFor="let item of college4facilitiesArr"><mat-icon
+                                                        [svgIcon]="item.icon"></mat-icon> {{item.name}}</li>
+                                                <!-- <li><mat-icon svgIcon="mat_solid:local_cafe"></mat-icon> Cafeteria</li>
+                                                <li><mat-icon svgIcon="mat_solid:business"></mat-icon> Hostel</li>
+                                                <li><mat-icon svgIcon="mat_solid:sports_cricket"></mat-icon> Sports
+                                                    Complex</li>
+                                                <li><mat-icon svgIcon="mat_solid:directions_run"></mat-icon> Gym</li>
+                                                <li><mat-icon svgIcon="mat_solid:local_hospital"></mat-icon> Hospital /
+                                                    Medical Facilities</li>
+                                                <li><mat-icon svgIcon="mat_solid:cell_wifi"></mat-icon> Wi-Fi Campus
+                                                </li>
+                                                <li><mat-icon svgIcon="mat_solid:airport_shuttle"></mat-icon> Shuttle
+                                                    Service</li>
+                                                <li><mat-icon svgIcon="mat_solid:settings_overscan"></mat-icon>
+                                                    Auditorium</li>
+                                                <li><mat-icon svgIcon="mat_solid:store"></mat-icon> Convenience Store
+                                                </li>
+                                                <li><mat-icon svgIcon="mat_solid:science"></mat-icon> Labs</li>
+                                                <li><mat-icon svgIcon="mat_solid:ballot"></mat-icon> Others</li> -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+
+
+                        </mat-accordion>
+
+                        <div class=" border-t">
+                            <div class="rating-container">
+                                <div>
+                                    <h2>How would you rate this page?</h2>
+                                    <p class="fdbkTxt">We will use this feedback to improve your experience.</p>
+                                </div>
+                                <div>
+                                    <div class="fStrContnr">
+                                        <span class="rating-icon-container">
+                                            <span class="rating-icon-wrpr"><mat-icon class=" text-gray-400"
+                                                    [svgIcon]="'mat_outline:star_outline'"></mat-icon></span>
+                                            <span class="rating-icon-wrpr"><mat-icon class=" text-gray-400"
+                                                    [svgIcon]="'mat_outline:star_outline'"></mat-icon></span>
+                                            <span class="rating-icon-wrpr"><mat-icon class=" text-gray-400"
+                                                    [svgIcon]="'mat_outline:star_outline'"></mat-icon></span>
+                                            <span class="rating-icon-wrpr"><mat-icon class=" text-gray-400"
+                                                    [svgIcon]="'mat_outline:star_outline'"></mat-icon></span>
+                                            <span class="rating-icon-wrpr"><mat-icon class=" text-gray-400"
+                                                    [svgIcon]="'mat_outline:star_outline'"></mat-icon></span>
+                                        </span>
+                                        <div class="text-center">Rate Us Now</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- popup start -->
+
+                        <div class="popcenter">
+                            <ng-template #popupinfo>
+                                <form [formGroup]="selectCollegeForm">
+                                    <div class="relative border-b border-dashed compareclass"
+                                        style="width:30vw;max-width:100%;max-height:80vh;">
+                                        <div
+                                            class="flex border-b border-dashed p-4 bg-gray-100 flex-row flex-auto items-center text-lg font-semibold leading-tight">
+                                            <mat-icon svgIcon="mat_solid:verified_user"
+                                                class="mr-2 secondary-color"></mat-icon>
+                                            College/Course Selection
+                                        </div>
+                                        <mat-icon svgIcon="mat_outline:clear"
+                                            class="absolute icon-size-5 right-4 cursor-pointer z-10"
+                                            style="top:14px!important;" (click)="popupClose()"></mat-icon>
+
+
+
+                                        <div class="mx-6 mt-2">
+
+                                            <mat-form-field class="w-full">
+                                                <mat-label>Select College</mat-label>
+                                                <input matInput placeholder="Search college"
+                                                    [formControl]="searchCollegeControl" [(ngModel)]="selectedcollage">
+                                                <!-- <img *ngIf="collegeLoader" class="img-fluid " style="width: 30px"
+                                                src="assets/images/Loader.gif" alt="" class=" rounded-full mx-auto" /> -->
+                                                <mat-icon matSuffix>search</mat-icon>
+                                            </mat-form-field>
+
+                                        </div>
+
+                                        <div *ngIf="coolegeList">
+                                            <ul class="divide-y divide-gray-200">
+                                                <!-- <img *ngIf="collegeLoader" class="img-fluid " style="width: 30px"
+                                                src="assets/images/Loader.gif" alt="" class=" rounded-full mx-auto" /> -->
+                                                <li class="flex items-center py-4 px-6 cursor-pointer hover:bg-gray-100"
+                                                    *ngFor="let item of collageListArr" [value]="item.id">
+                                                    <!-- <img class="w-12 h-12 rounded object-cover mr-4"
+                                                    src="assets/images/clg1.jpg" alt="User avatar"> -->
+                                                    <div class="flex-1">
+                                                        <h3 class="text-lg font-medium text-gray-800"
+                                                            (click)="clgList(item.title,item.id)">{{item.title}}
+                                                            <!-- <img class="w-5 h-5 ml-auto" [src]="item.image"> -->
+                                                        </h3>
+                                                        <!-- <p class="text-gray-600 text-base">B.Tech. in Civil Engineering</p> -->
+                                                    </div>
+                                                    <div class="flex">
+                                                        <mat-checkbox class="example-margin" color="primary">
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div *ngIf="collegeForm" class="mx-6">
+                                            <mat-form-field class="w-full">
+                                                <mat-label>Select Degree</mat-label>
+                                                <mat-select formControlName="degree"
+                                                    (selectionChange)="getcourseData()">
+                                                    <mat-option *ngFor="let item of degreeArr"
+                                                        [value]="item">{{item}}</mat-option>
+                                                    <!-- <mat-option value="two">Second option</mat-option> -->
+
+                                                </mat-select>
+                                                <img *ngIf="degreeLoader" class="img-fluid " style="width: 30px"
+                                                    src="assets/images/Loader.gif" alt=""
+                                                    class=" rounded-full mx-auto" />
+                                                <mat-error *ngIf="selectCollegeForm.invalid">Please select
+                                                    degree</mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field class="w-full">
+                                                <mat-label>Select Course</mat-label>
+                                                <mat-select formControlName="course">
+                                                    <mat-option *ngFor="let course of coursesArr"
+                                                        [value]="course.id">{{course.name}}</mat-option>
+                                                    <!-- <mat-option value="two">Second option</mat-option> -->
+
+                                                </mat-select>
+                                                <img *ngIf="courseLoader" class="img-fluid " style="width: 30px"
+                                                    src="assets/images/Loader.gif" alt=""
+                                                    class=" rounded-full mx-auto" />
+                                                <mat-error *ngIf="selectCollegeForm.invalid">Please select
+                                                    course</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div>
+
+                                        </div>
+
+                                        <div class="border-t border-dashed text-center pt-2  mb-3 mr-3">
+                                            <button class="fuse-mat-button-rounded" mat-flat-button [color]="'primary'"
+                                                (click)="gotoQuote()" [disabled]="!selectCollegeForm.valid">
+                                                <span>Apply </span><img *ngIf="getDAtaLoader" class="img-fluid "
+                                                    style="width: 30px" src="assets/images/page_loader_default.gif"
+                                                    alt="" class=" rounded-full mx-auto" />
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </ng-template>
+                        </div>
+
+                        <!-- popup end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

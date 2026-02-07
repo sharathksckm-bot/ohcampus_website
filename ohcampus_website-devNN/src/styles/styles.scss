@@ -1,0 +1,401 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+// @import '~ngx-sharebuttons/themes/material/material-dark-theme';
+// @import '~ngx-sharebuttons/themes/modern/modern-light-theme';
+// @import '~ngx-sharebuttons/themes/circles/circles-dark-theme';
+
+quick-chat,
+settings,
+languages,
+search,
+shortcuts,
+messages,
+notifications {
+    display: none !important;
+}
+
+.bgsigninpage {
+    // background-image: url(assets/images/students.jpg);
+    background-image: url(../assets/images/students.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    //position: relative;
+    border: 2px solid #fff;
+    border-radius: 10px;
+}
+
+.bglayer::after {
+    content: '';
+    // background: #0284f582;
+    background: #6a777e6e;
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+}
+
+mat-dialog-container {
+    padding: 0 !important;
+}
+
+// ----------Footer Css ------------------------
+
+.footer-nav ul,
+.footer-social ul {
+    display: flex;
+
+    li a {
+        color: #f7f7f7;
+        font-size: 14px;
+        padding: 0 14px;
+    }
+
+    li {
+        margin: 0 6px;
+    }
+}
+
+.footer-content h5 {
+    color: #ececec;
+    font-size: 16px;
+    padding-bottom: 20px;
+    margin: 0;
+    font-weight: 400;
+}
+
+.footer-content ul li {
+    padding: 5px 0;
+}
+
+.footer-content ul li a {
+    text-decoration: none;
+    color: #999999 !important;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.footer-content ul li a:hover {
+    text-decoration: none;
+    color: #fff !important;
+}
+
+.mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper .mat-form-field-flex {
+    background: transparent !important;
+}
+
+.capsule--blue {
+    border-color: #88d834;
+    color: #88d834;
+}
+
+.capsule {
+    display: block;
+    padding: 9px 58px;
+    border-radius: 50px;
+    min-width: 50px;
+    border: 1px solid #88d834;
+    line-height: .875rem;
+    font-size: .875rem;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    outline: none;
+    box-shadow: none;
+}
+
+ul.taglist li {
+    display: inline-block;
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.capsule--blue:hover {
+    color: #fff;
+    background: #88d834;
+}
+
+.secondary-color {
+    color: #88d834;
+}
+
+.secondary-bg {
+    background: #88d834;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #bddbfa;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #f1f1f1;
+}
+
+.secondaryButton {
+    background-color: #88d834 !important;
+    color: #fff !important;
+}
+
+button.mat-flat-button {
+    min-height: 0;
+    height: 38px !important;
+}
+
+.headStyle {
+    position: relative;
+    margin: 0;
+    -webkit-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+    padding-bottom: 5px;
+}
+
+.headStyle::before {
+    width: 28px;
+    height: 5px;
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    margin-left: -14px;
+    background-color: #88d834;
+}
+
+.headStyle::after {
+    width: 100px;
+    height: 1px;
+    display: block;
+    content: "";
+    position: relative;
+    margin-top: 25px;
+    left: 50%;
+    margin-left: -50px;
+    background-color: #88d834;
+}
+
+.mat-paginator {
+    font-size: 14px !important;
+
+}
+
+body.light .mat-paginator {
+    color: #2196f3;
+}
+
+.mat-paginator .mat-paginator-container {
+    justify-content: right;
+}
+
+.angular-editor-textarea ol {
+    list-style: decimal !important;
+    margin-right: 1rem !important;
+    margin-left: 1rem !important;
+    padding: 1rem !important;
+}
+
+.angular-editor-textarea ul {
+    list-style: unset !important;
+    margin-right: 1rem !important;
+    margin-left: 1rem !important;
+    padding: 1rem !important;
+}
+
+.angular-editor-textarea {
+    min-height: 250px !important;
+}
+
+.tabecontent table th:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.tabecontent table th {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.tabecontent table th,
+.tabecontent table td.strong {
+    background-color: #bddbfa;
+    color: #353535 !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+}
+
+.tabecontent table tr td:not(:last-child) {
+    border-right: 1px dashed #dfdfdf;
+}
+
+.tabecontent table tr td {
+    color: #353535;
+    text-align: left;
+    background-color: white;
+    font-size: var(--text-regular);
+    padding: 0.5rem 1.15rem;
+    line-height: 1.375rem;
+}
+
+.tabecontent table tr {
+    border-bottom: 1px dashed #dfdfdf;
+}
+
+.tabecontent table th:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.tabecontent p {
+    text-align: justify;
+}
+
+.tablepara {
+    text-align: justify;
+}
+
+.tabecontent1 table th:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.tabecontent1 table th {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.tabecontent1 table th,
+.tabecontent1 table td.strong {
+    background-color: #bddbfa;
+    color: #353535 !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+}
+
+.tabecontent1 table tr td:not(:last-child) {
+    border-right: 1px dashed #dfdfdf;
+}
+
+.tabecontent1 table tr td {
+    color: #353535;
+    text-align: left;
+    background-color: white;
+    font-size: var(--text-regular);
+    padding: 0.5rem 1.15rem;
+    line-height: 1.375rem;
+}
+
+.tabecontent1 table tr {
+    border-bottom: 1px dashed #dfdfdf;
+}
+
+.tabecontent1 table th:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.tabecontent1 p {
+    text-align: justify;
+}
+
+.tabecontent1 ul {
+    list-style: unset !important;
+    margin-right: 1rem !important;
+    margin-left: 1rem !important;
+    // padding: 1rem !important;
+}
+
+
+//exam details pattern
+.pattern table th:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.pattern table {
+    width: 100%;
+    background-color: #dcedfd;
+}
+
+.pattern table th {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.pattern table th,
+.pattern table td.strong {
+    background-color: #bddbfa;
+    color: #353535 !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+}
+
+.pattern table tr td:not(:last-child) {
+    border: 1px solid #ddd;
+}
+
+.pattern table tr td {
+    color: #353535;
+    text-align: left;
+    background-color: white;
+    font-size: var(--text-regular);
+    padding: 0.5rem 1.15rem;
+    line-height: 1.375rem;
+}
+
+.pattern table tr {
+    border: 1px solid #ddd;
+}
+
+.pattern table th:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.pattern p {
+    text-align: justify;
+}
+
+@media only screen and (max-width: 600px) {
+    .popuplogin{
+        width: 100% !important; 
+        top: 50px;
+    } 
+}
+
+//   .pattern table .table-bordered {
+//     border: 1px solid #ddd;
+// }
+// .pattern table .table-striped > tbody > tr:nth-of-type(odd) {
+//    // background-color: #f9f9f9;
+//     background-color: #dcedfd;
+// }
+// .pattern table .table-bordered > thead > tr > th, .table-bordered  > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+//     border: 1px solid #ddd;
+// }
+// .pattern  table > thead > tr > th, .pattern table > tbody > tr > th, .pattern table > tfoot > tr > th, .pattern  table > thead > tr > td, .pattern table > tbody > tr > td, .pattern table > tfoot > tr > td {
+//     padding: 8px;
+//     line-height: 1.42857143;
+//     vertical-align: top;
+//     border-top: 1px solid #ddd;
+// }

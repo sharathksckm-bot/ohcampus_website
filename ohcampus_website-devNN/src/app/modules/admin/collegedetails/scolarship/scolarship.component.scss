@@ -1,0 +1,201 @@
+::ng-deep .carousel-indicators button {
+    width: 15px;
+    height: 15px;
+    margin: 7.5px;
+    min-height: 0!important;
+}
+::ng-deep .carousel-slide-content{
+ background: #fff!important;
+}
+::ng-deep .carousel > button:first-of-type {
+    left: 0px!important;
+}
+::ng-deep .carousel > button:last-of-type {
+    right: 0px!important;
+}
+::ng-deep .carousel-indicators {
+    bottom: -3px!important;
+}
+// ::ng-deep .mat-focus-indicator.mat-icon-button.mat-button-base{
+//     background: #f0f5f9 !important;
+//     width: 32px !important;
+//     height: 32px !important;
+//     min-height: 0;
+// }
+.whiteCrcl {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .whiteCrcl.highlight {
+    color: blue; /* Highlight color */
+    transform: scale(1.2); /* Slightly enlarge the icon */
+  }
+.reviewrate{
+    
+    mat-icon{
+        min-width: 0;
+        width: 25px;
+        color: #FFC107;
+        margin-right: 4px;
+    }
+}
+.comRating{
+    mat-icon{
+        min-width: 0;
+        width: 12px;
+        color: #FFC107;
+        margin-right: 3px;
+    }
+}
+.verifyuser{
+    mat-icon{
+        min-width: 0;
+        width: 17px;
+        height: 15px;
+        min-height: 0;
+        position: relative;
+        top: 2px;
+    }
+}
+ul.ullist {
+    list-style: unset!important; 
+    margin: 0.5em!important; 
+    padding: 1em!important; 
+}
+ol.ullist {
+    list-style: decimal!important; 
+    margin: 0.5em!important; 
+    padding: 1em!important; 
+}
+
+.shortRiew{
+    span{
+        border: 1px solid #ddd;
+        padding: 2px 7px;
+        font-size: 12px;
+        margin-right: 10px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+    }
+    mat-icon{
+        min-width: 0;
+        width: 15px;
+        color: #FFC107;
+        margin-right: 4px;
+    }
+}
+.totalrew{
+    mat-icon{
+        min-width: 0;
+        width: 15px;
+        color: white;
+        margin-right: 2px;
+        margin-top: -1.5px;
+    }
+   
+}
+
+// -----------------------n--------------
+
+.rwsHead {
+    padding: 10px 30px;
+}
+.rwsTag {
+    border-radius: 4px;
+    background:#68da44;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px!important;
+    padding: 4px 12px;
+}
+h2.rwsHeading {
+    color: var(--primary-dark, #2f1238);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 30px!important;
+    margin: 12px 0 4px;
+}
+.mA {
+    align-items: center;
+}
+.cA {
+    justify-content: center;
+}
+.whiteCrcl {
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 100px;
+    border: 1px solid #cacaca;
+    cursor: pointer;
+    margin: 0 0 0 12px;
+    min-width: 0;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+}
+.iflxBox {
+    display: inline-flex;
+}
+.flxBox {
+    display: flex;
+}
+.editCase {
+    gap: 8px;
+}
+p.rwsHeadingSupportiveTxt {
+    color: #353535;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px!important;
+    max-width: calc(100% - 50px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.recoWidgetSection {
+    border-radius: 6px;
+    background: linear-gradient(310deg, rgb(215 237 255) 0.01%, rgb(252 254 255));
+    margin: 20px 0;
+    min-height: 455px;
+}
+
+.whiteWrapBox {
+    padding: 32px 28px;
+    border-radius: 15px;
+    background: #fff;
+    border: 1px solid #fff;
+    border-radius: 12px;
+}
+
+table.tblBorder, .tblBorder th, .tblBorder td {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    padding: 6px;
+}
+.tblBorder th{
+    background:#0099f3;
+    color: #fff;
+}
+.askQ{
+    background: linear-gradient(136.99deg, #ffffff, #d8f3cf);
+    border-radius: 6px;
+}
+.rwsHead {
+    padding: 10px 30px;
+}
+
+.scroll-top-button {
+    position: fixed;
+    bottom: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    z-index: 1000;
+    display: none; /* Initially hide the button */
+  }
+  
+  .scroll-top-button.show {
+    display: block; /* Show the button when scrolling */
+  }

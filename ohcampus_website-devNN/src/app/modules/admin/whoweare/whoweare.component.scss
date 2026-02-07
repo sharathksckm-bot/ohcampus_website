@@ -1,0 +1,24 @@
+.heroSection{
+    background-image: url(../../../../assets/images/heroimg.jpg);
+    background-size: cover;
+    
+    background-position: center;
+    .textset{
+        margin: 0;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);width: 80%;
+    }
+}
+.heroSection::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+   // background-color: #015181b5;
+    background-color: #034870b5;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}

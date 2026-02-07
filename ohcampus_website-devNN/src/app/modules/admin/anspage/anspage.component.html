@@ -1,0 +1,259 @@
+<div class="flex flex-col flex-0 lg:flex-row items-center max-w-7xl w-full mx-auto py-8">
+
+    <div class="sm:grid md:grid-cols-3 lg:grid-cols-3 gap-6 w-full min-w-0 p-3">
+        <div class="flex flex-col col-span-2 flex-auto min-w-0">
+            <div class="bg-card rounded p-4">
+
+                <h1 class="text-2xl my-3 font-semibold">{{question}}</h1>
+                <span>{{views}} Views | Posted {{question_asked}}</span>
+                <div class="my-2 flex items-center justify-between">
+                    <div class="flex">
+                        Asked by : <span class="font-semibold"> {{fullname}}</span>
+                    </div>
+                    <div class="flex">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" class="text-md min-w-0 min-h-0 w-8 h-8"
+                            style="border:1px solid #ddd;">
+                            <mat-icon class="icon-size-5">more_horiz</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>
+                                <mat-icon>report</mat-icon>
+                                <span>Report Abuse</span>
+                            </button>
+                            <button mat-menu-item>
+                                <mat-icon>question_answer</mat-icon>
+                                <span>Answer Later </span>
+                            </button>
+                        </mat-menu>
+                        <button class="px-3 mx-2 text-md text-md min-w-0 min-h-0 w-8 h-8" mat-icon-button
+                            style="border:1px solid #ddd;">
+                            <mat-icon svgIcon="mat_solid:share" class="icon-size-5"></mat-icon>
+                        </button>
+                        <button class="px-3 text-md min-w-0 min-h-0 h-8" mat-stroked-button
+                            (click)="followQuestion(isFollowing ? 'unfollow' : 'follow')">
+                            {{ isFollowing ? 'Unfollow' : 'Follow' }}
+                        </button>
+                        <button class="px-3 text-md min-w-0 min-h-0 h-8 ml-2 shadow-none" mat-raised-button
+                            color="primary" (click)="openFilter()">
+                            Answer
+                        </button>
+                    </div>
+                </div>
+
+                <span> {{this.ansArr.length}} Answers</span>
+
+                <div class="border-t pt-3 mt-3" *ngFor="let item of ansArr, let i=index">
+                    <div class="flex mb-3 justify-between">
+                        <span class="flex">
+                            <div *ngIf="item.answerby != null"
+                                class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2">
+                                {{item.answerby.charAt(0)}}</div>
+
+                            <!-- <div *ngIf="item.answerby == null"
+                                class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2">
+                                </div> -->
+                            <p> <span class="text-md font-medium"> Answered by </span><br>
+                                <span class="text-sm"><span class="font-semibold">{{item.answerby}}</span>
+                                    <!-- | Contributor-Level 10 -->
+                                </span>
+                            </p>
+                        </span>
+                        <div><span>{{item.answered_question}} </span></div>
+                    </div>
+
+                    <p> {{item.answer}}</p>
+
+                    <div class="mt-2 pt-2 flex items-center justify-between">
+                        <div class="flex">
+                            <!-- <mat-icon svgIcon="mat_outline:thumb_up" class="mr-1 icon-size-5 text-gray-400"></mat-icon> -->
+                            <mat-icon svgIcon="mat_outline:thumb_up"
+                                class=" mr-1 icon-size-7 cursor-pointer border rounded-full p-1"
+                                [ngClass]="{'icon-hover': isHovered[i], 'icon-click': isClicked[i]}"
+                                (mouseenter)="isHovered[i] = true" (mouseleave)="isHovered[i] = false"
+                                (click)="voteAnswere('like',item.answer_id,i)">
+                            </mat-icon>
+                            |
+                            <mat-icon svgIcon="mat_outline:thumb_down"
+                                class="mx-1 icon-size-7 cursor-pointer  border rounded-full p-1"
+                                [ngClass]="{'icon-hover-dislike': isHovered2[i], 'icon-click-dislike': isClicked2[i]}"
+                                (mouseenter)="isHovered2[i] = true" (mouseleave)="isHovered2[i] = false"
+                                (click)="voteAnswere('dislike',item.answer_id,i)">
+                            </mat-icon> |
+                            {{item.like}} Upvotes {{item.dis_like}} Downvotes &nbsp; <span
+                                class="cursor-pointer comment" style="color: green;" (click)="getcomments(i)">{{
+                                item.answere_comments.length}} Comments</span>
+                        </div>
+
+
+                        <div class="flex">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" class="text-md min-w-0 min-h-0 w-8 h-8 "
+                                style="border:1px solid #ddd;">
+                                <mat-icon class="icon-size-5">more_horiz</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item>
+                                    <mat-icon>report</mat-icon>
+                                    <span>Report Abuse</span>
+                                </button>
+                                <button mat-menu-item>
+                                    <mat-icon>question_answer</mat-icon>
+                                    <span>Answer Later </span>
+                                </button>
+                            </mat-menu>
+                            <button class="px-3 mx-2 text-md min-w-0 min-h-0 w-8 h-8" mat-icon-button
+                                style="border:1px solid #ddd;">
+                                <mat-icon svgIcon="mat_solid:share" class="icon-size-5"></mat-icon>
+                            </button>
+                            <button class="px-3 text-md min-w-0 min-h-0 h-8" mat-stroked-button
+                                (click)="openpopupReview(item.answer_id)">
+                                Comment
+                            </button>
+                        </div>
+
+                    </div>
+                    <div *ngIf="commentSections[i]">
+                        <div *ngFor="let comment of item.answere_comments " class="border-t pt-3 mt-2">
+                            <div class="flex mb-3 justify-between">
+                                <span class="flex">
+                                    <div *ngIf="comment.commentby != null"
+                                        class="h-8 w-8 font-bold text-green-700 text-center pt-1 bg-green-200 rounded mt-1 mr-2 ml-9">
+                                        {{ comment.commentby.charAt(0) }}</div>
+                                    <p> <span class="text-md font-medium"> Comment by </span><br>
+                                        <span class="text-sm"><span class="font-semibold">{{comment.commentby}}</span>
+                                            <!-- | Contributor-Level 10 -->
+                                        </span>
+                                    </p>
+                                </span>
+                                <div><span>{{comment.commented_on_answere}} </span></div>
+                            </div>
+                            <p class="ml-18"> {{comment.comment}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <h2 class="text-lg font-medium my-4">Related Questions</h2>
+
+            <div class="related-que">
+                <ul>
+                    <li *ngFor="let item of related_questionArr">
+                        <!-- <a href="https://ask.shiksha.com/what-is-the-eligibility-criteria-for-the-btech-course-at-iit-madras-qna-7672337" onclick="ndcgTracking('0','7672337');gaTrackEventCustom('QUESTION DETAIL PAGE','RELATED_QUEST_QUESTIONDETAIL_DESKAnA','Non-Logged In');">
+                What is the eligibility criteria for the BTech course at IIT Madras? 
+            </a> -->
+                        <div (click)="getAns(item.question_id)" class="cursor-pointer font-semibold">{{item.question}}
+                        </div>
+                        <span>{{item.answerCount}} Answer</span>
+                        <span>{{item.views}} Views</span>
+                    </li>
+
+                </ul>
+            </div>
+
+            <!-- popup start -->
+
+            <div class="popcenter">
+                <ng-template #popupFilter>
+                    <div class="relative px-3" style="width:60vw;max-width:100%;max-height:80vh;">
+                        <div
+                            class="flex mb-3 border-b border-dashed py-6 p-3 flex-row flex-auto items-center text-xl font-semibold leading-tight">
+                            <mat-icon svgIcon="mat_solid:filter_list" class="mr-1 text-primary"></mat-icon>
+                            Write your answer
+                        </div>
+                        <mat-icon svgIcon="mat_outline:clear" class="absolute top-3 right-4 cursor-pointer z-10"
+                            (click)="popupClose()"></mat-icon>
+                        <form [formGroup]="AnswerForm">
+                            <div class="my-4 relative" layout="col">
+                                <p class="">{{question}}</p>
+                                <textarea rows="7" class="border rounded-lg my-2 p-3" style="resize: none;width:100%"
+                                    formControlName="answer"></textarea>
+                            </div>
+                        </form>
+                        <div class="flex justify-end border-t py-3 border-dashed">
+                            <div class="hidden md:block sm:block lg:block text-left pl-40">
+                                <button class="fuse-mat-button-rounded" mat-flat-button (click)="popupClose()">
+                                    <span>Cancel</span>
+                                </button>
+                                <button class="fuse-mat-button-rounded ml-1" mat-flat-button [color]="'primary'"
+                                    (click)="postAnswere()">
+                                    <span>Post</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+
+            <!-- popup end -->
+
+            <div class="popcenter">
+                <ng-template #popupReview>
+                    <div class="relative px-3" style="width:60vw;max-width:100%;max-height:80vh;">
+                        <div
+                            class="flex mb-3 border-b border-dashed py-6 p-3 flex-row flex-auto items-center text-xl font-semibold leading-tight">
+                            <mat-icon svgIcon="mat_solid:filter_list" class="mr-1 text-primary"></mat-icon>
+                            {{text}}
+                        </div>
+                        <mat-icon svgIcon="mat_outline:clear" class="absolute top-3 right-4 cursor-pointer z-10"
+                            (click)="popupClose()"></mat-icon>
+                        <form [formGroup]="CommentForm">
+                            <div class="my-4 relative" layout="col">
+                                <!-- <p class="">{{question}}</p> -->
+                                <textarea rows="7" class="border rounded-lg my-2 p-3" style="resize: none;width:100%"
+                                    formControlName="comment"></textarea>
+                            </div>
+                        </form>
+                        <div class="flex justify-end border-t py-3 border-dashed">
+                            <div class="hidden md:block sm:block lg:block text-left pl-40">
+                                <button class="fuse-mat-button-rounded" mat-flat-button (click)="popupClose()">
+                                    <span>Cancel</span>
+                                </button>
+                                <button class="fuse-mat-button-rounded ml-1" mat-flat-button [color]="'primary'"
+                                    (click)="postAnsComment()">
+                                    <span>Save</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+
+
+
+        </div>
+        <div class="flex flex-col flex-auto min-w-0">
+            <div class="bg-card rounded p-3 py-6">
+
+                <div class="search-block text-center">
+                    <p class="signup-h3">Taking an Exam? Selecting a College?</p>
+                    <p class="inf-txts">Get authentic answers from experts, students and alumni that you
+                        <strong>won't</strong> find anywhere else
+                    </p>
+
+                    <button class="fuse-mat-button-rounded my-3" mat-flat-button [color]="'primary'"
+                        (click)="onLoginButtonClick()">
+                        <span>Sign Up on OhCampus </span>
+                    </button>
+
+                    <p class="background-brdr"><span>On OhCampus, get access to</span></p>
+                    <ul class="inf-li mt-6">
+                        <li><strong>{{Clgcount}}</strong> Colleges</li>
+                        <li><strong>{{Examcount}}</strong> Exams</li>
+
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="bg-card rounded text-center p-3 py-6 mt-4">
+                <h3 class="text-xl">Share Your College Life Experience</h3>
+
+                <button class="fuse-mat-button-rounded my-3 secondaryButton " mat-flat-button (click)="reviewrating()">
+                    <span>Write A Review </span>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>

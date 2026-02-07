@@ -1,0 +1,660 @@
+<style>
+    .wres {
+        width: 30vw;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .wres {
+            width: 90vw !important;
+        }
+
+    }
+
+    @media only screen and (max-width: 768px) {
+        .wres {
+            width: 90vw !important;
+        }
+
+    }
+
+    /* @media only screen and (max-width: 1400px) {
+    .ruby-menu-demo-header{
+        display: none;
+    }
+} */
+</style>
+
+<!-- Navigation -->
+<ng-container *ngIf="isScreenSmall">
+    <fuse-vertical-navigation class="dark bg-gray-900 print:hidden" [mode]="'over'" [name]="'mainNavigation'"
+        [navigation]="navigation.default" [opened]="false">
+        <!-- Navigation header hook -->
+        <ng-container fuseVerticalNavigationContentHeader>
+            <!-- Logo -->
+            <div class="flex items-center h-20 pt-6 px-8" (click)="goToHome()">
+                <img class="w-24" src="assets/images/logo/logo.png" alt="Logo image">
+            </div>
+        </ng-container>
+    </fuse-vertical-navigation>
+</ng-container>
+
+<!-- Wrapper -->
+<div class="flex flex-col flex-auto w-full min-w-0">
+
+    <div class="bg-primary-500 topSroller z-50 relative py-2 px-10">
+        <div class="flex items-center text-white text-sm justify-end">
+            <mat-icon svgIcon="mat_solid:call" class="text-white mr-1 icon-size-5"></mat-icon> <span><a
+                    href="tel:+08884560456">08884560456</a></span>
+            <mat-icon svgIcon="mat_solid:mail"
+                class="text-white ml-2 mr-1 icon-size-5"></mat-icon><span>enquiry@ohcampus.com</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 items-center w-full h-16 sm:h-17 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+        <ng-container *ngIf="!isScreenSmall">
+            <!-- Logo -->
+            <div class="flex">
+                <div class="flex items-center mx-2 lg:mr-8">
+                    <div class="hidden md:flex lg:flex cursor-pointer">
+                        <img class="dark:hidden w-30" routerLink="/home" src="assets/images/logo/logo.png">
+                    </div>
+                </div>
+                <!-- Horizontal navigation -->
+                <fuse-horizontal-navigation class="mr-2" [name]="'mainNavigation'"
+                    [navigation]="navigation.horizontal"></fuse-horizontal-navigation>
+            </div>
+        </ng-container>
+
+        <!-- Navigation toggle button -->
+        <ng-container *ngIf="isScreenSmall">
+            <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
+                <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+                <!-- <fuse-vertical-navigation>fsfsdf</fuse-vertical-navigation> -->
+            </button>
+            <!-- <fuse-vertical-navigation>fsfsdf</fuse-vertical-navigation> -->
+        </ng-container>
+        <!-- Components -->
+        <div class="flex w-full items-center pl-2   ">
+            <app-menubar></app-menubar>
+            <div class="ml-auto">
+                <button *ngIf="username == null" mat-stroked-button [color]="'primary'"
+                    class="min-w-0 h-8 min-h-0 ml-auto" (click)="showsign()">Sign
+                    In</button> &nbsp;
+                <button *ngIf="username == null" mat-stroked-button [color]="'primary'"
+                    class="min-w-0 h-8 min-h-0 ml-auto" (click)=" showsignup() ">Sign
+                    Up</button> &nbsp;
+            </div>
+            <!-- <app-menubar></app-menubar> -->
+            <languages></languages>
+            <!-- <fuse-fullscreen class="hidden md:block"></fuse-fullscreen> -->
+            <search [appearance]="'bar'"></search>
+            <shortcuts></shortcuts>
+            <messages></messages>
+            <notifications></notifications>
+            <!-- <button class="lg:hidden" mat-icon-button (click)="quickChat.toggle()">
+                <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
+            </button> -->
+            <user *ngIf="username != null"></user>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto w-full">
+        <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
+             Otherwise, layout changes won't be registered and the view won't be updated! -->
+        <router-outlet *ngIf="true"></router-outlet>
+    </div>
+
+    <!-- Footer -->
+
+    <div class=" fixed mr-2" style="bottom: 65px; right: 0px; z-index: 100;">
+        <button mat-menu-item (click)="shareOnWhatsApp()">
+            <a class="icon-link whatsapp text-green-500 text-5xl"><i class="fab fa-whatsapp"></i>
+            </a>
+        </button>
+    </div>
+    <div class="relative z-49 border-t sm:px-14 md:px-30 lg:px-30 bg-gray-900 dark:bg-transparent print:hidden">
+        <!-- <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span> -->
+        <div class="top-footer w-full px-4 md:px-6 ">
+            <div class="footer-container">
+                <div class="md:flex lg:flex items-center justify-between py-3">
+                    <div class="footer-logo"> <img class="dark:hidden w-40" src="assets/images/logo/logo.png"></div>
+                    <!-- <div class="footer-nav">
+                        <ul>
+                            <li><a href="">About</a></li>
+                            <li><a href="">Hiring</a></li>
+                            <li><a href="">Magazine</a></li>
+                            <li><a href="">News</a></li>
+                            <li><a href="">Contact</a></li>
+                        </ul>
+                    </div> -->
+                    <div class="footer-social">
+                        <ul>
+                            <li>
+                                <a href="https://www.instagram.com/OhCampus/" target="_blank"><img class="lazy"
+                                        src="assets/icons/social/insta.svg" alt="Instagram"></a>
+                            </li>
+                            <li>
+                                <a href="https://www.youtube.com/user/ohcampus" target="_blank"><img class="lazy"
+                                        alt=" Youtube" src="assets/icons/social/youtube.svg"></a>
+                            </li>
+                            <li>
+                                <a href="https://www.facebook.com/OhCampus/" target="_blank"><img class="lazy"
+                                        alt=" Facebook" src="assets/icons/social/facebook.svg"></a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/company/ohcampus-com" target="_blank"><img
+                                        class="lazy" alt=" LinkedIn" src="assets/icons/social/linkdin.svg"></a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/OhCampus/" target="_blank"><img class="lazy" alt=" Twitter"
+                                        src="assets/icons/social/twitter.svg"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="md:flex lg:flex px-4 md:px-8 justify-between py-6 border-t border-gray-800">
+
+            <div class="footer-content">
+                <h5>TOP COURSES</h5>
+                <ul>
+                    <li class="cursor-pointer" *ngFor="let item of categoryArr" (click)="getAllCourses(item.id)">
+                        <a>{{item.catname}}</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="footer-content">
+                <h5>USEFUL LINK</h5>
+                <ul>
+                    <li class="cursor-pointer"><a (click)="getFaqs()">FAQs</a></li>
+
+                    <li class="cursor-pointer"><a (click)="getloans()">Loans</a></li>
+
+                    <li class="cursor-pointer"><a (click)="getScholarships()">Scholarships</a></li>
+
+
+                </ul>
+            </div>
+
+            <div class="footer-content">
+                <h5>HELP & SUPPORT</h5>
+                <ul>
+                    <li><a routerLink="/termsncondition">Terms and Condition</a></li>
+
+                    <li><a routerLink="/contactus">Contact Us</a></li>
+
+                    <li><a routerLink="/whoweare">Who We Are</a></li>
+
+                    <li><a routerLink="/comparecollege">Compare Colleges</a></li>
+
+
+                </ul>
+            </div>
+
+            <div class="footer-content">
+                <h5>GET IN TOUCH</h5>
+                <ul>
+                    <li><a>Address: OhCampus.com, Comet Career India, 2nd Floor, </a></li>
+
+                    <li><a>SMG Plaza, MG Road, Chikkamagaluru, Karnataka</a></li>
+
+                    <li><a>Phone: 8884560456</a></li>
+
+                    <!-- <li><a href="">NCERT</a></li> -->
+
+                    <li><a>Email: enquiry@ohcampus.com</a></li>
+
+                </ul>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="text-center text-gray-400 bg-black py-3 px-6 text-md">© 2025 OhCampus.com | All rights reserved.</div>
+
+</div>
+
+<!-- Quick chat -->
+<quick-chat #quickChat="quickChat"></quick-chat>
+
+
+<!-- Signin pop start -->
+
+<div class="popcenter">
+    <ng-template #callsignInForm>
+        <!-- <div class="relative bgsigninpage" style="width: 60vw;max-width:100%;height: 90vh;max-height: 100%;"> -->
+        <div class="relative bgsigninpage7 wres overflow-auto" style="height: 90vh;max-width:100%;max-height: 100%;">
+            <mat-icon svgIcon="mat_solid:clear" class="absolute w-6 h-6 right-2 top-2 cursor-pointer z-20 "
+                (click)="signinclose()"></mat-icon>
+
+
+            <!-- <auth-sign-in></auth-sign-in> -->
+
+
+            <div class="w-full  bglayer4">
+                <div
+                    class=" flex flex-col  items-center md:items-center sm:justify-end md:justify-end flex-auto min-w-0 ">
+                    <div class="z-10 md:flex md:items-center items-center md:justify-center w-full sm:w-auto p-10 pt-4">
+
+                        <!-- md:w-1/2   sm:rounded-2xl sm:shadow-md sm:bg-card-->
+                        <div class="w-full mx-auto sm:mx-0" *ngIf="showSignIn">
+                            <!-- Logo -->
+                            <div class="w-28 mb-3">
+                                <img src="assets/images/logo/logo.png">
+                            </div>
+
+                            <!-- Title -->
+                            <div class="border-t pt-3 text-2xl font-bold tracking-tight leading-tight">Sign in</div>
+                            <div class="flex flex-wrap items-baseline mt-1 font-medium">
+                                <div>Don't have an account?</div>
+                                <a class="ml-1 hover:underline text-primary cursor-pointer" (click)="sign_up()">Sign up
+                                </a>
+                            </div>
+
+                            <fuse-alert class="mt-8 mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                                [type]="alert.type">
+                                {{alert.message}}
+                            </fuse-alert>
+
+                            <!-- Sign in form -->
+                            <form class="mt-4 SignForm" [formGroup]="signInForm" #signInNgForm="ngForm">
+                                <!-- <button class="flex-auto items-center" type="button" [color]="'primary'" mat-stroked-button>
+                                    <mat-icon class="icon-size-5" [svgIcon]="'feather:facebook'"></mat-icon>
+                                    Sign in with Google
+                                </button> -->
+                                <!-- Email field -->
+                                <mat-form-field class="w-full">
+                                    <mat-label class="white">Email address</mat-label>
+                                    <input id="email" matInput [formControlName]="'email'">
+                                    <mat-error *ngIf="signInForm.get('email').hasError('required')">
+                                        Email address is required
+                                    </mat-error>
+                                    <mat-error *ngIf="signInForm.get('email').hasError('email')">
+                                        Please enter a valid email address
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <!-- Password field -->
+                                <mat-form-field class="w-full">
+                                    <mat-label class="white">Password</mat-label>
+                                    <input id="password" matInput type="password" [formControlName]="'password'"
+                                        #passwordField>
+                                    <button mat-icon-button type="button"
+                                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                                        matSuffix>
+                                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                    </button>
+                                    <mat-error>
+                                        Password is required
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <div class="ml-1 mb-2 hover:underline text-primary cursor-pointer"
+                                    (click)="OpenDialog()"> Forgot Password ?
+                                </div>
+
+                                <!-- <mat-form-field class="w-full">
+                                    <mat-label class="white">Mobile Number</mat-label>
+                                    <input matInput [formControlName]="'mobile_no'" (keypress)="numberOnly($event)"> -->
+                                <!-- <mat-error *ngIf="signInForm.get('mobile_no').hasError('required')">
+                            Mobile Number is required
+                        </mat-error> -->
+                                <!-- <mat-error *ngIf="signInForm.get('mobile_no').hasError('email')">
+                            Please enter a valid email address
+                        </mat-error> -->
+                                <!-- </mat-form-field> -->
+
+                                <!-- Actions -->
+                                <!-- <div class="inline-flex items-end justify-between w-full">
+                                <mat-checkbox
+                                    [color]="'primary'"
+                                    [formControlName]="'rememberMe'">
+                                    Remember me
+                                </mat-checkbox>
+                                <a
+                                    class="text-md font-medium text-primary-500 hover:underline"
+                                    [routerLink]="['/forgot-password']">Forgot password?
+                                </a>
+                            </div>-->
+                                <!-- Submit button -->
+                                <button class="fuse-mat-button-large w-full mt-4" mat-flat-button [color]="'primary'"
+                                    (click)="signIn()">
+                                    <span> Sign in </span>
+                                </button>
+
+                                <!-- Separator -->
+                                <div class="flex items-center mt-4">
+                                    <div class="flex-auto mt-px border-t"></div>
+                                    <div class="ml-1 mb-2 hover:underline text-primary cursor-pointer" (click)="loginWithGoogle()">Other Sign In Options</div>
+                                     <!-- <button class="flex-auto" type="button" mat-stroked-button (click)="loginWithGoogle()">
+                                        <mat-icon class="icon-size-5">google</mat-icon>
+                                        Other Sign In Options
+                                    </button> -->
+                                    <div class="flex-auto mt-px border-t"></div>
+                                </div>
+
+                                <!-- Single sign-on buttons -->
+                                <!-- <div class="flex items-center mt-4 space-x-4"> -->
+                                    <!-- <button class="flex-auto" type="button" mat-stroked-button>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'feather:facebook'"></mat-icon>
+                                    </button>
+                                    <button class="flex-auto" type="button" mat-stroked-button>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'feather:twitter'"></mat-icon>
+                                    </button>
+                                    <button class="flex-auto" type="button" mat-stroked-button>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'feather:github'"></mat-icon>
+                                    </button> -->
+                                    
+                                    <div id="googleBtn" class="mt-3 flex justify-center"></div>
+                                    <!-- <button (click)="loginWithGoogle()">Login with Google</button> -->
+                                <!-- </div> -->
+                            </form>
+                        </div>
+
+                        <div class="w-full mx-auto sm:mx-0" *ngIf="showSignUp">
+                            <!-- Logo -->
+                            <!-- <div class="w-12">
+                            <img src="assets/images/logo/logo.svg">
+                        </div> -->
+
+                            <div class="w-28 mb-3">
+                                <img src="assets/images/logo/logo.png">
+                            </div>
+
+                            <!-- Title -->
+                            <div class="border-t pt-3 text-2xl font-bold tracking-tight leading-tight">Sign Up</div>
+                            <div class="flex flex-wrap items-baseline mt-1 font-medium">
+                                <div>Already have an account?</div>
+                                <a class="ml-1 hover:underline text-primary cursor-pointer" (click)="sign_in()">Sign in
+                                </a>
+                            </div>
+
+                            <!-- Sign in form -->
+                            <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                                [type]="alert.type">
+                                {{alert.message}}
+                            </fuse-alert>
+
+
+                            <form class="mt-6 SignUpForm" [formGroup]="signUpForm" #signUpNgForm="ngForm">
+                                <!-- Email field -->
+                                <mat-form-field class="w-full" *ngIf="isDataSubmit">
+                                    <mat-label class="white">Full name</mat-label>
+                                    <input id="name" matInput [formControlName]="'name'">
+                                    <mat-error *ngIf="signUpForm.get('name').hasError('required')">
+                                        Full name is required
+                                    </mat-error>
+                                </mat-form-field>
+
+
+                                <mat-form-field class="w-full">
+                                    <mat-label class="white">Email address</mat-label>
+                                    <input id="email" matInput [formControlName]="'email'">
+                                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                                        Email address is required
+                                    </mat-error>
+                                    <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                                        Please enter a valid email address
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full">
+                                    <mat-label class="white">Mobile Number</mat-label>
+                                    <input matInput [formControlName]="'mobile_no'" (keypress)="numberOnly($event)"
+                                        minlength="10" maxlength="10">
+                                    <!-- <mat-error *ngIf="signInForm.get('mobile_no').hasError('required')">
+                            Mobile Number is required
+                        </mat-error> -->
+                                    <!-- <mat-error *ngIf="signInForm.get('mobile_no').hasError('email')">
+                            Please enter a valid email address
+                        </mat-error> -->
+                                </mat-form-field>
+
+
+                                <mat-form-field class="w-full" *ngIf="isDataSubmit">
+                                    <mat-label class="white">Password</mat-label>
+                                    <input id="password" matInput type="password" [formControlName]="'password'"
+                                        #passwordField>
+                                    <button mat-icon-button type="button"
+                                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                                        matSuffix>
+                                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                    </button>
+                                    <mat-error *ngIf="signUpForm.get('password').hasError('required')">
+                                        Password is required
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full" *ngIf="isDataSubmit">
+                                    <mat-label class="white">Confirm Password</mat-label>
+                                    <input id="password1" matInput type="password" [formControlName]="'confirmpassword'"
+                                        #ConfpasswordField>
+                                    <button mat-icon-button type="button"
+                                        (click)="ConfpasswordField.type === 'password' ? ConfpasswordField.type = 'text' : ConfpasswordField.type = 'password'"
+                                        matSuffix>
+                                        <mat-icon class="icon-size-5" *ngIf="ConfpasswordField.type === 'password'"
+                                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                        <mat-icon class="icon-size-5" *ngIf="ConfpasswordField.type === 'text'"
+                                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                    </button>
+                                    <mat-error *ngIf="signUpForm.get('confirmpassword').hasError('required')">
+                                        Password is required
+                                    </mat-error>
+                                    <mat-error *ngIf="signUpForm.get('confirmpassword').hasError('mismatch')">
+                                        Passsword and Confirm Password didn't match.
+                                    </mat-error>
+                                </mat-form-field>
+
+
+                                <mat-form-field class="w-full" *ngIf="isOtpSent">
+                                    <mat-label class="white">Please Enter the OTP Sent to Your Email</mat-label>
+                                    <input id="Otp" matInput formControlName="Otp">
+                                    <!-- <mat-error *ngIf="signUpForm.get('Otp').hasError('required')">
+                                        OTP address is required
+                                    </mat-error> -->
+                                    <!-- <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                                        Please enter a valid email address
+                                    </mat-error> -->
+                                </mat-form-field>
+
+
+                                <div *ngIf="isOtpSent"
+                                    class="mt-2 ml-1 mb-2 hover:underline text-primary cursor-pointer"
+                                    (click)="ResendOTP()"> Resend OTP</div>
+
+                                <div class="inline-flex items-end w-full mt-1.5 text-sm">
+                                    <mat-checkbox [color]="'primary'" [formControlName]="'agreements'">
+                                        <span>I agree to the</span>
+                                        <a class="ml-1 hover:underline text-primary" [routerLink]="['./']">Terms of
+                                            Service
+                                        </a>
+                                        <span>and</span>
+                                        <a class="ml-1 hover:underline text-primary" [routerLink]="['./']">Privacy
+                                            Policy
+                                        </a>
+                                    </mat-checkbox>
+                                </div>
+                                <button *ngIf="isDataSubmit" class="fuse-mat-button-large w-full mt-6" mat-flat-button
+                                    [color]="'primary'" (click)="signUp()">
+                                    <span>Submit</span>
+                                </button>
+
+                                <!-- Submit button -->
+                                <button *ngIf="isOtpSent" class="fuse-mat-button-large w-full mt-6" mat-flat-button
+                                    [color]="'primary'" (click)="verifyOTP()">
+                                    <span> Create your account </span>
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="popcenter">
+                        <ng-template #callAPIDialog1>
+                            <div class="flex flex-auto justify-between overflow-hidden relative ">
+                                <h2 matDialogTitle class="font-medium text-xl"></h2>
+                            </div>
+                            <div class="p-4 sm:p-10 overflow-hidden max-w-full relative popuplogin">
+                                <mat-icon svgIcon="mat_outline:close"
+                                    style="color: red; cursor: pointer; position: absolute; z-index: 111; right:15px; top:15px;"
+                                    matDialogClose="yes" (click)="close()"></mat-icon>
+                                <div class="w-40 mb-6">
+                                    <img src="assets/images/logo/logo.png">
+                                </div>
+                                <div class="pophead mb-6">
+                                    <h1 class="font-bold text-2xl">Forgot Your Passsword?</h1>
+                                    <p>Don't worry. we'll email you a password reset link with instructions.</p>
+                                </div>
+                                <div class="max-w-10xl">
+
+                                    <div class="grid grid-cols-1 mt-3 w-full min-w-0">
+                                        <form [formGroup]="forgotpassword">
+
+                                            <div class="flex flex-col flex-auto overflow-hidden">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label class="labelcss">Enter Email </mat-label>
+                                                    <input matInput formControlName="emailId">
+                                                    <mat-error *ngIf="forgotpassword.get('emailId').hasError
+                            (required)">Username address is required</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="text-center">
+                                                <button class="fuse-mat-button-rounded mt-4 items-center"
+                                                    (click)="ResetPass()" mat-flat-button [color]="'primary'">
+                                                    Request Reset Link
+                                                </button>
+                                            </div>
+                                            <div class="text-center">
+                                                <button class="fuse-mat-button-rounded mt-4 items-center"
+                                                    mat-stroked-button [color]="'primary'">
+                                                    Back to Login
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+
+<div class="popcenter">
+    <ng-template #callAPIDialogapply>
+
+        <mat-icon svgIcon="mat_outline:close"
+            style="color: red; cursor: pointer; position: absolute; z-index: 111;  left: 73%;" matDialogClose="yes"
+            (click)="close()"></mat-icon>
+        <div class="font-semibold text-2xl flex items-center mt-3 ml-2"><mat-icon svgIcon="mat_solid:person"
+                style="color: #2196f3" class="primary"></mat-icon> APPLY NOW</div>
+        <hr class="border-t border-gray-300 my-4">
+        <div class="p-3 border-dashed" style="height:70vh;">
+            <form [formGroup]="applicationForm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 ml-2 overflow-y-auto"
+                    style="width: 50vw;">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Student Name </mat-label>
+                        <input matInput formControlName="name">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Mobile Number </mat-label>
+                        <input matInput formControlName="mobileno" maxlength="10" minlength="10"
+                            (keypress)="numberOnly($event)">
+
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Email </mat-label>
+                        <input matInput formControlName="email">
+
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>Course Category</mat-label>
+                        <mat-select formControlName="course_category" (ngModelChange)="getCourseByCategoryClg()">
+                            <mat-option *ngFor="let course of CourseCategoryArr" [value]="course.category_id">
+                                {{course.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Course </mat-label>
+                        <img *ngIf="courseLoader" class="img-fluid " style="width: 30px" src="assets/images/Loader.gif"
+                            alt="" class=" rounded-full mx-auto" />
+                        <mat-select formControlName="course" matTooltip="{{selectedcourse}}" matTooltipPosition="above"
+                            (ngModelChange)="getCourseselected($event)">
+                            <mat-option *ngFor="let course of CoursesByCatArr" [value]="course.id"
+                                [matTooltip]="course.name" matTooltipPosition="above">
+                                {{course.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-full">
+                        <mat-label>College </mat-label>
+                        <input matInput formControlName="college" readonly>
+
+                    </mat-form-field>
+
+
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Entrance Exam </mat-label>
+                        <mat-select formControlName="exam">
+                            <mat-option>
+                                <ngx-mat-select-search noEntriesFoundLabel="No matching type found"
+                                    placeholderLabel="Find exam ..." [formControl]="examFilterCtrl">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let course of examTypeFilter | async" [value]="course.id">
+                                {{course.title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Expected/Secured Rank </mat-label>
+                        <input matInput formControlName="expected_rank" (keypress)="numberOnly($event)">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Expected/Secured Score </mat-label>
+                        <input matInput formControlName="expected_score" (keypress)="numberOnly($event)">
+                    </mat-form-field>
+
+                </div>
+            </form>
+            <button mat-raised-button color="primary" class="px-12 justify-center mt-4 mb-10"
+                (click)="savCourseApplication()">Submit</button>
+        </div>
+    </ng-template>
+</div>
+
+<!--pop end -->
