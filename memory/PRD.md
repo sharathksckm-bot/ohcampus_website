@@ -1,112 +1,110 @@
-# OhCampus Website - Product Requirements Document
+# OhCampus Platform - Product Requirements Document
 
 ## Original Problem Statement
 Create a web-based counseling platform for OhCampus counselors with features for counselors (filtering/viewing colleges) and admins (managing fees, courses, FAQs).
 
-## All Issues RESOLVED ✅
+## Platform Architecture
+- **Frontend**: Angular 12 (ohcampus.com)
+- **Admin Panel**: Angular (admin.ohcampus.com)
+- **Backend API**: CodeIgniter/PHP (campusapi.ohcampus.com)
+- **Database**: MySQL/MariaDB
+- **Web Server**: Nginx with PHP-FPM
 
-1. ✅ **Production Bug Fixed**: Website now loads data on iOS/Incognito browsers
-2. ✅ **Complete Menus**: All 25 categories displaying (Engineering, Management, Medicine, etc.)
-3. ✅ **College & Article Data Loading**: Featured Colleges, Trending Colleges, Articles all working
-4. ✅ **College List Page**: /allCollegeList working with filters
-5. ✅ **Study Abroad Page**: /study-abroad form fully functional
-6. ✅ **SEO Meta Tags**: Description, keywords, Open Graph, Twitter cards added
-7. ✅ **Stats Display**: 10571 colleges, 6214 courses, 201 exams
+## Server Details
+- **Host**: 103.118.17.62
+- **SSH Port**: 22
+
+## Directory Structure
+```
+/home/ohcampus/
+├── public_html/                 # Live production frontend
+│   ├── admin.ohcampus.com/      # Admin panel
+│   ├── campusapi.ohcampus.com/  # Backend API
+│   └── (Angular build files)
+├── public_html_backup_*/        # Backups
+└── logs/
+```
 
 ## What's Been Implemented
 
-### February 23, 2026 - Complete Production Fix
-**Approach**: Used source code from repository and manually added all missing features
+### Session: Feb 23, 2026 (Latest)
 
-**Fixes Applied:**
-1. **JWT Tokens**: Updated expired tokens in ALL component files (valid until 2036)
-2. **Array Access Bugs**: Added null checks (`|| []`) in:
-   - `home.component.ts`: getBlogs(), getEvents(), getfooterNotification()
-   - `menubar.component.ts`: getCategoryList(), getCityList(), getTrendingSpecilization(), getlistofCertificate()
-   - `studyabroad.component.ts`: getStateList(), getCityByState(), getCourseCategory(), getCourseByCategory(), getCountries()
-   - `allcolleges.component.ts`: Token update
-3. **SEO Meta Tags**: Added full meta tags to index.html:
-   - Description, keywords, robots, author
-   - Open Graph (og:type, og:url, og:title, og:description, og:image)
-   - Twitter cards (twitter:card, twitter:title, twitter:description)
-4. **API Wrapper**: Added `getEvents()` method to Common.php controller for frontend compatibility
+#### P0 - Performance Bug Fixed ✅
+- **Issue**: `allCollegeList` API taking ~25 seconds
+- **Root Causes**:
+  1. Missing `getRankListByClgIds()` batch method (N+1 query fix incomplete)
+  2. Missing database indexes on `gallery` and `college_ranks` tables
+- **Solution**:
+  - Added batch method to `College_model.php`
+  - Created index: `idx_gallery_postid_type ON gallery (postid, type)`
+  - Created index: `idx_college_ranks_college_id ON college_ranks (college_id, category_id)`
+- **Result**: Response time reduced from ~25s to ~0.8s
 
-**Files Modified in Angular Source:**
-- `src/index.html` - SEO meta tags
-- `src/app/modules/admin/home/home.component.ts`
-- `src/app/modules/admin/studyabroad/studyabroad.component.ts`
-- `src/app/modules/admin/allcolleges/allcolleges.component.ts`
-- `src/app/layout/layouts/horizontal/modern/menubar/menubar.component.ts`
-- Multiple other component files (token updates)
+#### Admin Panel Fixed ✅
+- **Issue**: admin.ohcampus.com returning 500 error
+- **Root Cause**: Admin directory missing from production
+- **Solution**: Restored from `/home/ohcampus/public_html_backup_20260223_135832/admin.ohcampus.com`
 
-**Backend Fix:**
-- `application/controllers/web/Common.php` - Added getEvents() wrapper method
+#### Angular Routing Fixed ✅
+- Restored `.htaccess` file for client-side routing
 
-## Architecture
+### Previous Sessions
+- Fixed critical production bug (site not loading data on iPhone/Incognito)
+- Fixed multiple JavaScript bugs in Angular source code
+- Replaced expired JWT tokens throughout Angular source
+- Fixed CORS issues on backend API
+- Built and deployed new Angular frontend
 
-```
-/home/ohcampus/
-├── public_html/                    # Main website (Angular)
-│   ├── index.html
-│   ├── main.*.js                   # Compiled Angular
-│   ├── assets/
-│   └── campusapi.ohcampus.com/     # CodeIgniter API Backend
-│       └── application/
-│           ├── controllers/web/    # API endpoints
-│           ├── models/
-│           └── config/
-│               ├── config.php      # Contains defaultToken
-│               └── jwt.php         # Contains jwt_key (MEDICAL_SECRET_KEY)
-```
+## Pending Issues
 
-## Tech Stack
-- **Frontend:** Angular 12.2.3 (Fuse template)
-- **Backend:** CodeIgniter 3 (PHP)
-- **Web Server:** Nginx + PHP-FPM 8.1
-- **Database:** MySQL
+### P1 - "New" Study Abroad Form Missing
+- Current form in Git repo is older version
+- Newer form exists only in production backup compiled files
+- Needs to be extracted and re-implemented
 
-## Credentials
-- **Server SSH:** root@103.118.17.62 (Port 22)
-- **JWT Secret:** `MEDICAL_SECRET_KEY`
-
-## Prioritized Backlog
-
-### P1 - Performance Issue
-**Issue:** `allCollegeList` page takes ~24 seconds to load
-- Root Cause: N+1 query problem in `College_model.php`
-- Fix: Refactor to use JOINs or batch fetching
-
-### P2 - Mobile App Build Failures
-- Status: Blocked on user action (need clean build from latest Git)
+### P1 - Missing Blog Images
+- Several images returning 404:
+  - `/uploads/blogs/bpt_image_21.jpg`
+  - `/uploads/blogs/ohcampus_after_12.jpg`
+  - `/uploads/blogs/allied_health_sciences_image_1.jpg`
 
 ### P2 - Scholarship Application Module
 - Backend complete
-- Next: Create frontend form
-- Then: OTP verification (MSG91), Admin panel
+- Frontend form pending
 
-### P3 - Future Tasks
+### P2 - Mobile App Build Issues
+- Blocked on user performing clean build
+
+## Future Tasks (Backlog)
+
+### P3 - Technical Debt
 - Refactor hardcoded JWT token architecture
+- Fix Nginx vs Apache configuration conflicts
+
+### P3 - Features
 - Email notifications for admission deadlines
-- Dynamic SEO meta tags
-- HTTP Status Codes fix for PUT/DELETE endpoints
+- OTP verification (MSG91) for scholarship form
+- Admin panel for scholarship applications
 
-## Known Issues Not Yet Fixed
-- Minor JS error in navigation component (`reading 'slice'`)
-- "Not secure" warning for `webmail.ohcampus.com`
+## Known Issues
+- "Not secure" warning for webmail.ohcampus.com
+- Incorrect HTTP status codes for PUT/DELETE endpoints in counselor app
 
-## Testing Status - ALL PASSED ✅
-- ✅ Desktop browser (normal) - All features working
-- ✅ Desktop browser (incognito) - All features working  
-- ✅ iPhone Safari simulation - All features working
-- ✅ Stats display: 10571 colleges, 6214 courses, 201 exams
-- ✅ Featured Colleges section loading
-- ✅ Articles section loading (6+ recent articles)
-- ✅ Complete navigation menus (25 categories)
-- ✅ Study Abroad form (/study-abroad) working
-- ✅ College List page (/allCollegeList) working with filters
-- ✅ SEO meta tags in source
-- ✅ API endpoints with CORS headers
+## API Endpoints
+- Main API Base: `https://campusapi.ohcampus.com/web/`
+- College List: `POST /College/getCollegeList`
+- College Details: `POST /College/getCollegeDetailsByID`
 
-## GitHub Repositories
-- Website Source: `https://github.com/sharathksckm-bot/ohcampus_website.git`
-- Mobile App Source: `https://github.com/sharathksckm-bot/ohcampus-mobile-app-developed.git`
+## Database Schema
+- Database: `ohcampus_beta`
+- Key Tables: `college`, `college_ranks`, `gallery`, `college_course`
+
+## 3rd Party Integrations
+- Firebase
+- Sendinblue
+- MSG91
+
+## Files Modified This Session
+- `/home/ohcampus/public_html/campusapi.ohcampus.com/application/models/web/College_model.php` - Added getRankListByClgIds()
+- `/home/ohcampus/public_html/.htaccess` - Restored for Angular routing
+- `/home/ohcampus/public_html/admin.ohcampus.com/` - Restored from backup
