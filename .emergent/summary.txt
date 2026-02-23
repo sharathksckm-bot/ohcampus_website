@@ -2,496 +2,205 @@
 **Initial Request:**
 Create a web-based counseling platform for OhCampus counselors with features for counselors (filtering/viewing colleges) and admins (managing fees, courses, FAQs).
 
-**Recent User Requests & Issues from this session:**
-1.  **Mobile App:** The user provided a GitHub link to an Ionic/Cordova mobile app and asked the agent to fix version conflict errors to enable building an Android App Bundle () file, version , for the Google Play Store.
-2.  ** (Main Site):**
-    *   Data (statistics for colleges, courses, exams) was not loading on the homepage, especially in incognito mode.
-3.  ** (Counselor App):**
-    *   The fee filter on the  page was not working correctly; it only filtered results on the currently displayed page, not the entire dataset.
-    *   Users were unable to log in. This was a recurring issue.
-    *   The fee management section in the admin panel had a limit of 100 records per college, which the user requested be increased to 300 and later removed entirely.
-4.  ** (Admin App):**
-    *   The Applications list page was not opening/loading data.
+**Recent User Requests & Issues:**
+1.  **Mobile App Build & Runtime Failures:** The user has been unable to build the Ionic/Cordova mobile app locally, encountering a long and cascading series of errors related to Gradle, Java versions, Node.js, XML parsing, and missing dependencies.
+2.  **Mobile App Runtime Bugs:** After a previous successful build, the user reported that Google Sign-in was not working, the splash screen logo was missing, and the app crashed after state selection.
+3.  **Production Bug (New):** The main website, , is not opening on iPhone devices.
+4.  **New Feature (Paused):** Build a complete Scholarship Application Module for .
 
 **User's preferred language**: English
 
 **what currently exists?**
-A complex, multi-application environment deployed directly on a production server, managed via SSH. The system consists of:
-1.  **Counselor App ():** A React frontend with a FastAPI/Python backend. The source code is in , with deployments to . It uses both MongoDB and MySQL.
-2.  **Admin App & Main Site (, ):** Two separate Angular frontends that share a CodeIgniter/PHP backend API (). The source code for these exists only on the production server.
-3.  **Mobile App (Ionic/Cordova):** A newly cloned codebase from a public GitHub repository located at . This is an Ionic/Cordova (Angular-based) mobile application.
-4.  **Server Infrastructure:** A live production server where Nginx and Apache () are both installed. Conflicts between them have caused outages. All administration is done directly on this server.
+The environment is a mix of technologies deployed on a live production server, managed via SSH. It includes:
+1.  ** & :** Pre-compiled Angular frontends with a CodeIgniter/PHP backend. Source code is unavailable; the agent modifies compiled JS files directly.
+2.  **:** A React frontend with a FastAPI/Python backend.
+3.  **Mobile App:** An Ionic/Cordova (Angular-based) mobile app codebase cloned from GitHub, located at . This project has a nested structure, with the actual code residing in .
 
 **Last working item**:
--   Last item agent was working: The agent was resolving version conflicts in the Ionic/Cordova mobile app to prepare it for an Android Studio build. The agent identified several issues, including duplicate dependencies, outdated , and old Gradle/AGP versions. It updated  to version  and  with modern SDK/Gradle versions. The agent was in the process of editing  to remove conflicting dependencies and implement the Firebase Bill of Materials (BOM).
+-   Last item agent was working: Investigating a new production bug where  fails to open on iPhone devices. The agent has checked server response, Nginx configuration, and the SSL certificate, which all appear correct. The agent suspects an iOS Safari-specific JavaScript issue, possibly related to  usage.
 -   Status: IN PROGRESS
 -   Agent Testing Done: N
--   Which testing method agent to use? manual testing by curl. The next agent cannot use platform tools for this. The agent must complete the gradle file modifications and then advise the user on how to build the  file using Android Studio, as this is outside the platform's capabilities.
+-   Which testing method agent to use? Manual testing by curl/ python -c. The agent needs to investigate production server logs and analyze the compiled JavaScript files for iOS-incompatible code. Web search for common iOS Safari issues is also recommended.
 -   User Testing Done: N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Complete Mobile App Gradle Configuration Fix (P0)**
--   **Issue 2: Fix not secure warning for  (P1)**
--   **Issue 3: Incorrect HTTP Status Codes for / endpoints (P2)**
--   **Issue 4: Implement dynamic SEO meta tags for  (P2)**
+-   **Issue 1: Mobile App Build & Runtime Failures (P0)**
+-   **Issue 2: Production Bug:  Not Opening on iPhone (P0)**
+-   **Issue 3: Mobile App Runtime: Splash Screen Logo Not Displaying (P1)**
+-   **Issue 4: Production Bugs - Misc. Frontend Issues (P2)**
+-   **Issue 5: Fix not secure warning for  (P3)**
 
 Issues Detail:
--   **Issue 1: Complete Mobile App Gradle Configuration Fix**
-    -   **Attempted fixes:**
-        -   Cloned the repository from GitHub.
-        -   Identified version conflicts in  and  (e.g., , ).
-        -   Updated  to version .
-        -   Updated  with  and .
-        -   Started modifying .
+-   **Issue 1: Mobile App Build & Runtime Failures**
+    -   **Attempted fixes:** The agent has spent the majority of the session remotely debugging the user's local build environment. A vast number of fixes were implemented on the agent's side and committed to git, including:
+        *   Fixing  calls to include  across all login pages.
+        *   Removing  from navigation to prevent app crashes.
+        *   Adding null checks for  parsing.
+        *   Fixing dozens of cascading Gradle errors by replacing  with , correcting library versions (), resolving Java/Gradle version conflicts (upgrading to Gradle 8.5 for Java 21), fixing duplicate plugin applications (), and adding missing  declarations.
+        *   Adding a runtime permission request for  on Android 13+.
+        *   Updating app version to 36.
+    -   **Next debug checklist:** The user's local environment is severely out of sync and brittle. The agent has committed all known fixes to the Git repository. The user must:
+        1.  Delete their local  directory.
+        2.  Pull the latest changes from the Git repository.
+        3.  Navigate into the nested  directory.
+        4.  Run , then , then .
+        5.  Attempt to build the  in Android Studio.
+    -   **Why fix this issue and what will be achieved with the fix?** This is the main blocker preventing any updates to the Android mobile app. A successful build is required to test all the runtime bug fixes.
+    -   **Status:** BLOCKED
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?** both
+    -   **Blocked on other issue:** User action to perform a clean build with the latest code from Git.
+
+-   **Issue 2: Production Bug:  Not Opening on iPhone**
+    -   **Attempted fixes:** Basic checks (server response, Nginx config, SSL cert) have been performed and passed.
     -   **Next debug checklist:**
-        1.  Continue editing .
-        2.  Implement the Firebase BOM ().
-        3.  Remove explicit version numbers from individual Firebase dependencies (e.g., ).
-        4.  Resolve duplicate dependencies by using  and ensuring consistent versions.
-        5.  Verify all Gradle files for syntax and correctness.
-        6.  Once complete, inform the user that the code is ready for an external build in Android Studio.
-    -   **Why fix this issue and what will be achieved with the fix?** To resolve build-breaking version conflicts, allowing the user to generate a  file for Google Play upload.
+        1.  Inspect the compiled JavaScript files on the production server for code patterns known to cause issues on iOS Safari (e.g., specific  formats, lookbehind regex, strict  handling).
+        2.  Check production server logs () for any unusual request patterns from iOS user agents.
+        3.  Use  to find common reasons for websites failing on iOS but not other platforms.
+    -   **Why fix this issue and what will be achieved with the fix?** To restore access to the main website for all iPhone users.
     -   **Status:** IN PROGRESS
     -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** None (Requires external native build).
-    -   **Blocked on other issue:** none
+    -   **Should Test frontend/backend/both after fix?** Frontend.
+    -   **Blocked on other issue:** None.
 
--   **Issue 2: Fix not secure warning for **
-    -   **Attempted fixes:** None in this session. Previous attempts involved Nginx proxy and SSL installation.
-    -   **Next debug checklist:**
-        1.  Examine Nginx config: .
-        2.  Check for mixed content or certificate chain issues using 
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
-    <meta name="google" content="notranslate" />
-    <meta name="apple-itunes-app" content="app-id=1188352635" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>Webmail Login</title>
-    <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAICAAAAEAIADSAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAgAAAAIAgGAAAAc3p69AAAAplJREFUWIXt1j2IHGUYB/DfOzdnjIKFkECIVWIKvUFsIkRExa9KJCLaWAgWJx4DilZWgpDDiI0wiViIoGATP1CCEDYHSeCwUBBkgiiKURQJFiLo4d0eOxYzC8nsO9m9XcXC+8MW+3z+9/l6l2383xH+iSBpElyTdoda26xsDqp/h0CVZ3vwKm7tMBngAs7h7eRYebG6hMtMBHbMBX89vfARHprQ5U8cwdFQlIOZCVR5di1+w/wWXT/EY6EoN5NZCODuKZLDwzgSMCuBe2fwfX6QZwtpWzqfBBtLC3txF/ZhxKbBGx0EfsTJS77vwmGjlZrD4mUzUOXZjVjGI65cnTXchB8iupdDUb7QinsQZ7GzZftdQj2JVZ49iC/w6JjksIo7OnS9tiA5Vn6GtyK2+1MY5NkhfGDygVrBAxH5WkPuMjR7/3UsUFLl2Q68s4XkA3ws3v9zoSjX28Kr5wL1xrTxa6ou+f6OZGvqPg9v1wZeaUjcELE/DVfNhWFSvy/enOIZ9eq1sTokEMNLWI79oirP8g6fXpVnh7GEvY1sV/OJ4f0UhyKKk6EoX4x5pEkgXv6L6OM99YqNw/c4kXSwG5nkIfpLCynuiahW1GWeJHkfT4aiXO9atz1XcD6I6yLyHu6bIPk6Hg9FeYZ63y9EjBarPDvQ8VJ1nd9V3D4m+RncForyxFCQ4hSeahlej88Hefauurdwaufr5z/F/ZHAX6nL+mZE18e36IWiHLkFocqzW9QXcNz1+wUHxJ/f10JRPjvGP4pk/vj5L3F8AtufdD+/p6dJDknzX+05fDLGtife/766t9MRgFCUffWTudwE3AqBlVCUf0xLYGTQqzzbhydwJ3Y34g318J1tmX+DPBTlz9MS2MY2/nP8DTGaqeTDf30rAAAAAElFTkSuQmCC" type="image/x-icon" />
-
-    <!-- EXTERNAL CSS -->
-    <link href="/cPanel_magic_revision_1748449569/unprotected/cpanel/fonts/open_sans/open_sans.min.css" rel="stylesheet" type="text/css" />
-    <link href="/cPanel_magic_revision_1753317517/unprotected/cpanel/style_v2_optimized.css" rel="stylesheet" type="text/css" />
-
-    <style type="text/css">
-/*
-  This css is included in the base template in case the css cannot be loaded because of access restrictions
-  If this css is updated, please update securitypolicy_header.html.tmpl as well
-*/
-.copyright {
-  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNTlwdCIgaGVpZ2h0PSIzMjAiIHZpZXdCb3g9IjAgMCAzNTkgMjQwIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImEiPjxwYXRoIGQ9Ik0xMjMgMGgyMzUuMzd2MjQwSDEyM3ptMCAwIi8+PC9jbGlwUGF0aD48L2RlZnM+PHBhdGggZD0iTTg5LjY5IDU5LjEwMmg2Ny44MDJsLTEwLjUgNDAuMmMtMS42MDUgNS42LTQuNjA1IDEwLjEtOSAxMy41LTQuNDAyIDMuNC05LjUwNCA1LjA5Ni0xNS4zIDUuMDk2aC0zMS41Yy03LjIgMC0xMy41NSAyLjEwMi0xOS4wNSA2LjMtNS41MDUgNC4yLTkuMzUzIDkuOTA0LTExLjU1MiAxNy4xMDMtMS40IDUuNDAzLTEuNTUgMTAuNS0uNDUgMTUuMzAyIDEuMDk4IDQuNzk2IDMuMDQ3IDkuMDUgNS44NTIgMTIuNzUgMi43OTcgMy43MDMgNi40IDYuNjUyIDEwLjc5NyA4Ljg1IDQuMzk3IDIuMiA5LjE5OCAzLjI5OCAxNC40IDMuMjk4aDE5LjJjMy42MDIgMCA2LjU0NyAxLjQ1MyA4Ljg1MiA0LjM1MiAyLjI5NyAyLjkwMiAyLjk0NSA2LjE0OCAxLjk1IDkuNzVsLTEyIDQ0LjM5OGgtMjFjLTE0LjQwMyAwLTI3LjY1My0zLjE0OC0zOS43NS05LjQ1LTEyLjEwMi02LjMtMjIuMTUzLTE0LjY0OC0zMC4xNTMtMjUuMDUtOC0xMC4zOTUtMTMuNDU0LTIyLjI0Ni0xNi4zNS0zNS41NDctMi45LTEzLjMtMi41NS0yNi45NSAxLjA1Mi00MC45NTNsMS4yLTQuNWMyLjU5Ny05LjYwMiA2LjY0OC0xOC40NSAxMi4xNDgtMjYuNTUgNS41LTguMDk4IDEyLTE1IDE5LjUtMjAuNyA3LjUtNS43IDE1Ljg1LTEwLjE0OCAyNS4wNS0xMy4zNTIgOS4yLTMuMTk1IDE4Ljc5Ny00Ljc5NiAyOC44LTQuNzk2IiBmaWxsPSIjZmY2YzJjIi8+PGcgY2xpcC1wYXRoPSJ1cmwoI2EpIj48cGF0aCBkPSJNMTIzLjg5IDI0MEwxODIuOTkgMTguNjAyYzEuNTk4LTUuNTk4IDQuNTk4LTEwLjA5OCA5LTEzLjVDMTk2LjM4OCAxLjcgMjAxLjQ4NCAwIDIwNy4yODggMGg2Mi43YzE0LjQwMyAwIDI3LjY1IDMuMTQ4IDM5Ljc1IDkuNDUgMTIuMTAyIDYuMyAyMi4xNTMgMTQuNjU1IDMwLjE1MyAyNS4wNSA3Ljk5NyAxMC40MDIgMTMuNSAyMi4yNTQgMTYuNSAzNS41NSAzIDEzLjMwNSAyLjU5NCAyNi45NTQtMS4yMDIgNDAuOTVsLTEuMiA0LjVjLTIuNTk3IDkuNjAyLTYuNTk3IDE4LjQ1LTEyIDI2LjU1LTUuMzk4IDguMDk4LTExLjg0NyAxNS4wNTItMTkuMzQ3IDIwLjg0OC03LjUgNS44MDUtMTUuODU1IDEwLjMwNS0yNS4wNSAxMy41LTkuMiAzLjIwNC0xOC44MDUgNC44MDUtMjguODA1IDQuODA1aC01NC4yOTdsMTAuOC00MC41YzEuNi01LjQwMiA0LjYtOS44IDktMTMuMjAzIDQuMzk2LTMuMzk4IDkuNDk3LTUuMTAyIDE1LjMwMi01LjEwMmgxNy4zOThjNy4yIDAgMTMuNjUzLTIuMiAxOS4zNTItNi41OTcgNS42OTUtNC4zOTggOS40NDUtMTAuMDk3IDExLjI1LTE3LjEgMS4zOTQtNC45OTcgMS41NDctOS45LjQ0NS0xNC43LTEuMS00LjgtMy4wNS05LjA0Ny01Ljg0OC0xMi43NS0yLjgtMy42OTUtNi40MDItNi42OTUtMTAuNzk2LTktNC40MDYtMi4yOTctOS4yMDYtMy40NS0xNC40MDItMy40NUgyMzMuMzlsLTQzLjggMTYyLjkwM2MtMS42MDYgNS40LTQuNjA2IDkuNzk3LTkgMTMuMTk1LTQuNDAzIDMuNDA3LTkuNDA2IDUuMTAyLTE1IDUuMTAyaC00MS43IiBmaWxsPSIjZmY2YzJjIi8+PC9nPjwvc3ZnPgo=) no-repeat scroll center top transparent;
-  background-size: 25px auto;
-}
-    </style>
-    <!--[if IE 6]>
-    <style type="text/css">
-        img {
-            behavior: url(/cPanel_magic_revision_1733780194/unprotected/cp_pngbehavior_login.htc);
-        }
-    </style>
-    <![endif]-->
-
-    <script>
-    window.DOM = { get: function(id) { return document.getElementById(id) } };
-    </script>
-</head>
-<body class="wm">
-
-
-
-
-<!-- Do not remove msg_code as it is needed for automated testing - msg_code:[]  -->
-<div id="login-wrapper" class="group has-pw-reset">
-    <div class="wrapper">
-    <div id="notify">
-        <noscript>
-            <div class="error-notice">
-                <img src="/cPanel_magic_revision_1733779511/unprotected/cpanel/images/notice-error.png" alt="Error" align="left"/>
-                JavaScript is disabled in your browser.
-                For Webmail to function properly, you must enable JavaScript.
-                If you do not enable JavaScript, certain features in Webmail will not function correctly.
-            </div>
-            </noscript>
-        
-        
-        <div id='login-status' class="error-notice" style="visibility: hidden">
-            <div class="content-wrapper">
-                <div id="login-detail">
-                    <div id="login-status-icon-container"><span class='login-status-icon'></span></div>
-                    <div id="login-status-message">You have logged out.</div>
-                </div>
-            </div>
-        </div>
-        <div id="IE-warning" class="warn-notice IE-warning-hide" style="display: none">
-            <div class="content-wrapper">
-                <div id="IE-warning-detail">
-                    <div id="IE-warning-icon-container"><span class="IE-warning-icon"></span></div>
-                    <div id="IE-warning-message">The system has detected that you are using Internet Explorer 11. cPanel &amp; WHM no longer supports Internet Explorer 11. For more information, read the <a title="cPanel Blog" target="_blank" href="https://go.cpanel.net/ie11deprecation">cPanel Blog</a>.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="display:none">
-        <div id="locale-container" style="visibility:hidden">
-            <div id="locale-inner-container">
-                <div id="locale-header">
-                    <div class="locale-head">Please select a locale:</div>
-                    <div class="close"><a href="javascript:void(0)" onclick="toggle_locales(false)">X Close</a></div>
-                </div>
-                <div id="locale-map">
-                    <div class="scroller clear">
-                        
-                            <div class="locale-cell"><a href="?locale=ar">العربية</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=cs">čeština</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=da">dansk</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=de">Deutsch</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=el">Ελληνικά</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=es">español</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=es_419">español latinoamericano</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=es_es">español de España</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=fi">suomi</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=fil">Filipino</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=fr">français</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=he">עברית</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=hu">magyar</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=id">Bahasa Indonesia</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=it">italiano</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=ja">日本語</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=ko">한국어</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=ms">Bahasa Melayu</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=nb">norsk bokmål</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=nl">Nederlands</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=pl">polski</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=pt">português</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=pt_br">português do Brasil</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=ro">română</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=ru">русский</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=sv">svenska</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=th">ไทย</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=tr">Türkçe</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=uk">українська</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=vi">Tiếng Việt</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=zh">中文</a></div>
-                        
-                            <div class="locale-cell"><a href="?locale=zh_tw">中文（台湾）</a></div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="content-container">
-        <div id="login-container">
-
-            <div id="login-sub-container">
-                    <div id="login-sub-header">
-                        
-                        <img class="main-logo" src="/cPanel_magic_revision_1733779511/unprotected/cpanel/images/webmail-logo.svg" alt="logo" />
-                        
-                    </div>
-                    <div id="login-sub"
-                                                >
-                        <div id="clickthrough_form" style="visibility:hidden">
-                            <form action="javascript:void(0)">
-                                <div class="notices"></div>
-                                <button type="submit" class="clickthrough-cont-btn">Continue</button>
-                            </form>
-                        </div>
-                        <div id="forms">
-                            <form novalidate id="login_form" action="/login/" method="post" style="visibility:">
-                                <div class="input-req-login"><label for="user">Email Address</label></div>
-                                <div class="input-field-login icon username-container">
-                                    <input name="user" id="user" autofocus="autofocus" value="" placeholder="Enter your email address." class="std_textbox" type="text"  tabindex="1" data-testid="user" required>
-                                </div>
-                                <div class="input-req-login login-password-field-label"><label for="pass">Password</label></div>
-                                <div class="input-field-login icon password-container">
-                                    <input name="pass" id="pass" placeholder="Enter your email password." class="std_textbox" type="password" tabindex="2"  data-testid="pass" required>
-                                </div>
-                                <div class="controls">
-                                    <div class="login-btn">
-                                        <button name="login" type="submit" id="login_submit" tabindex="3" data-testid="login_submit">Log in</button>
-                                    </div>
-
-                                                                            <div class="reset-pw">
-                                            <a href="/resetpass?start=1" id="reset_password">Reset Password
-                                            </a>
-                                        </div>
-                                                                    </div>
-                                <div class="clear" id="push"></div>
-                            </form>
-                        <!--CLOSE forms -->
-                        </div>
-                    <!--CLOSE login-sub -->
-                    </div>
-                    
-
-                                    <!--CLOSE wrapper -->
-                </div>
-            <!--CLOSE login-sub-container -->
-            </div>
-        <!--CLOSE login-container -->
-        </div>
-        
-                <div id="locale-footer">
-            <div class="locale-container">
-                <noscript>
-                    <form method="get" action=".">
-                        <select name="locale">
-                            <option value="">Change locale</option>
-                            <option value='ar'>العربية</option><option value='cs'>čeština</option><option value='da'>dansk</option><option value='de'>Deutsch</option><option value='el'>Ελληνικά</option><option value='es'>español</option><option value='es_419'>español latinoamericano</option><option value='es_es'>español de España</option><option value='fi'>suomi</option><option value='fil'>Filipino</option><option value='fr'>français</option><option value='he'>עברית</option><option value='hu'>magyar</option><option value='id'>Bahasa Indonesia</option><option value='it'>italiano</option><option value='ja'>日本語</option><option value='ko'>한국어</option><option value='ms'>Bahasa Melayu</option><option value='nb'>norsk bokmål</option><option value='nl'>Nederlands</option><option value='pl'>polski</option><option value='pt'>português</option><option value='pt_br'>português do Brasil</option><option value='ro'>română</option><option value='ru'>русский</option><option value='sv'>svenska</option><option value='th'>ไทย</option><option value='tr'>Türkçe</option><option value='uk'>українська</option><option value='vi'>Tiếng Việt</option><option value='zh'>中文</option><option value='zh_tw'>中文（台湾）</option>                        </select>
-                        <button style="margin-left: 10px" type="submit">Change</button>
-                    </form>
-                    <style type="text/css">#mobilelocalemenu, #locales_list {display:none}</style>
-                </noscript>
-                <ul id="locales_list">
-                    
-                        
-                        <li><a href="/?locale=ar">العربية</a></li>
-                    
-                        
-                        <li><a href="/?locale=cs">čeština</a></li>
-                    
-                        
-                        <li><a href="/?locale=da">dansk</a></li>
-                    
-                        
-                        <li><a href="/?locale=de">Deutsch</a></li>
-                    
-                        
-                        <li><a href="/?locale=el">Ελληνικά</a></li>
-                    
-                        
-                        <li><a href="/?locale=es">español</a></li>
-                    
-                        
-                        <li><a href="/?locale=es_419">español&nbsp;latinoamericano</a></li>
-                    
-                        
-                        <li><a href="/?locale=es_es">español&nbsp;de&nbsp;España</a></li>
-                    
-                        
-					
-                        <li><a href="javascript:void(0)" id="morelocale" onclick="toggle_locales(true)" title="More locales">…</a></li>
-                    
-                </ul>
-                <div id="mobilelocalemenu">Select a locale:
-                    <a href="javascript:void(0)" onclick="toggle_locales(true)" title="Change locale">English</a>
-                </div>
-            </div>
-        </div>
-    </div>
-<!--Close login-wrapper -->
-</div>
-<script>
-    var MESSAGES = {"ajax_timeout":"The connection timed out. Please try again.","temp_domain":"You cannot use the Webmail feature for an account that uses a temporary domain.","session_locale":"The desired locale has been saved to your browser. To change the locale in this browser again, select another locale on this screen.","no_username":"You must specify a username to log in.","authenticating":"Authenticating …","network_error":"A network error occurred during your login request. Please try again. If this condition persists, contact your network service provider.","read_below":"Read the important information below.","internal_error":"An internal error occurred. If this condition persists, contact the system administrator.","success":"Login successful. Redirecting …","invalid_login":"The login is invalid."};
-
-    window.IS_LOGOUT = false;
-
-
-//login.js
-"use strict";var FADE_DURATION=.45;var FADE_DELAY=20;var AJAX_TIMEOUT=3e4;var LOCALE_FADES=[];var HAS_CSS_OPACITY="opacity"in document.body.style;var login_form=DOM.get("login_form");var login_username_el=DOM.get("user");var login_password_el=DOM.get("pass");var login_submit_el=DOM.get("login_submit");window.get_goto=function(appOrUri){let queryStr=window.location.search;queryStr=queryStr.substr(1);let exploded=queryStr.split("&");exploded=exploded.flatMap((kv=>kv.split("=")));let ret="";let otherParams=[];for(let i=0;i<exploded.length;i++){if(exploded[i]==="goto_"+appOrUri){ret=exploded[++i];continue}otherParams.push(exploded[i]+"="+exploded[++i])}let alt=location.href.replace(location.origin,"");if(appOrUri==="uri"&&alt.length>1){alt=alt.substr(1);alt=alt.replace(new RegExp("^cpsess[0-9]+/"),"");alt=alt.replace(new RegExp("\\?.*$"),"");ret=alt}if(appOrUri==="uri"&&otherParams.length){ret=ret+"?"+otherParams.join("&")}if(ret.indexOf("webmaillogout.cgi")>=0){ret=""}return ret};window.goto_app=window.get_goto("app");window.goto_uri=window.get_goto("uri");var div_cache={"login-page":DOM.get("login-page")||false,"locale-container":DOM.get("locale-container")||false,"login-container":DOM.get("login-container")||false,"locale-footer":DOM.get("locale-footer")||false,"content-cell":DOM.get("content-container")||false,invalid:DOM.get("invalid")||false};var content_cell=div_cache["content-cell"];if(div_cache["locale-footer"]){div_cache["locale-footer"].style.display="block"}var reset_form=DOM.get("reset_form");var set_opacity;if(HAS_CSS_OPACITY){set_opacity=function setOpacity(el,opacity){el.style.opacity=opacity}}else{var filter_regex=/(DXImageTransform\.Microsoft\.Alpha\()[^)]*\)/;set_opacity=function setOpacity(el,opacity){var filter_text=el.currentStyle.filter;if(!filter_text){el.style.filter="progid:DXImageTransform.Microsoft.Alpha(enabled=true)"}else if(!filter_regex.test(filter_text)){el.style.filter+=" progid:DXImageTransform.Microsoft.Alpha(enabled=true)"}else{var new_filter=filter_text.replace(filter_regex,"$1enabled=true)");if(new_filter!==filter_text){el.style.filter=new_filter}}try{el.filters.item("DXImageTransform.Microsoft.Alpha").opacity=opacity*100}catch(e){try{el.filters.item("alpha").opacity=opacity*100}catch(error){}}}}function toggle_locales(show_locales){while(LOCALE_FADES.length){clearInterval(LOCALE_FADES.shift())}var newly_shown=div_cache[show_locales?"locale-container":"login-container"];set_opacity(newly_shown,0);if(HAS_CSS_OPACITY){content_cell.replaceChild(newly_shown,content_cell.children[0])}else{var old=content_cell.children[0];content_cell.insertBefore(newly_shown,old);newly_shown.style.display="";old.style.display="none"}LOCALE_FADES.push(fade_in(newly_shown));LOCALE_FADES.push((show_locales?fade_out:fade_in)("locale-footer"))}function showIEBanner(){if(navigator.userAgent.indexOf("Trident")!==-1){var ieBannerDiv=document.getElementById("IE-warning");if(ieBannerDiv){ieBannerDiv.classList.remove("IE-warning-hide")}}}showIEBanner();function fade_in(el,duration,_fade_out_instead){el=div_cache[el]||DOM.get(el)||el;var style_obj=el.style;var interval;var cur_style=window.getComputedStyle?getComputedStyle(el,null):el.currentStyle;var visibility=cur_style.visibility;var start_opacity;if(el.offsetWidth&&visibility!=="hidden"){if(window.getComputedStyle){start_opacity=Number(cur_style.opacity)}else{try{start_opacity=el.filters.item("DXImageTransform.Microsoft.Alpha").opacity}catch(e){try{start_opacity=el.filters("alpha").opacity}catch(error){start_opacity=100}}start_opacity/=100}if(!start_opacity){start_opacity=0}}else{start_opacity=0;set_opacity(el,0)}if(_fade_out_instead&&start_opacity<.01){if(start_opacity){set_opacity(el,0)}return}if(!duration){duration=FADE_DURATION}var duration_ms=duration*1e3;var start=new Date;var end;if(_fade_out_instead){end=duration_ms+start.getTime()}else{style_obj.visibility="visible"}var fader=function(){var opacity;if(_fade_out_instead){opacity=start_opacity*(end-new Date)/duration_ms;if(opacity<=0){opacity=0;clearInterval(interval);style_obj.visibility="hidden"}}else{opacity=start_opacity+(1-start_opacity)*(new Date-start)/duration_ms;if(opacity>=1){opacity=1;clearInterval(interval)}}set_opacity(el,opacity)};fader();interval=setInterval(fader,FADE_DELAY);return interval}function fade_out(el,timeout){return fade_in(el,timeout,true)}function AjaxObject(url,callbackFunction){this._url=url;this._callback=callbackFunction||function(){}}AjaxObject.prototype.updating=false;AjaxObject.prototype.abort=function(){if(this.updating){this.AJAX.abort();delete this.AJAX}};AjaxObject.prototype.update=function(passData,postMethod){if(this.AJAX){return false}var ajax=null;if(window.XMLHttpRequest){ajax=new XMLHttpRequest}else if(window.ActiveXObject){ajax=new window.ActiveXObject("Microsoft.XMLHTTP")}else{return false}var timeout;var that=this;ajax.onreadystatechange=function(){if(ajax.readyState==4){clearTimeout(timeout);that.updating=false;that._callback(ajax);delete that.AJAX}};try{var uri;timeout=setTimeout((function(){that.abort();show_status(MESSAGES.ajax_timeout,"error")}),AJAX_TIMEOUT);if(/post/i.test(postMethod)){uri=this._url+"?login_only=1";ajax.open("POST",uri,true);ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");ajax.send(passData)}else{uri=this._url+"?"+passData+"&timestamp="+(new Date).getTime();ajax.open("GET",uri,true);ajax.send(null)}this.AJAX=ajax;this.updating=true}catch(e){login_form.submit()}return true};var _text_content="textContent"in document.body?"textContent":"innerText";function _process_parsed_login_success(result){var final_uri;var login_url_regex=/^\/(?:logout|login|openid_connect_callback)\/?/;if(result.redirect&&!login_url_regex.test(result.redirect)){final_uri=result.redirect}var location_obj_to_redirect;if(/^(?:\/cpsess[^/]+)\/$/.test(final_uri)){location_obj_to_redirect=top.location}else{if(result.security_token&&top!==window){for(var f=0;f<top.frames.length;f++){if(top.frames[f]!==window){var href=top.frames[f].location.href.replace(/\/cpsess[.\d]+/,result.security_token);top.frames[f].location.href=href}}}location_obj_to_redirect=location}var redirector=function(){location_obj_to_redirect.href=final_uri+location.hash};if(result.notices&&result.notices.length){show_status(MESSAGES.read_below,"warn");var click_form=DOM.get("clickthrough_form");var container=click_form.querySelector(".notices");for(var n=0;n<result.notices.length;n++){var new_p=document.createElement("p");new_p.textContent=result.notices[n].content;container.appendChild(new_p)}click_form.onsubmit=redirector;fade_out(login_form);fade_in(click_form)}else{show_status(MESSAGES.success,"success");fade_out("content-container",FADE_DURATION/2);redirector()}}var login_button={button:login_submit_el,_suppressed_disabled:null,suppress:function(){if(this._suppressed_disabled===null){this._suppressed_disabled=this.button.disabled;this.button.disabled=true}},release:function(){if(this._suppressed_disabled!==null){this.button.disabled=this._suppressed_disabled;this._suppressed_disabled=null}},queue_disabled:function(state){if(this._suppressed_disabled===null){this.button.disabled=state}else{this._suppressed_disabled=state}}};function login_results(ajax_obj){var result;try{result=JSON.parse(ajax_obj&&ajax_obj.responseText)}catch(e){result=null}var response_status=ajax_obj.status;if(response_status===200){if(result){if(result.session){window.SubmitPost.submit(result.redirect,{session:result.session,goto_uri:result.goto_uri})}else{_process_parsed_login_success(result)}}else{login_form.submit()}return}else{if(parseInt(response_status/100,10)===4){var msg_code=result&&result.message;show_status(MESSAGES[msg_code||"invalid_login"]||MESSAGES.invalid_login,"error");set_status_timeout()}else{show_status(MESSAGES.network_error,"error")}document.body.classList.remove("logging-in");login_button.release();return}}var level_classes={info:"info-notice",error:"error-notice",success:"success-notice",warn:"warn-notice"};var levels_regex="";Object.keys(level_classes).forEach((function(lv){levels_regex+="|"+level_classes[lv]}));levels_regex=new RegExp("\\b(?:"+levels_regex.slice(1)+")\\b");function show_status(message,level){DOM.get("login-status-message")[_text_content]=message;var container=DOM.get("login-status");var this_class=level&&level_classes[level]||level_classes.info;var el_class=container.className.replace(levels_regex,this_class);container.className=el_class;fade_in(container);reset_status_timeout()}var STATUS_TIMEOUT=null;function reset_status_timeout(){clearTimeout(STATUS_TIMEOUT);STATUS_TIMEOUT=null}function set_status_timeout(delay){STATUS_TIMEOUT=setTimeout((function(){fade_out("login-status")}),delay||8e3)}var LOGIN_SUBMIT_OK=true;document.body.onkeyup=function(){LOGIN_SUBMIT_OK=true};document.body.onmousedown=function(){LOGIN_SUBMIT_OK=true};function do_login(){if(LOGIN_SUBMIT_OK){LOGIN_SUBMIT_OK=false;if(login_username_el.value.length===0){show_status(MESSAGES.no_username,"error");return false}document.body.classList.add("logging-in");login_button.suppress();show_status(MESSAGES.authenticating,"info");var goto_app_query=window.goto_app&&window.goto_app.value?"&goto_app="+encodeURIComponent(window.goto_app.value):"";var goto_uri_query=window.goto_uri?"&goto_uri="+encodeURIComponent(window.goto_uri):"";var ajax_login=new AjaxObject(login_form.action,login_results);ajax_login.update("user="+encodeURIComponent(login_username_el.value)+"&pass="+encodeURIComponent(login_password_el.value)+goto_app_query+goto_uri_query,"POST")}return false}function show_login(){var select_user_form=document.getElementById("select_user_form");select_user_form.style.display="none";var login_form=document.getElementById("login_form");login_form.style.visibility="";var select_users_option_block=document.getElementById("select_users_option_block");select_users_option_block.style.display="block";var login_sub=document.getElementById("login-sub");login_sub.style.display="block"}function show_select_user(){var login_form=document.getElementById("login_form");login_form.style.visibility="hidden";var select_users_option_block=document.getElementById("select_users_option_block");select_users_option_block.style.display="none";var select_user_form=document.getElementById("select_user_form");select_user_form.style.display="block";var login_sub=document.getElementById("login-sub");login_sub.style.display="none"}if(!window.JSON){login_button.suppress();var new_script=document.createElement("script");new_script.onreadystatechange=function(){if(this.readyState==="loaded"||this.readyState==="complete"){this.onreadystatechange=null;window.JSON={parse:window.jsonParse};window.jsonParse=undefined;login_button.release()}};new_script.src="/unprotected/json-minified.js";document.getElementsByTagName("head")[0].appendChild(new_script)}try{login_form.onsubmit=do_login;set_opacity(DOM.get("login-wrapper"),0);LOCALE_FADES.push(fade_in("login-wrapper"));var preload=document.createElement("div");preload.id="preload_images";document.body.insertBefore(preload,document.body.firstChild);if(window.IS_LOGOUT){set_status_timeout(1e4)}else if(/(?:\?|&)locale=[^&]/.test(location.search)){show_status(MESSAGES.session_locale)}setTimeout((function(){login_username_el.focus()}),100)}catch(e){if(window.console){console.warn(e)}}
-
-//submit_post.js
-(function(context){"use strict";var DOC=context.document;function _wrongType(name,value){throw new Error("“"+name+"” must be a string, number, or array, not "+value)}var scalarTypeIsOk={number:true,string:true};function submit(url,args){var myform=DOC.createElement("form");myform.method="POST";myform.action=url;myform.style.display="none";Object.keys(args).forEach((function(name){var values;if("object"===typeof args[name]){if(args[name]instanceof Array){values=args[name]}else{_wrongType(name,args[name])}}else if(scalarTypeIsOk[typeof args[name]]){values=[args[name]]}else{_wrongType(name,args[name])}values.forEach((function(val){var myvar=DOC.createElement("input");myvar.type="hidden";myvar.name=name;myvar.value=val;myform.appendChild(myvar)}))}));DOC.documentElement.appendChild(myform);myform.submit();DOC.documentElement.removeChild(myform)}context.SubmitPost={submit:submit}})(window);
-
-//jstz.min.js
-/*! jstz - v1.0.4 - 2012-12-18 */
-(function(e){var t=function(){"use strict";var e="s",n=function(e){var t=-e.getTimezoneOffset();return t!==null?t:0},r=function(e,t,n){var r=new Date;return e!==undefined&&r.setFullYear(e),r.setDate(n),r.setMonth(t),r},i=function(e){return n(r(e,0,2))},s=function(e){return n(r(e,5,2))},o=function(e){var t=e.getMonth()>7?s(e.getFullYear()):i(e.getFullYear()),r=n(e);return t-r!==0},u=function(){var t=i(),n=s(),r=i()-s();return r<0?t+",1":r>0?n+",1,"+e:t+",0"},a=function(){var e=u();return new t.TimeZone(t.olson.timezones[e])},f=function(e){var t=new Date(2010,6,15,1,0,0,0),n={"America/Denver":new Date(2011,2,13,3,0,0,0),"America/Mazatlan":new Date(2011,3,3,3,0,0,0),"America/Chicago":new Date(2011,2,13,3,0,0,0),"America/Mexico_City":new Date(2011,3,3,3,0,0,0),"America/Asuncion":new Date(2012,9,7,3,0,0,0),"America/Santiago":new Date(2012,9,3,3,0,0,0),"America/Campo_Grande":new Date(2012,9,21,5,0,0,0),"America/Montevideo":new Date(2011,9,2,3,0,0,0),"America/Sao_Paulo":new Date(2011,9,16,5,0,0,0),"America/Los_Angeles":new Date(2011,2,13,8,0,0,0),"America/Santa_Isabel":new Date(2011,3,5,8,0,0,0),"America/Havana":new Date(2012,2,10,2,0,0,0),"America/New_York":new Date(2012,2,10,7,0,0,0),"Asia/Beirut":new Date(2011,2,27,1,0,0,0),"Europe/Helsinki":new Date(2011,2,27,4,0,0,0),"Europe/Istanbul":new Date(2011,2,28,5,0,0,0),"Asia/Damascus":new Date(2011,3,1,2,0,0,0),"Asia/Jerusalem":new Date(2011,3,1,6,0,0,0),"Asia/Gaza":new Date(2009,2,28,0,30,0,0),"Africa/Cairo":new Date(2009,3,25,0,30,0,0),"Pacific/Auckland":new Date(2011,8,26,7,0,0,0),"Pacific/Fiji":new Date(2010,11,29,23,0,0,0),"America/Halifax":new Date(2011,2,13,6,0,0,0),"America/Goose_Bay":new Date(2011,2,13,2,1,0,0),"America/Miquelon":new Date(2011,2,13,5,0,0,0),"America/Godthab":new Date(2011,2,27,1,0,0,0),"Europe/Moscow":t,"Asia/Yekaterinburg":t,"Asia/Omsk":t,"Asia/Krasnoyarsk":t,"Asia/Irkutsk":t,"Asia/Yakutsk":t,"Asia/Vladivostok":t,"Asia/Kamchatka":t,"Europe/Minsk":t,"Australia/Perth":new Date(2008,10,1,1,0,0,0)};return n[e]};return{determine:a,date_is_dst:o,dst_start_for:f}}();t.TimeZone=function(e){"use strict";var n={"America/Denver":["America/Denver","America/Mazatlan"],"America/Chicago":["America/Chicago","America/Mexico_City"],"America/Santiago":["America/Santiago","America/Asuncion","America/Campo_Grande"],"America/Montevideo":["America/Montevideo","America/Sao_Paulo"],"Asia/Beirut":["Asia/Beirut","Europe/Helsinki","Europe/Istanbul","Asia/Damascus","Asia/Jerusalem","Asia/Gaza"],"Pacific/Auckland":["Pacific/Auckland","Pacific/Fiji"],"America/Los_Angeles":["America/Los_Angeles","America/Santa_Isabel"],"America/New_York":["America/Havana","America/New_York"],"America/Halifax":["America/Goose_Bay","America/Halifax"],"America/Godthab":["America/Miquelon","America/Godthab"],"Asia/Dubai":["Europe/Moscow"],"Asia/Dhaka":["Asia/Yekaterinburg"],"Asia/Jakarta":["Asia/Omsk"],"Asia/Shanghai":["Asia/Krasnoyarsk","Australia/Perth"],"Asia/Tokyo":["Asia/Irkutsk"],"Australia/Brisbane":["Asia/Yakutsk"],"Pacific/Noumea":["Asia/Vladivostok"],"Pacific/Tarawa":["Asia/Kamchatka"],"Africa/Johannesburg":["Asia/Gaza","Africa/Cairo"],"Asia/Baghdad":["Europe/Minsk"]},r=e,i=function(){var e=n[r],i=e.length,s=0,o=e[0];for(;s<i;s+=1){o=e[s];if(t.date_is_dst(t.dst_start_for(o))){r=o;return}}},s=function(){return typeof n[r]!="undefined"};return s()&&i(),{name:function(){return r}}},t.olson={},t.olson.timezones={"-720,0":"Etc/GMT+12","-660,0":"Pacific/Pago_Pago","-600,1":"America/Adak","-600,0":"Pacific/Honolulu","-570,0":"Pacific/Marquesas","-540,0":"Pacific/Gambier","-540,1":"America/Anchorage","-480,1":"America/Los_Angeles","-480,0":"Pacific/Pitcairn","-420,0":"America/Phoenix","-420,1":"America/Denver","-360,0":"America/Guatemala","-360,1":"America/Chicago","-360,1,s":"Pacific/Easter","-300,0":"America/Bogota","-300,1":"America/New_York","-270,0":"America/Caracas","-240,1":"America/Halifax","-240,0":"America/Santo_Domingo","-240,1,s":"America/Santiago","-210,1":"America/St_Johns","-180,1":"America/Godthab","-180,0":"America/Argentina/Buenos_Aires","-180,1,s":"America/Montevideo","-120,0":"Etc/GMT+2","-120,1":"Etc/GMT+2","-60,1":"Atlantic/Azores","-60,0":"Atlantic/Cape_Verde","0,0":"Etc/UTC","0,1":"Europe/London","60,1":"Europe/Berlin","60,0":"Africa/Lagos","60,1,s":"Africa/Windhoek","120,1":"Asia/Beirut","120,0":"Africa/Johannesburg","180,0":"Asia/Baghdad","180,1":"Europe/Moscow","210,1":"Asia/Tehran","240,0":"Asia/Dubai","240,1":"Asia/Baku","270,0":"Asia/Kabul","300,1":"Asia/Yekaterinburg","300,0":"Asia/Karachi","330,0":"Asia/Kolkata","345,0":"Asia/Kathmandu","360,0":"Asia/Dhaka","360,1":"Asia/Omsk","390,0":"Asia/Rangoon","420,1":"Asia/Krasnoyarsk","420,0":"Asia/Jakarta","480,0":"Asia/Shanghai","480,1":"Asia/Irkutsk","525,0":"Australia/Eucla","525,1,s":"Australia/Eucla","540,1":"Asia/Yakutsk","540,0":"Asia/Tokyo","570,0":"Australia/Darwin","570,1,s":"Australia/Adelaide","600,0":"Australia/Brisbane","600,1":"Asia/Vladivostok","600,1,s":"Australia/Sydney","630,1,s":"Australia/Lord_Howe","660,1":"Asia/Kamchatka","660,0":"Pacific/Noumea","690,0":"Pacific/Norfolk","720,1,s":"Pacific/Auckland","720,0":"Pacific/Tarawa","765,1,s":"Pacific/Chatham","780,0":"Pacific/Tongatapu","780,1,s":"Pacific/Apia","840,0":"Pacific/Kiritimati"},typeof exports!="undefined"?exports.jstz=t:e.jstz=t})(this);
-//cptimezone_optimized.js
-(function(window){"use strict";var JSTZ_RELATIVE_PATH="sharedjs/jstz.min.js";var TIMEZONE_COOKIE="timezone";var COOKIE_TIMEZONE_MISMATCH_CLASS="if-timezone-cookie-needs-update";var DETECTED_TZ_CLASS="detected-timezone";var SHOWN_CLASS="shown";function _get_cookie(sKey){return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*"+encodeURIComponent(sKey).replace(/[\-\.\+\*]/g,"\\$&")+"\\s*\\=\\s*([^;]*).*$)|^.*$"),"$1"))||null}function _detect_timezone(){return window.jstz.determine().name()}function reset_timezone_and_reload(){return reset_timezone(location.reload.bind(location))}function _set_cookie(callback){document.cookie=TIMEZONE_COOKIE+"="+_detect_timezone()+"; path=/; secure";if(callback){callback()}}function set_timezone_if_unset(on_success){return!_get_cookie(TIMEZONE_COOKIE)&&reset_timezone(on_success)}function reset_timezone(on_success){_set_cookie(on_success);return true}function set_timezone_and_reload_if_unset(){return set_timezone_if_unset(location.reload.bind(location))}function show_cookie_timezone_mismatch_nodes(){var detected_tz=_detect_timezone();if(detected_tz!==_get_cookie(TIMEZONE_COOKIE)){var detected_nodes=document.querySelectorAll("."+DETECTED_TZ_CLASS);[].forEach.call(detected_nodes,(function(n){n.textContent=detected_tz}));var show_nodes=document.querySelectorAll("."+COOKIE_TIMEZONE_MISMATCH_CLASS);[].forEach.call(show_nodes,(function(n){n.className+=" "+SHOWN_CLASS}))}}window.CPTimezone={show_cookie_timezone_mismatch_nodes:show_cookie_timezone_mismatch_nodes,reset_timezone_and_reload:reset_timezone_and_reload,reset_timezone:reset_timezone,set_timezone_and_reload_if_unset:set_timezone_and_reload_if_unset}})(window);
-
-
-CPTimezone.reset_timezone();
-</script>
-
-<style>
-    @media (min-width: 481px) {
-        #select_user_form {
-            width: px;
-        }
-    }
-</style>
-    
-    <div class="copyright">Copyright© 2026 cPanel, L.L.C.
-    <br /><a href="https://go.cpanel.net/privacy" target="_blank">Privacy Policy</a></div>
-    
-
-</body>
-
-</html>.
-    -   **Why fix this issue and what will be achieved with the fix?** To provide secure, trusted access to webmail.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** Backend (Nginx).
-
--   **Issue 3: Incorrect HTTP Status Codes**
-    -   **Attempted fixes:** None.
-    -   **Next debug checklist:** Audit  and  endpoints in  and ensure they return  or  as appropriate.
-    -   **Why fix this issue and what will be achieved with the fix?** To align the API with RESTful best practices.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** Backend.
-
--   **Issue 4: Implement dynamic SEO meta tags for **
-    -   **Attempted fixes:** None in this session.
-    -   **Next debug checklist:** Modify  to use  to inject meta descriptions based on the URL, as it's a client-side rendered Angular app.
-    -   **Why fix this issue and what will be achieved with the fix?** To improve the site's SEO.
-    -   **Status:** NOT STARTED
+-   **Issue 3: Mobile App Runtime: Splash Screen Logo Not Displaying**
+    -   **Attempted fixes:** The agent implemented a fix for Android 12+ splash screens by creating the necessary theme files (), drawables (), and updating .
+    -   **Next debug checklist:** Await user confirmation after they successfully build and test version 36.
+    -   **Why fix this issue and what will be achieved with the fix?** Restore app branding.
+    -   **Status:** USER VERIFICATION PENDING
     -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Backend (Nginx).
+    -   **Should Test frontend/backend/both after fix?** None (Requires external build and testing by the user).
+    -   **Blocked on other issue:** Issue 1.
+
+-   **Issue 4: Production Bugs - Misc. Frontend Issues**
+    -   **Attempted fixes:** None possible. These were identified as frontend-only bugs in the pre-compiled Angular app.
+    -   **Next debug checklist:** Inform the user again that without the Angular source code, these issues (Admin Enquiry message, Management Seat form, Study Abroad view, College pages on iOS) cannot be fixed.
+    -   **Why fix this issue and what will be achieved with the fix?** To resolve critical bugs in the admin panel and main website.
+    -   **Status:** BLOCKED
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Frontend.
+    -   **Blocked on other issue:** Lack of frontend source code.
 
 **In progress Task List**:
--   **Task 1: Prepare Mobile App for .aab Build**
-    -   **Where to resume:** Continue editing  to resolve all identified version conflicts.
-    -   **What will be achieved with this?** A clean, buildable codebase that the user can import into Android Studio to generate the required  file.
+-   **Task 1: Build Scholarship Application Module (P1)**
+    -   **Where to resume:** The backend (DB table, PHP controllers/model) is done. The next step is to create the frontend. Start by creating the directory: . Then, create an  file inside it with the scholarship form, including the user-requested progress indicator.
+    -   **What will be achieved with this?** A new lead generation feature for .
     -   **Status:** IN PROGRESS
-    -   **Should Test frontend/backend/both after fix?** None.
+    -   **Should Test frontend/backend/both after fix?** Both.
+    -   **Blocked on something:** Agent is currently focused on the P0 iOS production bug.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   **P1:** Implement email notifications for admission deadlines.
+    -   **P1:** Implement OTP verification (MSG91) for the scholarship form.
+    -   **P1:** Implement auto-acknowledgement Email/SMS (Sendinblue) for scholarship submissions.
+    -   **P1:** Add Scholarship Applications functionality to the admin panel.
 -   **Future Tasks:**
+    -   **P2:** Implement email notifications for admission deadlines.
     -   **P2:** Develop an advanced analytics dashboard.
-    -   **P3:** Refactor the monolithic .
-    -   **P3:** Refactor the hardcoded JWT token architecture in the  Angular app.
+    -   **P3:** Refactor the hardcoded JWT token architecture in .
+    -   **P3:** Refactor the monolithic  for the counselor app.
 
 **Completed work in this session**
--   ** Data Loading Fixed:** Diagnosed and fixed an expired JWT hardcoded in over 40 lazy-loaded JavaScript chunk files. Also resolved an aggressive Nginx caching issue () that prevented users from getting the updated files by temporarily setting  headers.
--   ** Server-Side Filtering Implemented:** Modified the Courses page filter to work server-side, ensuring it filters across all 2100+ courses instead of just the 50 on the current page. This involved updating the FastAPI backend and the React frontend.
--   ** Production Data Loading Fixed:** Fixed an issue where a local build was deployed with a preview backend URL instead of the production one, causing demo data to show. Rebuilt with the correct URL and deployed.
--   ** Fee Filter Logic Fixed:** Updated the frontend logic in  to correctly calculate first-year fees from  (from MySQL) when the detailed  array (from MongoDB) was not present.
--   ** Login Restored (Recurring Issue):** Diagnosed that Apache () had taken over ports 80/443, causing Nginx to fail. Stopped Apache, started Nginx, and disabled the Apache service to prevent recurrence.
--   ** Record Limits Removed:** Removed all hardcoded  calls from  for fees, colleges, users, and other collections to ensure all data is processed.
--   ** Application List Fixed:** Resolved an issue preventing the application list from loading. The fix involved correcting file permissions on a  directory on the server that the PHP backend was trying to write to.
--   ** Eligibility Display Verified:** Confirmed via screenshot that the fix to parse and display serialized PHP eligibility data was working correctly on the live site.
+-   **Mobile App Build System Overhaul (Unverified):**
+    -   Fixed dozens of cascading Gradle/Java/Node/TypeScript errors on the agent's side, enabling a successful build of the project.
+    -   Standardized build configuration on Gradle 8.5 and AGP 8.2.0 for Java 21 compatibility.
+    -   Corrected all  repository references to .
+    -   Fixed duplicate plugin applications and added missing  declarations.
+-   **Mobile App Bug Fixes (Unverified):**
+    -   Patched all known Google Sign-in pages (, , etc.) to include the required .
+    -   Fixed state selection crash by removing  and adding error handling.
+    -   Added robust null-checking for  parsing to prevent crashes.
+    -   Implemented a fix for the Android 12+ splash screen.
+-   **New Mobile App Feature (Unverified):**
+    -   Added a runtime permission request for  on Android 13+.
+-   **Version Control:**
+    -   Updated mobile app version to 36 across all relevant config files.
+    -   Committed all fixes to the Git repository.
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1:  SSL warning:** This issue was present in the initial handoff and was not addressed.
--   **Issue 2: Incorrect / status codes:** This API improvement task was noted but not prioritized.
--   **Issue 3: Dynamic SEO meta tags for :** This task was deferred.
+-   The frontend-dependent bugs from the user's initial list (see Issue 4).
+-   The not secure warning for .
+-   Incorrect HTTP Status Codes for / endpoints in the counselor app backend.
+-   Dynamic SEO meta tags for .
 
 **Known issue recurrence from previous fork**
--   **Nginx vs. Apache Conflict:** Apache () service can automatically start and take over ports 80/443, causing the Nginx proxy to fail and making all backend APIs unreachable. This has happened multiple times. A cron job was added as a temporary fix.
--   **Hardcoded Expired JWTs:** The  Angular application has its API token hardcoded in numerous compiled JavaScript files. This token expires, breaking the site. The agent had to find and replace the token in over 40 files to fix it. This is a major architectural flaw.
+-   **Hardcoded Expired JWTs:** The  site's authentication token is hardcoded in compiled JS files and will expire again, taking the site down. This is a critical architectural flaw.
+-   **Nginx vs. Apache Conflict:** The server has both web servers installed, creating a risk of port conflicts.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Direct Production Administration:** All work is done via SSH on a live, multi-application production server.
--   **Server Process Conflict:** Apache () and Nginx are both installed and can conflict over port bindings (80/443), causing site-wide outages.
--   **Hardcoded JWTs in Compiled JS:** A critical flaw in the Angular apps where expired tokens are hardcoded in dozens of minified  files, requiring manual  replacements across the filesystem to fix.
--   **Aggressive Browser Caching:** Nginx was configured with  and  headers, making it very difficult to push updates to users without manually changing the Nginx config to force a cache bust.
--   **Ionic/Cordova & Android Gradle:** The mobile app requires knowledge of the Cordova build system and Android's Gradle configuration to resolve dependency and version conflicts.
--   **Multi-Database Architecture:** The counselor app uses MySQL for main course/college data but fetches detailed fee structures from MongoDB, requiring careful data merging.
+-   **Direct Production Administration:** All web work is done via SSH on a live production server.
+-   **Remote Debugging of User's Local Environment:** The primary challenge is diagnosing and fixing build errors happening on the user's local machine, which is out of sync with the server and has its own configuration issues (Node.js version, PowerShell policies, Java version).
+-   **Pre-compiled Frontend Management:** Modifying compiled JS files directly as source code is unavailable.
+-   **Cascading Build Failures:** The mobile app build process is extremely fragile. One fix often reveals another underlying incompatibility.
 
 **key DB schema**
--   No schema changes were made. The agent interacted with MySQL () and MongoDB ().
+-   scholarship_applications: 
 
 **changes in tech stack**
--   No new technologies were added, but the agent cloned and began work on an existing Ionic/Cordova (Angular) project.
+-   The mobile app build system has been stabilized on **Gradle 8.5** and **Android Gradle Plugin (AGP) 8.2.0** to be compatible with the user's **Java 21** environment.
 
 **All files of reference**
--    (in-progress edit)
--    (updated)
--    (updated)
--    (updated for server-side filtering)
--    (updated for server-side filtering and limit removal)
--    (updated for server-side filtering)
--    (on production server, token script added and moved)
--    (on production server, ~40 files updated via )
--    (on production server, cache headers modified)
-
-**Areas that need refactoring**:
--   **Hardcoded JWT Token:** The  Angular app's authentication mechanism is fundamentally broken and is the source of recurring outages. It needs to be refactored to use a proper dynamic token exchange flow.
--   **Web Server Configuration:** The presence of both Apache and Nginx is unstable. The server should be standardized to use only Nginx as the web server and reverse proxy.
--   **Deployment Process:** The deployment process for the counselor app is fragile and has previously deleted the backend. It needs to be replaced with a robust script that only updates the frontend build assets.
-
-**key api endpoints**
--    (GET): Updated to support  and  for server-side filtering.
--    (POST): Used to debug login issues.
--    (POST): Debugged for the main site data loading issue.
--    (POST): Debugged for the admin panel application list issue.
+*Too many to list individually.* The core of this session involved modifying nearly every Gradle build file (, , , , ) in the  directory and its subdirectories (, ). Key application source files modified include:
+-   
+-   
+-   
+-   
+-   
+-   
+-   
 
 **Critical Info for New Agent**
--   **You are working directly on a live production server.** Every command has immediate consequences.
--   **The Nginx vs. Apache conflict is a recurring CRITICAL issue.** If APIs suddenly start returning 404s or cPanel error pages, the first thing to check is if Apache has taken over ports 80/443. The command  is essential. A temporary cron job was added to mitigate this, but it may not be foolproof.
--   **The Angular apps rely on hardcoded JWTs.** If the main  site or  breaks with auth errors, it's highly likely an expired token is embedded in multiple compiled JS files on the server. This is a known, high-risk architectural flaw.
--   **The mobile app build cannot be completed on the platform.** Your task is to fix the Gradle files so the user can perform the final  build externally using Android Studio.
+-   **You are working directly on a live production server.** Be extremely cautious.
+-   **The user's local build environment is the main source of errors.** The agent's code on the server is considered correct and has been pushed to Git. Your primary role in the mobile app task is to guide the user to perform a clean build using the latest code from the repository. Do not assume the user's error descriptions reflect the state of the code on the server.
+-   **The mobile project has a nested  directory.** The user frequently makes the mistake of running commands in the parent folder. Remind them to  into the correct sub-directory.
+-   **The  JWT authentication will break again.** Be prepared to regenerate and  a new token. The secret key is .
+-   **Your immediate task is the production bug where  is not opening on iPhones.** This is the highest priority.
 
 **documents and test reports created in this job**
--    (updated)
+None.
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** Admin panel applications are not opening. (FIXED)
-2.  **User:** Requests to build a  file for the mobile app, version 0.0.34, and can provide keystore info. Asks for credit cost.
-3.  **Agent:** Responds (via support agent) that  generation is an external process and not charged, suggests exporting the code.
-4.  **User:** Asks the agent to check the code and fix version conflict errors that are preventing the build in Android Studio.
-5.  **User:** Provides the GitHub URL for the mobile app codebase.
-6.  **Agent:** Fails to clone (repo is private).
-7.  **User:** Makes the repository public.
-8.  **Agent:** Clones the repo and begins investigating the Ionic/Cordova project.
-9.  **Agent:** Identifies multiple Gradle version conflicts and starts applying fixes.
-10. **Agent:** Was in the middle of editing  when the session ended.
+10. User: Asks for code to add for Notification Permission Request. (RESOLVED)
+9.  Agent: Provides the code snippets.
+8.  User: Runs  in the wrong directory and gets an error. (RESOLVED)
+7.  Agent: Instructs the user to navigate to the correct nested project directory.
+6.  User: Reports a **new P0 bug**:  is not opening on iPhone devices. (PENDING)
+5.  Agent: Attempts to SSH into the production server to investigate the new bug.
+4.  Agent: Fails to SSH, installs .
+3.  Agent: Successfully checks the server's HTTP response (it's OK).
+2.  Agent: Inspects the Nginx configuration.
+1.  Agent: Inspects the SSL certificate (it's valid) and the site's .
 
 **Project Health Check:**
 -   **Broken:**
-    -   The  site shows a not secure warning, preventing trusted access.
+    -   The user's local mobile app build process is non-functional and the source of constant, cascading errors.
+    -   The production website  is inaccessible to iPhone users.
 -   **Fragile / High-Risk:**
-    -   **Hardcoded JWTs:** The entire  site is at constant risk of failure due to expiring tokens embedded in compiled JS files. **This is the highest architectural risk.**
-    -   **Nginx/Apache Conflict:** The server is unstable due to two web servers competing for ports. An outage is likely to happen again.
-    -   **Deployment Process:** The deployment for  is manual and has a history of causing production outages by deleting the backend.
+    -   ** JWT Authentication:** The architecture is fundamentally flawed and will cause a site-wide outage when the token expires.
+    -   **Server Configuration:** The Nginx/Apache conflict remains a risk.
+    -   **Mobile App Build Process:** The entire process is extremely brittle and wholly dependent on the user's local environment matching a complex set of dependencies.
 
 **3rd Party Integrations**
--   **Ionic/Cordova:** The mobile app framework. The agent is working with its configuration files and associated Gradle plugins.
--    / 
--    / 
--   
--   
+-   Ionic/Cordova
+-   Firebase (Authentication, Google Sign-in, FCM)
+-   Sendinblue (Email)
+-   MSG91 (for upcoming OTP)
+-   Nginx
+-   CodeIgniter/PHP
+-   FastAPI/Python
+-   React
+-   Angular (pre-compiled)
 
 **Testing status**
--   **Testing agent used after significant changes:** NO
--   **Troubleshoot agent used after agent stuck in loop:** NO
--   **Test files created:** None.
--   **Known regressions:** The recurring login failures due to the Nginx/Apache conflict are a form of regression. The JWT token expiration is another.
+-   Testing agent used after significant changes: NO
+-   Troubleshoot agent used after agent stuck in loop: NO
+-   Test files created: None.
+-   Known regressions: The  JWT token failure is a known recurring regression.
 
 **Credentials to test flow:**
--   **Counselor Platform:**
-    -   **Admin:**  / 
 -   **Server SSH:**
     -   **Host:** 
     -   **Port:** 
@@ -499,7 +208,4 @@ CPTimezone.reset_timezone();
     -   **Password:** 
 
 **What agent forgot to execute**
--   The agent correctly prioritized the user's most recent request (mobile app fix). The following tasks from the initial handoff remain pending:
-    -   Fixing the  not secure warning.
-    -   Implementing dynamic SEO meta tags for .
-    -   Auditing and fixing / status codes.</analysis>
+-   The **Scholarship Application Module** frontend development was completely sidelined due to constant firefighting of the mobile app issues. The user's request for a progress indicator on the form was noted but never implemented. This task needs to be resumed after the P0 issues are resolved.</analysis>
