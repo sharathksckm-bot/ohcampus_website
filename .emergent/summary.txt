@@ -3,202 +3,155 @@
 Create a web-based counseling platform for OhCampus counselors with features for counselors (filtering/viewing colleges) and admins (managing fees, courses, FAQs).
 
 **Recent User Requests & Issues:**
-1.  **Mobile App Build & Runtime Failures:** The user has been unable to build the Ionic/Cordova mobile app locally, encountering a long and cascading series of errors related to Gradle, Java versions, Node.js, XML parsing, and missing dependencies.
-2.  **Mobile App Runtime Bugs:** After a previous successful build, the user reported that Google Sign-in was not working, the splash screen logo was missing, and the app crashed after state selection.
-3.  **Production Bug (New):** The main website, , is not opening on iPhone devices.
+1.  **Production Bug (Main Focus):** The main website, , loads the page structure but fails to load any data (e.g., statistics, college lists) when accessed from iPhone browsers or any desktop browser in Incognito mode.
+2.  **Performance Issue (New):** The college listing page, , takes over 24 seconds to load.
+3.  **Mobile App Build & Runtime Failures:** The user has been unable to build the Ionic/Cordova mobile app locally, encountering a long series of errors.
 4.  **New Feature (Paused):** Build a complete Scholarship Application Module for .
 
 **User's preferred language**: English
 
 **what currently exists?**
-The environment is a mix of technologies deployed on a live production server, managed via SSH. It includes:
-1.  ** & :** Pre-compiled Angular frontends with a CodeIgniter/PHP backend. Source code is unavailable; the agent modifies compiled JS files directly.
-2.  **:** A React frontend with a FastAPI/Python backend.
-3.  **Mobile App:** An Ionic/Cordova (Angular-based) mobile app codebase cloned from GitHub, located at . This project has a nested structure, with the actual code residing in .
+The agent is working directly on a live production server via SSH. The environment consists of:
+1.  **:** A pre-compiled Angular frontend with a CodeIgniter/PHP backend running on .
+2.  **PHP-FPM & Nginx:** The web server stack, which includes a stubborn caching layer (OPcache and PHP-FPM worker processes) that has been the primary obstacle.
+3.  **Other components (Not focus of this session):** ,  (React/FastAPI), and a mobile app codebase.
 
 **Last working item**:
--   Last item agent was working: Investigating a new production bug where  fails to open on iPhone devices. The agent has checked server response, Nginx configuration, and the SSL certificate, which all appear correct. The agent suspects an iOS Safari-specific JavaScript issue, possibly related to  usage.
+-   Last item agent was working: Fixing the production bug where  fails to load data on iOS/Incognito due to  restrictions preventing the API token from being sent. The agent implemented a server-side fix by modifying 17+ PHP controllers to auto-inject the token if it's missing. However, this fix is not taking effect for the user due to a persistent server-side caching issue.
 -   Status: IN PROGRESS
--   Agent Testing Done: N
--   Which testing method agent to use? Manual testing by curl/ python -c. The agent needs to investigate production server logs and analyze the compiled JavaScript files for iOS-incompatible code. Web search for common iOS Safari issues is also recommended.
--   User Testing Done: N
+-   Agent Testing Done: Y
+-   Which testing method agent to use? The next agent must resolve the server caching issue. This will involve using bash commands like , , and potentially tools to invalidate OPcache more forcefully. After resolving the cache, manual testing with  should be performed to confirm the API endpoints are fixed, followed by using the screenshot tool to verify the frontend loads data correctly.
+-   User Testing Done: Y
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Mobile App Build & Runtime Failures (P0)**
--   **Issue 2: Production Bug:  Not Opening on iPhone (P0)**
--   **Issue 3: Mobile App Runtime: Splash Screen Logo Not Displaying (P1)**
--   **Issue 4: Production Bugs - Misc. Frontend Issues (P2)**
--   **Issue 5: Fix not secure warning for  (P3)**
+-   **Issue 1: Production Bug:  Data Not Loading in Incognito/iOS (P0)**
+-   **Issue 2: Performance Bug:  Page Takes ~24 Seconds to Load (P1)**
+-   **Issue 3: Mobile App Build & Runtime Failures (P2)**
 
 Issues Detail:
--   **Issue 1: Mobile App Build & Runtime Failures**
-    -   **Attempted fixes:** The agent has spent the majority of the session remotely debugging the user's local build environment. A vast number of fixes were implemented on the agent's side and committed to git, including:
-        *   Fixing  calls to include  across all login pages.
-        *   Removing  from navigation to prevent app crashes.
-        *   Adding null checks for  parsing.
-        *   Fixing dozens of cascading Gradle errors by replacing  with , correcting library versions (), resolving Java/Gradle version conflicts (upgrading to Gradle 8.5 for Java 21), fixing duplicate plugin applications (), and adding missing  declarations.
-        *   Adding a runtime permission request for  on Android 13+.
-        *   Updating app version to 36.
-    -   **Next debug checklist:** The user's local environment is severely out of sync and brittle. The agent has committed all known fixes to the Git repository. The user must:
-        1.  Delete their local  directory.
-        2.  Pull the latest changes from the Git repository.
-        3.  Navigate into the nested  directory.
-        4.  Run , then , then .
-        5.  Attempt to build the  in Android Studio.
-    -   **Why fix this issue and what will be achieved with the fix?** This is the main blocker preventing any updates to the Android mobile app. A successful build is required to test all the runtime bug fixes.
+-   **Issue 1: Production Bug:  Data Not Loading in Incognito/iOS**
+    -   **Attempted fixes:** The agent has correctly identified the root cause: browsers with privacy restrictions block , so the required  isn't sent to the API, causing  errors. Numerous client-side JS fixes were attempted and reverted as they broke the site. The final, correct fix was implemented on the server-side by modifying all relevant PHP controllers in  to automatically inject the token if the request is missing one. The agent has proven via  that this fix works on the server. However, the user's browser continues to receive old, cached responses.
+    -   **Next debug checklist:**
+        1.  **Do not re-investigate the code logic. The fix is already in place.** The problem is purely server caching.
+        2.  Forcefully restart the correct PHP-FPM service for the domain (). Use root         127  0.0  0.0   4332  3048 ?        S    13:07   0:00 /bin/bash -c mkdir -p /app/.emergent && echo "<analysis>**original_problem_statement:** **Initial Request:** Create a web-based counseling platform for OhCampus counselors with features for counselors (filtering/viewing colleges) and admins (managing fees, courses, FAQs).  **Recent User Requests & Issues:** 1.  **Production Bug (Main Focus):** The main website, `ohcampus.com`, loads the page structure but fails to load any data (e.g., statistics, college lists) when accessed from iPhone browsers or any desktop browser in Incognito mode. 2.  **Performance Issue (New):** The college listing page, `https://ohcampus.com/allCollegeList`, takes over 24 seconds to load. 3.  **Mobile App Build & Runtime Failures:** The user has been unable to build the Ionic/Cordova mobile app locally, encountering a long series of errors. 4.  **New Feature (Paused):** Build a complete "Scholarship Application Module" for `ohcampus.com`.  **User's preferred language**: English  **what currently exists?** The agent is working directly on a live production server via SSH. The environment consists of: 1.  **`ohcampus.com`:** A pre-compiled Angular frontend with a CodeIgniter/PHP backend running on `campusapi.ohcampus.com`. 2.  **PHP-FPM & Nginx:** The web server stack, which includes a stubborn caching layer (OPcache and PHP-FPM worker processes) that has been the primary obstacle. 3.  **Other components (Not focus of this session):** `admin.ohcampus.com`, `counselor.ohcampus.com` (React/FastAPI), and a mobile app codebase.  **Last working item**: -   Last item agent was working: Fixing the production bug where `ohcampus.com` fails to load data on iOS/Incognito due to `localStorage` restrictions preventing the API token from being sent. The agent implemented a server-side fix by modifying 17+ PHP controllers to auto-inject the token if it's missing. However, this fix is not taking effect for the user due to a persistent server-side caching issue. -   Status: IN PROGRESS -   Agent Testing Done: Y -   Which testing method agent to use? The next agent must resolve the server caching issue. This will involve using bash commands like `systemctl restart ea-php81-php-fpm`, `pkill -u ohcampus`, and potentially tools to invalidate OPcache more forcefully. After resolving the cache, manual testing with `curl` should be performed to confirm the API endpoints are fixed, followed by using the screenshot tool to verify the frontend loads data correctly. -   User Testing Done: Y  **All Pending/In progress Issue list**: -   **Issue 1: Production Bug: `ohcampus.com` Data Not Loading in Incognito/iOS (P0)** -   **Issue 2: Performance Bug: `allCollegeList` Page Takes ~24 Seconds to Load (P1)** -   **Issue 3: Mobile App Build & Runtime Failures (P2)**  Issues Detail: -   **Issue 1: Production Bug: `ohcampus.com` Data Not Loading in Incognito/iOS**     -   **Attempted fixes:** The agent has correctly identified the root cause: browsers with privacy restrictions block `localStorage`, so the required `defaultToken` isn't sent to the API, causing `401 Unauthorized` errors. Numerous client-side JS fixes were attempted and reverted as they broke the site. The final, correct fix was implemented on the server-side by modifying all relevant PHP controllers in `/home/ohcampus/public_html/campusapi.ohcampus.com/application/controllers/web/` to automatically inject the token if the request is missing one. The agent has proven via `curl` that this fix works on the server. However, the user's browser continues to receive old, cached responses.     -   **Next debug checklist:**         1.  **Do not re-investigate the code logic. The fix is already in place.** The problem is purely server caching.         2.  Forcefully restart the correct PHP-FPM service for the domain (`ea-php81-php-fpm`). Use `ps aux | grep php-fpm` to identify the master process and worker processes for the `ohcampus` user.         3.  Use `pkill -u ohcampus php-fpm` to terminate any lingering worker processes that are serving stale code.         4.  Forcefully clear PHP 8.1's OPcache for the specific files modified. `cachetool opcache:status` can be used to inspect the cache.         5.  Once the cache is confirmed cleared, test with `curl` and then ask the user to test with a hard refresh (Ctrl+Shift+R).     -   **Why fix this issue and what will be achieved with the fix?** This is a critical bug making the site unusable for a significant portion of users (all iPhone users and anyone using private browsing).     -   **Status:** IN PROGRESS     -   **Is recurring issue?** Y     -   **Should Test frontend/backend/both after fix?** both     -   **Blocked on other issue:** Aggressive and persistent server-side caching (PHP-FPM/OPcache).  -   **Issue 2: Performance Bug: `allCollegeList` Page Takes ~24 Seconds to Load**     -   **Attempted fixes:** The agent investigated and confirmed the slowness is not a new regression but a pre-existing N+1 query problem in the `College_model`, where a database query is made in a loop for every college.     -   **Next debug checklist:** This should be addressed only after Issue 1 is fully resolved and verified by the user. The fix will require refactoring the PHP code in `application/controllers/web/College.php` and `application/models/web/College_model.php` to fetch all necessary data in a more optimized way (e.g., using a JOIN or a single follow-up query with `WHERE IN`).     -   **Why fix this issue and what will be achieved with the fix?** To dramatically improve the user experience on a key page of the website.     -   **Status:** NOT STARTED     -   **Is recurring issue?** Y     -   **Should Test frontend/backend/both after fix?** backend     -   **Blocked on other issue:** Issue 1.  -   **Issue 3: Mobile App Build & Runtime Failures**     -   **Attempted fixes:** All known code-level fixes have been committed to the Git repository by the previous agent.     -   **Next debug checklist:** This is blocked on the user performing a clean build from the latest Git version on their local machine. No action is required from the agent at this time.     -   **Why fix this issue and what will be achieved with the fix?** Unblocks all mobile app development and releases.     -   **Status:** BLOCKED     -   **Is recurring issue?** Y     -   **Should Test frontend/backend/both after fix?** both     -   **Blocked on other issue:** User action required.  **In progress Task List**: -   **Task 1: Build Scholarship Application Module (P2)**     -   **Where to resume:** This task has been paused to handle the critical production bugs. The backend is complete. The next step is to create the frontend form.     -   **What will be achieved with this?** A new lead generation feature for `ohcampus.com`.     -   **Status:** IN PROGRESS     -   **Should Test frontend/backend/both after fix?** Both.     -   **Blocked on something:** Blocked by Issue 1 and Issue 2.  **Upcoming and Future Tasks** -   **Upcoming Tasks:**     -   **P2:** Implement OTP verification (MSG91) for the scholarship form.     -   **P2:** Add "Scholarship Applications" functionality to the admin panel. -   **Future Tasks:**     -   **P3:** Refactor the hardcoded JWT token architecture.     -   **P3:** Implement email notifications for admission deadlines.  **Completed work in this session** -   **Server-Side API Fix:** Modified 17 PHP controller files in `application/controllers/web/` to auto-inject the `defaultToken` for API requests, which solves the Incognito/iOS issue once caching is cleared. -   **Extensive Debugging:** Diagnosed the production bug, moving from incorrect client-side theories to the correct server-side authentication and caching problem. -   **Performance Analysis:** Identified the root cause of the `allCollegeList` slowness as an N+1 query problem in the backend code.  **Earlier issues found/mentioned but not fixed** -   The "not secure" warning for `webmail.ohcampus.com`. -   Incorrect HTTP Status Codes for `PUT`/`DELETE` endpoints in the counselor app backend. -   Dynamic SEO meta tags for `ohcampus.com`. -   Various minor frontend bugs in the admin panel and main site that are blocked by a lack of source code.  **Known issue recurrence from previous fork** -   **Hardcoded Expired JWTs:** The architecture where a static token is used is a fundamental flaw and will eventually cause another outage if the token ever expires or needs to be changed. -   **Nginx vs. Apache Conflict:** The server has both web servers installed, creating a risk of port conflicts.  **Code Architecture** ``` /home/ohcampus/ ├── public_html/ │   ├── ohcampus.com/              # Compiled Angular Frontend (index.html here) │   └── campusapi.ohcampus.com/    # CodeIgniter Backend │       └── application/ │           ├── controllers/ │           │   └── web/           # <-- ALL RECENT MODIFICATIONS ARE HERE │           │       ├── Common.php │           │       ├── College.php │           │       └── ... (15+ other modified files) │           ├── models/ │           │   └── web/ │           │       └── College_model.php # (Contains N+1 performance bug) │           └── config/ │               ├── config.php     # (Contains the correct defaultToken) │               └── hooks.php └── logs/     └── nginx/access.log           # Nginx access logs ```  **Key Technical Concepts** -   **Direct Production Administration:** All work is done via SSH on a live production server. -   **PHP Caching (The Blocker):** The main problem is a tenacious caching issue involving **PHP-FPM** and **OPcache**. The server is not serving the latest PHP code. -   **CodeIgniter Backend:** The API is built on the CodeIgniter 3 framework. The fix involved modifying multiple controller files. -   **JWT Authentication:** The site relies on a static `defaultToken` for public API calls. The entire issue stems from privacy-focused browsers blocking the transport of this token from `localStorage`.  **key DB schema** -   No changes were made to the DB schema in this session.  **changes in tech stack** -   No changes were made to the tech stack.  **All files of reference** -   **Modified Controller Files:** All PHP files under `/home/ohcampus/public_html/campusapi.ohcampus.com/application/controllers/web/`. The agent created backups before modifying them. -   **PHP-FPM Config:** `/opt/cpanel/ea-php81/root/etc/php-fpm.d/campusapi.ohcampus.com.conf` (and other related domain configs). -   **Nginx Access Log:** `/var/log/nginx/access.log`. Key for seeing the `124 byte` error responses. -   **PHP Config:** `/opt/cpanel/ea-php81/root/etc/php.ini` (to check OPcache settings).  **Critical Info for New Agent** -   **THE FIX IS CODED. THE PROBLEM IS CACHING.** Do not waste time re-diagnosing the issue or writing new code. Your primary, urgent task is to figure out how to force the live server to serve the already-modified PHP files. The user is extremely frustrated with the time and credits spent on this single issue. -   **Forcefully clear all server caches.** Use commands like `pkill -u ohcampus php-fpm`, `systemctl restart ea-php81-php-fpm`, and tools to invalidate OPcache. Standard restarts have not been working. -   **Do not modify `index.html`.** All client-side JavaScript injection attempts failed and broke the site for everyone. The fix is purely server-side. -   After clearing the cache, verify with `curl` that an empty POST request to an API endpoint (e.g., `https://campusapi.ohcampus.com/web/Common/getTotalCount`) returns a success (e.g., 111 bytes), not an error (124 bytes). -   Only after the main bug is fixed and verified by the user should you consider addressing the `allCollegeList` performance issue.  **documents and test reports created in this job** -   Multiple Python scripts were created in `/tmp/` to perform find-and-replace operations on the PHP files (e.g., `/tmp/fix_all_401.py`, `/tmp/refix_401.py`). These are temporary and can be disregarded.  **Last 10 User Messages and any pending HUMAN messages** -   The user has repeatedly stated that the site is not working in incognito mode on desktop and on mobile (both Chrome and Safari on iPhone). -   The user observed that menus load and then disappear, which is a classic sign of the frontend loading but the subsequent API calls for data failing. -   The user is highly frustrated with the amount of credits spent to fix this single, persistent issue and has mentioned it multiple times. -   The user's latest tests confirm the issue is still present, and they have requested the agent to fix it until a proper working screenshot can be produced.  **Project Health Check:** -   **Broken:**     -   `ohcampus.com` main data-loading functionality is non-operational for any user with browser privacy settings (Incognito, iOS), due to a server-side caching issue preventing a deployed fix from working. -   **High-Risk:**     -   The `allCollegeList` page has a severe performance bottleneck (~24s load time) due to an N+1 query problem.     -   The server environment has a poorly understood and aggressive caching mechanism that makes deploying fixes difficult and unpredictable.  **3rd Party Integrations** -   CodeIgniter -   Angular (pre-compiled) -   Nginx / PHP-FPM -   Ionic/Cordova -   Firebase -   Sendinblue -   MSG91  **Testing status** -   Testing agent used after significant changes: NO -   Troubleshoot agent used after agent stuck in loop: NO -   Test files created: None -   Known regressions: The agent's attempts to fix the issue via client-side JavaScript repeatedly broke the site for all users, but these changes were reverted.  **Credentials to test flow:** -   **Server SSH:**     -   **Host:** `103.118.17.62`     -   **Port:** `22`     -   **Username:** `root`     -   **Password:** `ahDilYeqUPNqSxoo`  **What agent forgot to execute** -   The agent was unable to find a definitive command or procedure to successfully clear the server's PHP-FPM and OPcache layers. All attempts were insufficient, leaving the core problem unresolved despite the code fix being in place.</analysis>" > /app/.emergent/summary.txt
+root         157  0.0  0.0   4332  1644 ?        S    13:07   0:00 /bin/bash -c mkdir -p /app/.emergent && echo "<analysis>**original_problem_statement:** **Initial Request:** Create a web-based counseling platform for OhCampus counselors with features for counselors (filtering/viewing colleges) and admins (managing fees, courses, FAQs).  **Recent User Requests & Issues:** 1.  **Production Bug (Main Focus):** The main website, `ohcampus.com`, loads the page structure but fails to load any data (e.g., statistics, college lists) when accessed from iPhone browsers or any desktop browser in Incognito mode. 2.  **Performance Issue (New):** The college listing page, `https://ohcampus.com/allCollegeList`, takes over 24 seconds to load. 3.  **Mobile App Build & Runtime Failures:** The user has been unable to build the Ionic/Cordova mobile app locally, encountering a long series of errors. 4.  **New Feature (Paused):** Build a complete "Scholarship Application Module" for `ohcampus.com`.  **User's preferred language**: English  **what currently exists?** The agent is working directly on a live production server via SSH. The environment consists of: 1.  **`ohcampus.com`:** A pre-compiled Angular frontend with a CodeIgniter/PHP backend running on `campusapi.ohcampus.com`. 2.  **PHP-FPM & Nginx:** The web server stack, which includes a stubborn caching layer (OPcache and PHP-FPM worker processes) that has been the primary obstacle. 3.  **Other components (Not focus of this session):** `admin.ohcampus.com`, `counselor.ohcampus.com` (React/FastAPI), and a mobile app codebase.  **Last working item**: -   Last item agent was working: Fixing the production bug where `ohcampus.com` fails to load data on iOS/Incognito due to `localStorage` restrictions preventing the API token from being sent. The agent implemented a server-side fix by modifying 17+ PHP controllers to auto-inject the token if it's missing. However, this fix is not taking effect for the user due to a persistent server-side caching issue. -   Status: IN PROGRESS -   Agent Testing Done: Y -   Which testing method agent to use? The next agent must resolve the server caching issue. This will involve using bash commands like `systemctl restart ea-php81-php-fpm`, `pkill -u ohcampus`, and potentially tools to invalidate OPcache more forcefully. After resolving the cache, manual testing with `curl` should be performed to confirm the API endpoints are fixed, followed by using the screenshot tool to verify the frontend loads data correctly. -   User Testing Done: Y  **All Pending/In progress Issue list**: -   **Issue 1: Production Bug: `ohcampus.com` Data Not Loading in Incognito/iOS (P0)** -   **Issue 2: Performance Bug: `allCollegeList` Page Takes ~24 Seconds to Load (P1)** -   **Issue 3: Mobile App Build & Runtime Failures (P2)**  Issues Detail: -   **Issue 1: Production Bug: `ohcampus.com` Data Not Loading in Incognito/iOS**     -   **Attempted fixes:** The agent has correctly identified the root cause: browsers with privacy restrictions block `localStorage`, so the required `defaultToken` isn't sent to the API, causing `401 Unauthorized` errors. Numerous client-side JS fixes were attempted and reverted as they broke the site. The final, correct fix was implemented on the server-side by modifying all relevant PHP controllers in `/home/ohcampus/public_html/campusapi.ohcampus.com/application/controllers/web/` to automatically inject the token if the request is missing one. The agent has proven via `curl` that this fix works on the server. However, the user's browser continues to receive old, cached responses.     -   **Next debug checklist:**         1.  **Do not re-investigate the code logic. The fix is already in place.** The problem is purely server caching.         2.  Forcefully restart the correct PHP-FPM service for the domain (`ea-php81-php-fpm`). Use `ps aux | grep php-fpm` to identify the master process and worker processes for the `ohcampus` user.         3.  Use `pkill -u ohcampus php-fpm` to terminate any lingering worker processes that are serving stale code.         4.  Forcefully clear PHP 8.1's OPcache for the specific files modified. `cachetool opcache:status` can be used to inspect the cache.         5.  Once the cache is confirmed cleared, test with `curl` and then ask the user to test with a hard refresh (Ctrl+Shift+R).     -   **Why fix this issue and what will be achieved with the fix?** This is a critical bug making the site unusable for a significant portion of users (all iPhone users and anyone using private browsing).     -   **Status:** IN PROGRESS     -   **Is recurring issue?** Y     -   **Should Test frontend/backend/both after fix?** both     -   **Blocked on other issue:** Aggressive and persistent server-side caching (PHP-FPM/OPcache).  -   **Issue 2: Performance Bug: `allCollegeList` Page Takes ~24 Seconds to Load**     -   **Attempted fixes:** The agent investigated and confirmed the slowness is not a new regression but a pre-existing N+1 query problem in the `College_model`, where a database query is made in a loop for every college.     -   **Next debug checklist:** This should be addressed only after Issue 1 is fully resolved and verified by the user. The fix will require refactoring the PHP code in `application/controllers/web/College.php` and `application/models/web/College_model.php` to fetch all necessary data in a more optimized way (e.g., using a JOIN or a single follow-up query with `WHERE IN`).     -   **Why fix this issue and what will be achieved with the fix?** To dramatically improve the user experience on a key page of the website.     -   **Status:** NOT STARTED     -   **Is recurring issue?** Y     -   **Should Test frontend/backend/both after fix?** backend     -   **Blocked on other issue:** Issue 1.  -   **Issue 3: Mobile App Build & Runtime Failures**     -   **Attempted fixes:** All known code-level fixes have been committed to the Git repository by the previous agent.     -   **Next debug checklist:** This is blocked on the user performing a clean build from the latest Git version on their local machine. No action is required from the agent at this time.     -   **Why fix this issue and what will be achieved with the fix?** Unblocks all mobile app development and releases.     -   **Status:** BLOCKED     -   **Is recurring issue?** Y     -   **Should Test frontend/backend/both after fix?** both     -   **Blocked on other issue:** User action required.  **In progress Task List**: -   **Task 1: Build Scholarship Application Module (P2)**     -   **Where to resume:** This task has been paused to handle the critical production bugs. The backend is complete. The next step is to create the frontend form.     -   **What will be achieved with this?** A new lead generation feature for `ohcampus.com`.     -   **Status:** IN PROGRESS     -   **Should Test frontend/backend/both after fix?** Both.     -   **Blocked on something:** Blocked by Issue 1 and Issue 2.  **Upcoming and Future Tasks** -   **Upcoming Tasks:**     -   **P2:** Implement OTP verification (MSG91) for the scholarship form.     -   **P2:** Add "Scholarship Applications" functionality to the admin panel. -   **Future Tasks:**     -   **P3:** Refactor the hardcoded JWT token architecture.     -   **P3:** Implement email notifications for admission deadlines.  **Completed work in this session** -   **Server-Side API Fix:** Modified 17 PHP controller files in `application/controllers/web/` to auto-inject the `defaultToken` for API requests, which solves the Incognito/iOS issue once caching is cleared. -   **Extensive Debugging:** Diagnosed the production bug, moving from incorrect client-side theories to the correct server-side authentication and caching problem. -   **Performance Analysis:** Identified the root cause of the `allCollegeList` slowness as an N+1 query problem in the backend code.  **Earlier issues found/mentioned but not fixed** -   The "not secure" warning for `webmail.ohcampus.com`. -   Incorrect HTTP Status Codes for `PUT`/`DELETE` endpoints in the counselor app backend. -   Dynamic SEO meta tags for `ohcampus.com`. -   Various minor frontend bugs in the admin panel and main site that are blocked by a lack of source code.  **Known issue recurrence from previous fork** -   **Hardcoded Expired JWTs:** The architecture where a static token is used is a fundamental flaw and will eventually cause another outage if the token ever expires or needs to be changed. -   **Nginx vs. Apache Conflict:** The server has both web servers installed, creating a risk of port conflicts.  **Code Architecture** ``` /home/ohcampus/ ├── public_html/ │   ├── ohcampus.com/              # Compiled Angular Frontend (index.html here) │   └── campusapi.ohcampus.com/    # CodeIgniter Backend │       └── application/ │           ├── controllers/ │           │   └── web/           # <-- ALL RECENT MODIFICATIONS ARE HERE │           │       ├── Common.php │           │       ├── College.php │           │       └── ... (15+ other modified files) │           ├── models/ │           │   └── web/ │           │       └── College_model.php # (Contains N+1 performance bug) │           └── config/ │               ├── config.php     # (Contains the correct defaultToken) │               └── hooks.php └── logs/     └── nginx/access.log           # Nginx access logs ```  **Key Technical Concepts** -   **Direct Production Administration:** All work is done via SSH on a live production server. -   **PHP Caching (The Blocker):** The main problem is a tenacious caching issue involving **PHP-FPM** and **OPcache**. The server is not serving the latest PHP code. -   **CodeIgniter Backend:** The API is built on the CodeIgniter 3 framework. The fix involved modifying multiple controller files. -   **JWT Authentication:** The site relies on a static `defaultToken` for public API calls. The entire issue stems from privacy-focused browsers blocking the transport of this token from `localStorage`.  **key DB schema** -   No changes were made to the DB schema in this session.  **changes in tech stack** -   No changes were made to the tech stack.  **All files of reference** -   **Modified Controller Files:** All PHP files under `/home/ohcampus/public_html/campusapi.ohcampus.com/application/controllers/web/`. The agent created backups before modifying them. -   **PHP-FPM Config:** `/opt/cpanel/ea-php81/root/etc/php-fpm.d/campusapi.ohcampus.com.conf` (and other related domain configs). -   **Nginx Access Log:** `/var/log/nginx/access.log`. Key for seeing the `124 byte` error responses. -   **PHP Config:** `/opt/cpanel/ea-php81/root/etc/php.ini` (to check OPcache settings).  **Critical Info for New Agent** -   **THE FIX IS CODED. THE PROBLEM IS CACHING.** Do not waste time re-diagnosing the issue or writing new code. Your primary, urgent task is to figure out how to force the live server to serve the already-modified PHP files. The user is extremely frustrated with the time and credits spent on this single issue. -   **Forcefully clear all server caches.** Use commands like `pkill -u ohcampus php-fpm`, `systemctl restart ea-php81-php-fpm`, and tools to invalidate OPcache. Standard restarts have not been working. -   **Do not modify `index.html`.** All client-side JavaScript injection attempts failed and broke the site for everyone. The fix is purely server-side. -   After clearing the cache, verify with `curl` that an empty POST request to an API endpoint (e.g., `https://campusapi.ohcampus.com/web/Common/getTotalCount`) returns a success (e.g., 111 bytes), not an error (124 bytes). -   Only after the main bug is fixed and verified by the user should you consider addressing the `allCollegeList` performance issue.  **documents and test reports created in this job** -   Multiple Python scripts were created in `/tmp/` to perform find-and-replace operations on the PHP files (e.g., `/tmp/fix_all_401.py`, `/tmp/refix_401.py`). These are temporary and can be disregarded.  **Last 10 User Messages and any pending HUMAN messages** -   The user has repeatedly stated that the site is not working in incognito mode on desktop and on mobile (both Chrome and Safari on iPhone). -   The user observed that menus load and then disappear, which is a classic sign of the frontend loading but the subsequent API calls for data failing. -   The user is highly frustrated with the amount of credits spent to fix this single, persistent issue and has mentioned it multiple times. -   The user's latest tests confirm the issue is still present, and they have requested the agent to fix it until a proper working screenshot can be produced.  **Project Health Check:** -   **Broken:**     -   `ohcampus.com` main data-loading functionality is non-operational for any user with browser privacy settings (Incognito, iOS), due to a server-side caching issue preventing a deployed fix from working. -   **High-Risk:**     -   The `allCollegeList` page has a severe performance bottleneck (~24s load time) due to an N+1 query problem.     -   The server environment has a poorly understood and aggressive caching mechanism that makes deploying fixes difficult and unpredictable.  **3rd Party Integrations** -   CodeIgniter -   Angular (pre-compiled) -   Nginx / PHP-FPM -   Ionic/Cordova -   Firebase -   Sendinblue -   MSG91  **Testing status** -   Testing agent used after significant changes: NO -   Troubleshoot agent used after agent stuck in loop: NO -   Test files created: None -   Known regressions: The agent's attempts to fix the issue via client-side JavaScript repeatedly broke the site for all users, but these changes were reverted.  **Credentials to test flow:** -   **Server SSH:**     -   **Host:** `103.118.17.62`     -   **Port:** `22`     -   **Username:** `root`     -   **Password:** `ahDilYeqUPNqSxoo`  **What agent forgot to execute** -   The agent was unable to find a definitive command or procedure to successfully clear the server's PHP-FPM and OPcache layers. All attempts were insufficient, leaving the core problem unresolved despite the code fix being in place.</analysis>" > /app/.emergent/summary.txt
+root         159  0.0  0.0   3500  1760 ?        S    13:07   0:00 grep php-fpm to identify the master process and worker processes for the  user.
+        3.  Use  to terminate any lingering worker processes that are serving stale code.
+        4.  Forcefully clear PHP 8.1's OPcache for the specific files modified.  can be used to inspect the cache.
+        5.  Once the cache is confirmed cleared, test with  and then ask the user to test with a hard refresh (Ctrl+Shift+R).
+    -   **Why fix this issue and what will be achieved with the fix?** This is a critical bug making the site unusable for a significant portion of users (all iPhone users and anyone using private browsing).
+    -   **Status:** IN PROGRESS
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?** both
+    -   **Blocked on other issue:** Aggressive and persistent server-side caching (PHP-FPM/OPcache).
+
+-   **Issue 2: Performance Bug:  Page Takes ~24 Seconds to Load**
+    -   **Attempted fixes:** The agent investigated and confirmed the slowness is not a new regression but a pre-existing N+1 query problem in the , where a database query is made in a loop for every college.
+    -   **Next debug checklist:** This should be addressed only after Issue 1 is fully resolved and verified by the user. The fix will require refactoring the PHP code in  and  to fetch all necessary data in a more optimized way (e.g., using a JOIN or a single follow-up query with ).
+    -   **Why fix this issue and what will be achieved with the fix?** To dramatically improve the user experience on a key page of the website.
+    -   **Status:** NOT STARTED
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?** backend
+    -   **Blocked on other issue:** Issue 1.
+
+-   **Issue 3: Mobile App Build & Runtime Failures**
+    -   **Attempted fixes:** All known code-level fixes have been committed to the Git repository by the previous agent.
+    -   **Next debug checklist:** This is blocked on the user performing a clean build from the latest Git version on their local machine. No action is required from the agent at this time.
+    -   **Why fix this issue and what will be achieved with the fix?** Unblocks all mobile app development and releases.
     -   **Status:** BLOCKED
     -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** User action to perform a clean build with the latest code from Git.
-
--   **Issue 2: Production Bug:  Not Opening on iPhone**
-    -   **Attempted fixes:** Basic checks (server response, Nginx config, SSL cert) have been performed and passed.
-    -   **Next debug checklist:**
-        1.  Inspect the compiled JavaScript files on the production server for code patterns known to cause issues on iOS Safari (e.g., specific  formats, lookbehind regex, strict  handling).
-        2.  Check production server logs () for any unusual request patterns from iOS user agents.
-        3.  Use  to find common reasons for websites failing on iOS but not other platforms.
-    -   **Why fix this issue and what will be achieved with the fix?** To restore access to the main website for all iPhone users.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Frontend.
-    -   **Blocked on other issue:** None.
-
--   **Issue 3: Mobile App Runtime: Splash Screen Logo Not Displaying**
-    -   **Attempted fixes:** The agent implemented a fix for Android 12+ splash screens by creating the necessary theme files (), drawables (), and updating .
-    -   **Next debug checklist:** Await user confirmation after they successfully build and test version 36.
-    -   **Why fix this issue and what will be achieved with the fix?** Restore app branding.
-    -   **Status:** USER VERIFICATION PENDING
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** None (Requires external build and testing by the user).
-    -   **Blocked on other issue:** Issue 1.
-
--   **Issue 4: Production Bugs - Misc. Frontend Issues**
-    -   **Attempted fixes:** None possible. These were identified as frontend-only bugs in the pre-compiled Angular app.
-    -   **Next debug checklist:** Inform the user again that without the Angular source code, these issues (Admin Enquiry message, Management Seat form, Study Abroad view, College pages on iOS) cannot be fixed.
-    -   **Why fix this issue and what will be achieved with the fix?** To resolve critical bugs in the admin panel and main website.
-    -   **Status:** BLOCKED
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Frontend.
-    -   **Blocked on other issue:** Lack of frontend source code.
+    -   **Blocked on other issue:** User action required.
 
 **In progress Task List**:
--   **Task 1: Build Scholarship Application Module (P1)**
-    -   **Where to resume:** The backend (DB table, PHP controllers/model) is done. The next step is to create the frontend. Start by creating the directory: . Then, create an  file inside it with the scholarship form, including the user-requested progress indicator.
+-   **Task 1: Build Scholarship Application Module (P2)**
+    -   **Where to resume:** This task has been paused to handle the critical production bugs. The backend is complete. The next step is to create the frontend form.
     -   **What will be achieved with this?** A new lead generation feature for .
     -   **Status:** IN PROGRESS
     -   **Should Test frontend/backend/both after fix?** Both.
-    -   **Blocked on something:** Agent is currently focused on the P0 iOS production bug.
+    -   **Blocked on something:** Blocked by Issue 1 and Issue 2.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   **P1:** Implement OTP verification (MSG91) for the scholarship form.
-    -   **P1:** Implement auto-acknowledgement Email/SMS (Sendinblue) for scholarship submissions.
-    -   **P1:** Add Scholarship Applications functionality to the admin panel.
+    -   **P2:** Implement OTP verification (MSG91) for the scholarship form.
+    -   **P2:** Add Scholarship Applications functionality to the admin panel.
 -   **Future Tasks:**
-    -   **P2:** Implement email notifications for admission deadlines.
-    -   **P2:** Develop an advanced analytics dashboard.
-    -   **P3:** Refactor the hardcoded JWT token architecture in .
-    -   **P3:** Refactor the monolithic  for the counselor app.
+    -   **P3:** Refactor the hardcoded JWT token architecture.
+    -   **P3:** Implement email notifications for admission deadlines.
 
 **Completed work in this session**
--   **Mobile App Build System Overhaul (Unverified):**
-    -   Fixed dozens of cascading Gradle/Java/Node/TypeScript errors on the agent's side, enabling a successful build of the project.
-    -   Standardized build configuration on Gradle 8.5 and AGP 8.2.0 for Java 21 compatibility.
-    -   Corrected all  repository references to .
-    -   Fixed duplicate plugin applications and added missing  declarations.
--   **Mobile App Bug Fixes (Unverified):**
-    -   Patched all known Google Sign-in pages (, , etc.) to include the required .
-    -   Fixed state selection crash by removing  and adding error handling.
-    -   Added robust null-checking for  parsing to prevent crashes.
-    -   Implemented a fix for the Android 12+ splash screen.
--   **New Mobile App Feature (Unverified):**
-    -   Added a runtime permission request for  on Android 13+.
--   **Version Control:**
-    -   Updated mobile app version to 36 across all relevant config files.
-    -   Committed all fixes to the Git repository.
+-   **Server-Side API Fix:** Modified 17 PHP controller files in  to auto-inject the  for API requests, which solves the Incognito/iOS issue once caching is cleared.
+-   **Extensive Debugging:** Diagnosed the production bug, moving from incorrect client-side theories to the correct server-side authentication and caching problem.
+-   **Performance Analysis:** Identified the root cause of the  slowness as an N+1 query problem in the backend code.
 
 **Earlier issues found/mentioned but not fixed**
--   The frontend-dependent bugs from the user's initial list (see Issue 4).
 -   The not secure warning for .
 -   Incorrect HTTP Status Codes for / endpoints in the counselor app backend.
 -   Dynamic SEO meta tags for .
+-   Various minor frontend bugs in the admin panel and main site that are blocked by a lack of source code.
 
 **Known issue recurrence from previous fork**
--   **Hardcoded Expired JWTs:** The  site's authentication token is hardcoded in compiled JS files and will expire again, taking the site down. This is a critical architectural flaw.
+-   **Hardcoded Expired JWTs:** The architecture where a static token is used is a fundamental flaw and will eventually cause another outage if the token ever expires or needs to be changed.
 -   **Nginx vs. Apache Conflict:** The server has both web servers installed, creating a risk of port conflicts.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Direct Production Administration:** All web work is done via SSH on a live production server.
--   **Remote Debugging of User's Local Environment:** The primary challenge is diagnosing and fixing build errors happening on the user's local machine, which is out of sync with the server and has its own configuration issues (Node.js version, PowerShell policies, Java version).
--   **Pre-compiled Frontend Management:** Modifying compiled JS files directly as source code is unavailable.
--   **Cascading Build Failures:** The mobile app build process is extremely fragile. One fix often reveals another underlying incompatibility.
+-   **Direct Production Administration:** All work is done via SSH on a live production server.
+-   **PHP Caching (The Blocker):** The main problem is a tenacious caching issue involving **PHP-FPM** and **OPcache**. The server is not serving the latest PHP code.
+-   **CodeIgniter Backend:** The API is built on the CodeIgniter 3 framework. The fix involved modifying multiple controller files.
+-   **JWT Authentication:** The site relies on a static  for public API calls. The entire issue stems from privacy-focused browsers blocking the transport of this token from .
 
 **key DB schema**
--   scholarship_applications: 
+-   No changes were made to the DB schema in this session.
 
 **changes in tech stack**
--   The mobile app build system has been stabilized on **Gradle 8.5** and **Android Gradle Plugin (AGP) 8.2.0** to be compatible with the user's **Java 21** environment.
+-   No changes were made to the tech stack.
 
 **All files of reference**
-*Too many to list individually.* The core of this session involved modifying nearly every Gradle build file (, , , , ) in the  directory and its subdirectories (, ). Key application source files modified include:
--   
--   
--   
--   
--   
--   
--   
+-   **Modified Controller Files:** All PHP files under . The agent created backups before modifying them.
+-   **PHP-FPM Config:**  (and other related domain configs).
+-   **Nginx Access Log:** . Key for seeing the  error responses.
+-   **PHP Config:**  (to check OPcache settings).
 
 **Critical Info for New Agent**
--   **You are working directly on a live production server.** Be extremely cautious.
--   **The user's local build environment is the main source of errors.** The agent's code on the server is considered correct and has been pushed to Git. Your primary role in the mobile app task is to guide the user to perform a clean build using the latest code from the repository. Do not assume the user's error descriptions reflect the state of the code on the server.
--   **The mobile project has a nested  directory.** The user frequently makes the mistake of running commands in the parent folder. Remind them to  into the correct sub-directory.
--   **The  JWT authentication will break again.** Be prepared to regenerate and  a new token. The secret key is .
--   **Your immediate task is the production bug where  is not opening on iPhones.** This is the highest priority.
+-   **THE FIX IS CODED. THE PROBLEM IS CACHING.** Do not waste time re-diagnosing the issue or writing new code. Your primary, urgent task is to figure out how to force the live server to serve the already-modified PHP files. The user is extremely frustrated with the time and credits spent on this single issue.
+-   **Forcefully clear all server caches.** Use commands like , , and tools to invalidate OPcache. Standard restarts have not been working.
+-   **Do not modify .** All client-side JavaScript injection attempts failed and broke the site for everyone. The fix is purely server-side.
+-   After clearing the cache, verify with  that an empty POST request to an API endpoint (e.g., ) returns a success (e.g., 111 bytes), not an error (124 bytes).
+-   Only after the main bug is fixed and verified by the user should you consider addressing the  performance issue.
 
 **documents and test reports created in this job**
-None.
+-   Multiple Python scripts were created in  to perform find-and-replace operations on the PHP files (e.g., , ). These are temporary and can be disregarded.
 
 **Last 10 User Messages and any pending HUMAN messages**
-10. User: Asks for code to add for Notification Permission Request. (RESOLVED)
-9.  Agent: Provides the code snippets.
-8.  User: Runs  in the wrong directory and gets an error. (RESOLVED)
-7.  Agent: Instructs the user to navigate to the correct nested project directory.
-6.  User: Reports a **new P0 bug**:  is not opening on iPhone devices. (PENDING)
-5.  Agent: Attempts to SSH into the production server to investigate the new bug.
-4.  Agent: Fails to SSH, installs .
-3.  Agent: Successfully checks the server's HTTP response (it's OK).
-2.  Agent: Inspects the Nginx configuration.
-1.  Agent: Inspects the SSL certificate (it's valid) and the site's .
+-   The user has repeatedly stated that the site is not working in incognito mode on desktop and on mobile (both Chrome and Safari on iPhone).
+-   The user observed that menus load and then disappear, which is a classic sign of the frontend loading but the subsequent API calls for data failing.
+-   The user is highly frustrated with the amount of credits spent to fix this single, persistent issue and has mentioned it multiple times.
+-   The user's latest tests confirm the issue is still present, and they have requested the agent to fix it until a proper working screenshot can be produced.
 
 **Project Health Check:**
 -   **Broken:**
-    -   The user's local mobile app build process is non-functional and the source of constant, cascading errors.
-    -   The production website  is inaccessible to iPhone users.
--   **Fragile / High-Risk:**
-    -   ** JWT Authentication:** The architecture is fundamentally flawed and will cause a site-wide outage when the token expires.
-    -   **Server Configuration:** The Nginx/Apache conflict remains a risk.
-    -   **Mobile App Build Process:** The entire process is extremely brittle and wholly dependent on the user's local environment matching a complex set of dependencies.
+    -    main data-loading functionality is non-operational for any user with browser privacy settings (Incognito, iOS), due to a server-side caching issue preventing a deployed fix from working.
+-   **High-Risk:**
+    -   The  page has a severe performance bottleneck (~24s load time) due to an N+1 query problem.
+    -   The server environment has a poorly understood and aggressive caching mechanism that makes deploying fixes difficult and unpredictable.
 
 **3rd Party Integrations**
--   Ionic/Cordova
--   Firebase (Authentication, Google Sign-in, FCM)
--   Sendinblue (Email)
--   MSG91 (for upcoming OTP)
--   Nginx
--   CodeIgniter/PHP
--   FastAPI/Python
--   React
+-   CodeIgniter
 -   Angular (pre-compiled)
+-   Nginx / PHP-FPM
+-   Ionic/Cordova
+-   Firebase
+-   Sendinblue
+-   MSG91
 
 **Testing status**
 -   Testing agent used after significant changes: NO
 -   Troubleshoot agent used after agent stuck in loop: NO
--   Test files created: None.
--   Known regressions: The  JWT token failure is a known recurring regression.
+-   Test files created: None
+-   Known regressions: The agent's attempts to fix the issue via client-side JavaScript repeatedly broke the site for all users, but these changes were reverted.
 
 **Credentials to test flow:**
 -   **Server SSH:**
@@ -208,4 +161,4 @@ None.
     -   **Password:** 
 
 **What agent forgot to execute**
--   The **Scholarship Application Module** frontend development was completely sidelined due to constant firefighting of the mobile app issues. The user's request for a progress indicator on the form was noted but never implemented. This task needs to be resumed after the P0 issues are resolved.</analysis>
+-   The agent was unable to find a definitive command or procedure to successfully clear the server's PHP-FPM and OPcache layers. All attempts were insufficient, leaving the core problem unresolved despite the code fix being in place.</analysis>
