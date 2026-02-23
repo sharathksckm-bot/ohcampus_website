@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 class OhCampusAPITester:
-    def __init__(self, base_url="https://ohcampus-counsel.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://edu-counselor-2.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.counselor_token = None
         self.admin_token = None
