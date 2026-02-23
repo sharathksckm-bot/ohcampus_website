@@ -68,9 +68,15 @@ Create a web-based counseling platform for OhCampus counselors with features for
   - `/uploads/blogs/ohcampus_after_12.jpg`
   - `/uploads/blogs/allied_health_sciences_image_1.jpg`
 
-### P2 - Scholarship Application Module
-- Backend complete
-- Frontend form pending
+### P2 - Scholarship Application Module ✅ COMPLETED
+- Backend: Fixed model with correct table/column names
+- Database: Created `scholarship_applications` table
+- Frontend: Created `/scholarship.html` standalone page
+- URL: `https://ohcampus.com/scholarship.html`
+
+### P1 - Missing Blog Images ✅ FIXED
+- Created symlinks from `public_html/uploads/` to `campusapi.ohcampus.com/uploads/`
+- All blog images now accessible from main domain
 
 ### P2 - Mobile App Build Issues
 - Blocked on user performing clean build
