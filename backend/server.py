@@ -250,6 +250,102 @@ class FiltersResponse(BaseModel):
     categories: List[str]
     courses: List[str] = []
 
+# Scholarship Application Status constants
+SCHOLARSHIP_STATUSES = ["Pending", "Under Review", "Contacted", "Eligible", "Not Eligible", "Converted", "Rejected"]
+
+# Scholarship Application Model - for student applications from ohcampus.com/check-scholarship
+class ScholarshipApplicationBase(BaseModel):
+    # Personal Information
+    name: str
+    email: str
+    phone: str
+    father_name: Optional[str] = None
+    mother_name: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    gender: Optional[str] = None
+    
+    # Address
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    pincode: Optional[str] = None
+    
+    # Academic Information
+    tenth_percentage: Optional[float] = None
+    twelfth_percentage: Optional[float] = None
+    graduation_percentage: Optional[float] = None
+    current_education: Optional[str] = None
+    
+    # Preferred Course/Stream
+    preferred_stream: Optional[str] = None
+    preferred_course: Optional[str] = None
+    preferred_college: Optional[str] = None
+    
+    # Documents (URLs)
+    marks_card_url: Optional[str] = None
+    scorecard_url: Optional[str] = None
+    aadhar_url: Optional[str] = None
+    photo_url: Optional[str] = None
+    
+    # UTM Tracking
+    utm_source: Optional[str] = None
+    utm_medium: Optional[str] = None
+    utm_campaign: Optional[str] = None
+    utm_content: Optional[str] = None
+    utm_term: Optional[str] = None
+    
+    # Counselor Reference
+    counselor_id: Optional[str] = None
+    counselor_name: Optional[str] = None
+    
+    # Admin fields
+    status: str = "Pending"
+    admin_notes: Optional[str] = None
+
+class ScholarshipApplication(ScholarshipApplicationBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    application_number: Optional[str] = None  # Human-readable application number
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class ScholarshipApplicationCreate(BaseModel):
+    """Create model for external scholarship submissions"""
+    name: str
+    email: str
+    phone: str
+    father_name: Optional[str] = None
+    mother_name: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    pincode: Optional[str] = None
+    tenth_percentage: Optional[float] = None
+    twelfth_percentage: Optional[float] = None
+    graduation_percentage: Optional[float] = None
+    current_education: Optional[str] = None
+    preferred_stream: Optional[str] = None
+    preferred_course: Optional[str] = None
+    preferred_college: Optional[str] = None
+    marks_card_url: Optional[str] = None
+    scorecard_url: Optional[str] = None
+    aadhar_url: Optional[str] = None
+    photo_url: Optional[str] = None
+    utm_source: Optional[str] = None
+    utm_medium: Optional[str] = None
+    utm_campaign: Optional[str] = None
+    utm_content: Optional[str] = None
+    utm_term: Optional[str] = None
+
+class ScholarshipApplicationUpdate(BaseModel):
+    """Update model for admin editing"""
+    status: Optional[str] = None
+    admin_notes: Optional[str] = None
+    counselor_id: Optional[str] = None
+    counselor_name: Optional[str] = None
+
 # ===================== HELPERS =====================
 
 def hash_password(password: str) -> str:
