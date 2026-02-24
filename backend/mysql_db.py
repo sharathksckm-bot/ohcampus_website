@@ -35,6 +35,106 @@ async def execute_query(query: str, params: tuple = None) -> List[Dict[str, Any]
             result = await cursor.fetchall()
             return result
 
+async def get_total_courses_count() -> int:
+    """Get total count of all courses from featured colleges"""
+    query = """
+        SELECT COUNT(*) as cnt
+        FROM college_course cc
+        JOIN college c ON cc.collegeid = c.id
+        WHERE cc.is_deleted = 0 AND c.status = 1
+        AND (c.package_type = 'feature_listing' OR c.package_type = 'featured_listing')
+    """
+    results = await execute_query(query)
+    return results[0]['cnt'] if results else 0
+
+async def get_college_highlights(college_id: str) -> List[str]:
+    """Get college highlights from MySQL"""
+    mysql_id = college_id.replace('c-', '').replace('mysql-', '') if college_id.startswith(('c-', 'mysql-')) else college_id
+    
+    # First try from college_highlights table
+    query = "SELECT text FROM college_highlights WHERE collegeid = %s ORDER BY id"
+    results = await execute_query(query, (mysql_id,))
+    
+    if results:
+        return [r['text'].strip() for r in results if r['text'] and r['text'].strip()]
+    
+    # Fallback: extract from description
+    query = "SELECT description FROM college WHERE id = %s"
+    results = await execute_query(query, (mysql_id,))
+    
+    if results and results[0].get('description'):
+        desc = results[0]['description']
+        import re
+        if '<li>' in desc.lower():
+            li_items = re.findall(r'<li[^>]*>(.*?)</li>', desc, re.IGNORECASE | re.DOTALL)
+            return [re.sub(r'<[^>]+>', '', item).strip() for item in li_items if item.strip()][:6]
+    return []
+
+async def get_college_whats_new(college_id: str) -> List[Dict[str, Any]]:
+    """Get college news/updates from MySQL"""
+    mysql_id = college_id.replace('c-', '').replace('mysql-', '') if college_id.startswith(('c-', 'mysql-')) else college_id
+    
+    # First check for college_news table
+    try:
+        query = """
+            SELECT id, title, description, created_date
+            FROM college_news
+            WHERE college_id = %s AND status = 1
+            ORDER BY created_date DESC
+            LIMIT 10
+        """
+        results = await execute_query(query, (mysql_id,))
+        if results:
+            return [{
+                "id": row['id'],
+                "title": row['title'] or '',
+                "description": row.get('description') or '',
+                "date": str(row.get('created_date') or '')
+            } for row in results]
+    except Exception:
+        pass
+    
+    # Fallback: use what_new from college table
+    query = "SELECT what_new FROM college WHERE id = %s"
+    results = await execute_query(query, (mysql_id,))
+    
+    if results and results[0].get('what_new'):
+        what_new_raw = results[0]['what_new']
+        import re
+        if '<li>' in what_new_raw.lower():
+            li_items = re.findall(r'<li[^>]*>(.*?)</li>', what_new_raw, re.IGNORECASE | re.DOTALL)
+            return [{"title": re.sub(r'<[^>]+>', '', item).strip(), "description": ""} for item in li_items if item.strip()]
+    return []
+
+async def get_college_placements(college_id: str) -> Dict[str, Any]:
+    """Get college placement data from MySQL"""
+    mysql_id = college_id.replace('c-', '').replace('mysql-', '') if college_id.startswith(('c-', 'mysql-')) else college_id
+    
+    # Try placement_statistics table first
+    try:
+        query = """
+            SELECT year, highest_package, average_package, placement_rate, total_offers
+            FROM college_placement_statistics
+            WHERE college_id = %s
+            ORDER BY year DESC LIMIT 5
+        """
+        results = await execute_query(query, (mysql_id,))
+        if results:
+            return {
+                "stats": [{
+                    "year": str(r.get('year', '')),
+                    "highest_package": r.get('highest_package'),
+                    "average_package": r.get('average_package'),
+                    "placement_rate": r.get('placement_rate'),
+                    "total_offers": r.get('total_offers')
+                } for r in results]
+            }
+    except Exception:
+        pass
+    return {}
+
+
+
 async def get_featured_colleges(
     state: Optional[str] = None,
     city: Optional[str] = None,
