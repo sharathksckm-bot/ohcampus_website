@@ -7,96 +7,70 @@ Create a web-based counseling platform for OhCampus counselors with features for
 - **Frontend**: React (Counselor Portal - counselor.ohcampus.com)
 - **Admin Panel**: React (integrated in Counselor Portal)
 - **Backend API**: FastAPI/Python with MongoDB + MySQL support
-- **Database**: MongoDB (primary for users/auth), MySQL (production data - colleges, courses, fees)
+- **Database**: MongoDB (users/auth, scholarship applications), MySQL (production data - colleges, courses, fees)
 
 ## What's Been Implemented
 
-### Session: Feb 24, 2026 - Part 2 (Latest)
+### Session: Feb 24, 2026 - Part 3 (Latest)
+
+#### Featured Colleges Only ✅ COMPLETED
+- Modified `mysql_db.py` to filter only `package_type = 'feature_listing'` colleges
+- Only 158 featured colleges are now shown (not 10k+ free listing colleges)
+- Analytics/Dashboard shows correct featured college count (158)
+- Course count shows courses from featured colleges only (22)
+
+#### 4-Column Layout ✅ COMPLETED
+- Updated `Dashboard.jsx` to show colleges in 4 columns (`lg:grid-cols-4`)
+- Both loading skeleton and actual college grid use 4-column layout
+
+#### Category Names Display ✅ COMPLETED
+- Fixed category display from showing numeric IDs (164) to names (Nursing, Engineering, etc.)
+- Updated MySQL queries to JOIN with `category` table and fetch `catname`
+
+#### Scholarship Applications Feature ✅ COMPLETED
+- Created `ScholarshipApplications.jsx` page
+- Added route `/admin/scholarship-applications` for admins
+- Added route `/counselor/scholarship-applications` for counselors
+- Added menu item in AdminLayout sidebar
+- Features: Stats cards, search, filter by status, pagination, export CSV
+
+### Session: Feb 24, 2026 - Part 1 & 2
 
 #### Branding & UI Improvements ✅ COMPLETED
-- **Title Updated**: Changed from "Emergent | Fullstack App" to "OhCampus Counselor Portal"
-- **Favicon Added**: Added OhCampus favicon.png to the portal
-- **Description Updated**: Meta description updated to "OhCampus Counselor Portal - Your Gateway to College Counseling"
+- Title: "OhCampus Counselor Portal"
+- Favicon added
+- Meta description updated
 
-#### Record Limits Removed ✅ COMPLETED
-Removed artificial record limits across the platform:
+#### MySQL Integration ✅ COMPLETED
+- Created `mysql_db.py` module for production MySQL database
+- Fetches real college/course data from `ohcampus_beta` database
+- Patched `server.py` to use MySQL for colleges/courses
 
-**Frontend Changes:**
-- `AdminDashboard.jsx`: Removed `.slice(0, 5)` for recent colleges display
-- `AdminDashboard.jsx`: Removed `.slice(0, 5)` for courses needing attention
-- `PerformanceDashboard.jsx`: Removed `.slice(0, 5)` for top courses display
-- Removed "+X more courses need attention" message
+## Files Modified (Production)
+- `/var/www/counselor.ohcampus.com/backend/mysql_db.py`
+- `/var/www/counselor.ohcampus.com/backend/server.py`
+- `/var/www/counselor.ohcampus.com/index.html`
+- `/var/www/counselor.ohcampus.com/static/` (frontend build)
 
-**Backend Changes:**
-- `mysql_db.py`: Increased college limit from 200 to 10,000
-- `mysql_db.py`: Increased course limit from 500 to 10,000
-- `server.py`: Updated featured colleges limit to 10,000
+## Source Code Files Modified
+- `/tmp/Backend_API_main/frontend/src/pages/Dashboard.jsx` - 4-column layout
+- `/tmp/Backend_API_main/frontend/src/pages/ScholarshipApplications.jsx` - NEW
+- `/tmp/Backend_API_main/frontend/src/App.js` - Added scholarship routes
+- `/tmp/Backend_API_main/frontend/src/components/layout/AdminLayout.jsx` - Added menu item
 
-**Files Modified:**
-- `/var/www/counselor.ohcampus.com/index.html` (production)
-- `/var/www/counselor.ohcampus.com/backend/mysql_db.py` (production)
-- `/var/www/counselor.ohcampus.com/backend/server.py` (production)
-- `/tmp/Backend_API_main/frontend/src/pages/AdminDashboard.jsx` (source)
-- `/tmp/Backend_API_main/frontend/src/pages/PerformanceDashboard.jsx` (source)
-- `/tmp/Backend_API_main/frontend/public/index.html` (source)
+## Key Technical Details
 
-### Session: Feb 24, 2026 - Part 1
+### Featured vs Free Listing
+- `package_type = 'feature_listing'` → 158 colleges (shown)
+- `package_type = 'free_listing'` → 10,417 colleges (hidden)
 
-#### Scholarship Applications Integration ✅ COMPLETED
-Integrated scholarship applications into both Admin and Counselor panels.
-
-**Admin Panel Features** (`/admin/scholarship-applications`):
-- Dashboard with stats cards (Total, Pending, Converted, Today)
-- Applications table with search, filter by status, pagination
-- Application detail dialog with full information
-- Status update dropdown (7 statuses: Pending, Under Review, Contacted, Eligible, Not Eligible, Converted, Rejected)
-- Counselor assignment functionality
-- Admin notes textarea
-- Sidebar menu integration
-
-**Counselor Portal Features** (`/scholarships`):
-- "My Scholarship Referrals" page for counselors
-- Stats cards (Total Referrals, Pending, Converted, Conversion Rate)
-- "Get Referral Link" button with UTM dialog
-- Copy UTM link functionality
-- Applications table (read-only status)
-- Application detail view
-
-**Backend APIs**:
-- `POST /api/scholarship-applications` - Public endpoint for creating applications
-- `GET /api/scholarship-applications` - List with role-based filtering
-- `GET /api/scholarship-applications/stats` - Statistics endpoint
-- `GET /api/scholarship-applications/{id}` - Get single application
-- `PUT /api/scholarship-applications/{id}` - Update status/notes/counselor
-- `DELETE /api/scholarship-applications/{id}` - Admin only delete
-- `GET /api/counselor/scholarship-utm-link` - Generate UTM link
-
-**Role-Based Access Control**:
-- Admin: Sees all applications
-- Admission Manager: Sees all applications
-- Team Lead: Sees own + team members' applications
-- Counselor: Sees only own referrals (by counselor_id or utm_source)
-
-**UTM Tracking**:
-- UTM link format: `https://ohcampus.com/check-scholarship/?utm_source={counselor_id}&utm_medium=counselor&utm_campaign=scholarship_referral`
-- Auto-assigns counselor when utm_source matches counselor ID or email
-
-**Application Number Format**: SCH-YYYY-NNNN (e.g., SCH-2026-0001)
-
-### Previous Sessions
-- Counselor Portal with college/course browsing
-- Admin dashboard with performance metrics
-- User management with roles (Admin, Counselor, Team Lead, Admission Manager)
-- Fee management
-- FAQ management
-- Activity logging
-- College management
-- Admissions tracking
+### Category Mapping
+- Categories stored in `category` table with `id`, `catname`, `type`
+- College `categoryid` field references `category.id`
+- Example: categoryid=164 → catname="Nursing"
 
 ## Pending Issues
-1. **P1**: Implement Application Export for Admission Managers - CSV export functionality
-2. **P2**: Fix Fee Records Display - Integrate fee data from MySQL fee_structure table
-3. **P3**: Sync Code to Git Repository - Live server code ahead of source control
+None - all user requirements completed.
 
 ## Future Tasks (Backlog)
 
@@ -105,33 +79,15 @@ Integrated scholarship applications into both Admin and Counselor panels.
 - Add scholarship form link to main ohcampus.com navigation
 
 ### P2 - Medium Priority
-- Export scholarship applications to CSV/Excel for Admission Managers
-- Counselor performance reports for scholarship conversions
+- Counselor-specific scholarship applications view
+- Fee records integration from MySQL fee_structure table
 
 ### P3 - Low Priority
-- OTP verification for scholarship form (blocked on MSG91 template issues)
-- Resolve "not secure" warning for webmail.ohcampus.com
+- OTP verification for scholarship form (blocked on MSG91)
+- Sync live server code back to git repository
 
-## Test Credentials
-- Admin: `admin@ohcampus.com / admin123`
-- Counselor: `counselor@ohcampus.com / counselor123`
-
-## Key Files
-- `/app/backend/server.py` - FastAPI backend with all endpoints
-- `/app/frontend/src/pages/ScholarshipApplications.jsx` - Admin page
-- `/app/frontend/src/pages/CounselorScholarships.jsx` - Counselor page
-- `/app/frontend/src/components/layout/AdminLayout.jsx` - Admin sidebar with menu
-- `/app/frontend/src/components/layout/Navbar.jsx` - Counselor navbar
-
-## Database Schema
-- **MongoDB Collections**:
-  - `scholarship_applications` - Scholarship application data
-  - `users` - User accounts with roles
-  - `admissions` - Admission records
-  - `colleges` - College information
-  - `courses` - Course information
-
-## Testing Results
-- Backend: 100% (25/25 tests passed)
-- Frontend: 100% (all UI tests passed)
-- Test report: `/app/test_reports/iteration_16.json`
+## Credentials
+- **Server SSH**: root@103.118.17.62 (password: ahDilYeqUPNqSxoo)
+- **Admin Login**: admin@ohcampus.com / admin123
+- **Counselor Login**: counselor@ohcampus.com / counselor123
+- **MySQL**: localhost / ohcampus_ohcamhk / ohcampus123# / ohcampus_beta
