@@ -703,14 +703,15 @@ export default function ScholarshipApplications() {
                     Assign Counselor
                   </h3>
                   <Select
-                    value={selectedApp.counselor_id || ''}
+                    value={selectedApp.counselor_id || 'unassigned'}
                     onValueChange={(value) => {
-                      handleAssignCounselor(selectedApp.id, value);
-                      const counselor = counselors.find((c) => c.id === value);
+                      const actualValue = value === 'unassigned' ? '' : value;
+                      handleAssignCounselor(selectedApp.id, actualValue);
+                      const counselor = counselors.find((c) => c.id === actualValue);
                       setSelectedApp({
                         ...selectedApp,
-                        counselor_id: value,
-                        counselor_name: counselor?.name,
+                        counselor_id: actualValue || null,
+                        counselor_name: counselor?.name || null,
                       });
                     }}
                   >
@@ -718,7 +719,7 @@ export default function ScholarshipApplications() {
                       <SelectValue placeholder="Select counselor" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Unassigned</SelectItem>
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
                       {counselors.map((counselor) => (
                         <SelectItem key={counselor.id} value={counselor.id}>
                           {counselor.name} ({counselor.designation})
