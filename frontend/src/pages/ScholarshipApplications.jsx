@@ -444,7 +444,7 @@ export default function ScholarshipApplications() {
                           <div>
                             <p className="font-medium text-[#0F172A]">{app.name}</p>
                             <p className="text-xs text-[#475569]">{app.email}</p>
-                            <p className="text-xs text-[#475569]">{app.phone}</p>
+                            <p className="text-xs text-[#475569]">{app.mobile || app.phone}</p>
                           </div>
                         </td>
                         <td className="py-3 px-4">
