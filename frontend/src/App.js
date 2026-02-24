@@ -105,6 +105,14 @@ function AppRoutes() {
         } 
       />
       <Route 
+        path="/scholarships" 
+        element={
+          <ProtectedRoute>
+            <CounselorScholarships />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
         path="/profile" 
         element={
           <ProtectedRoute>
@@ -167,6 +175,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute requiredRole="admin">
             <ActivityLog />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/scholarship-applications" 
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <ScholarshipApplications />
           </ProtectedRoute>
         } 
       />
