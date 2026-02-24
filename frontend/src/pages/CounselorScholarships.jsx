@@ -129,10 +129,9 @@ export default function CounselorScholarships() {
       const response = await fetch(`${API_URL}/api/counselor/scholarship-utm-link`, {
         headers: getAuthHeaders(),
       });
+      if (!response.ok) return;
       const data = await response.json();
-      if (response.ok) {
-        setUtmLink(data.utm_link);
-      }
+      setUtmLink(data.utm_link);
     } catch (error) {
       console.error('Failed to fetch UTM link:', error);
     }
