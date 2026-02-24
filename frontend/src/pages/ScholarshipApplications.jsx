@@ -111,10 +111,9 @@ export default function ScholarshipApplications() {
       const response = await fetch(`${API_URL}/api/scholarship-applications/stats`, {
         headers: getAuthHeaders(),
       });
+      if (!response.ok) return;
       const data = await response.json();
-      if (response.ok) {
-        setStats(data);
-      }
+      setStats(data);
     } catch (error) {
       console.error('Failed to fetch stats:', error);
     }
@@ -125,10 +124,9 @@ export default function ScholarshipApplications() {
       const response = await fetch(`${API_URL}/api/admin/users`, {
         headers: getAuthHeaders(),
       });
+      if (!response.ok) return;
       const data = await response.json();
-      if (response.ok) {
-        setCounselors(data || []);
-      }
+      setCounselors(data || []);
     } catch (error) {
       console.error('Failed to fetch counselors:', error);
     }
