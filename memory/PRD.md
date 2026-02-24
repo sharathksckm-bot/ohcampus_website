@@ -9,21 +9,33 @@ Create a web-based counseling platform for OhCampus counselors with features for
 - **Backend API**: FastAPI/Python
 - **Database**: 
   - **MySQL (ohcampus_beta)**: Featured colleges, courses from main ohcampus.com database
-  - **MongoDB (ohcampus_counselor)**: Users, fees, admission charges, FAQs, activity logs
+  - **MongoDB (ohcampus_counselor)**: Users, fees, admission charges, FAQs, activity logs, scholarship applications
 
 ## Current Data Status (Feb 24, 2026)
-- **Featured Colleges**: 161 (from MySQL `package_type = 'feature_listing'`)
-- **Total Courses**: 2,539 courses across all featured colleges
+- **Featured Colleges**: 158 (from MySQL `package_type = 'feature_listing'`)
+- **Total Courses**: 2,379 courses across all featured colleges
 - **Fee Records**: 1,211 (in MongoDB)
-- **Colleges with Fees**: 49
+- **Scholarship Applications**: 8 (in MySQL)
 
 ## What's Been Implemented
 
-### Session: Feb 24, 2026 - Data Restoration
-- Restored MySQL connection with correct credentials
-- Fixed college ID format to use `c-{mysql_id}` to match fee records
-- Restored original frontend design from morning backup
-- Backend now correctly fetches 161 featured colleges from MySQL
+### Session: Feb 24, 2026 - MySQL Data Fixes & Scholarship Application
+#### Bug Fixes Completed:
+1. ✅ Fixed incorrect course count (was 22, now 2,379) 
+2. ✅ Fixed college count (was 8 demo, now 158 featured)
+3. ✅ Fixed MySQL column references (`cr.level` → `cc.level`, `cr.description` → `cr.course_description`)
+4. ✅ Fixed MySQL credentials in mysql_db.py
+5. ✅ Added missing functions: `get_total_courses_count`, `get_college_highlights`, `get_college_whats_new`, `get_college_placements`
+6. ✅ College detail page tabs (Highlights, Courses, Fees) now populated with MySQL data
+
+#### Scholarship Application Feature:
+- ✅ **Backend**: API endpoints for scholarship CRUD operations
+- ✅ **Frontend**: ScholarshipApplications.jsx page with:
+  - Total/Pending/Converted/Today stats
+  - Search and filter functionality
+  - Status management (Pending, Contacted, Rejected)
+  - Counselor assignment
+- ✅ **Admin Sidebar**: "Scholarship Applications" link added
 
 ### Key Technical Details
 
@@ -42,17 +54,31 @@ Create a web-based counseling platform for OhCampus counselors with features for
 - `/var/www/counselor.ohcampus.com/backend/.env` - Environment variables
 - `/var/www/counselor.ohcampus.com/` - Frontend build files
 
-## Pending Features
-1. **Scholarship Application Module** - To be added without breaking current functionality
-2. **Course counts display** - May need optimization on college detail page
+### Backups Created
+- `mysql_db.py.backup_20260224_174100`
+- `server.py.backup_20260224_174100`
 
 ## Credentials
 - **Server SSH**: root@103.118.17.62 (password: ahDilYeqUPNqSxoo)
 - **Admin Login**: admin@ohcampus.com / admin123
 - **Counselor Login**: counselor@ohcampus.com / counselor123
 
-## Future Tasks (Backlog)
-- Add Scholarship Application feature
-- Email notifications for scholarship submissions
-- Extend fee structure to 6 years annual / 12 semesters
-- Add scholarship form link to main ohcampus.com
+## P0 - Completed
+- [x] MySQL data integration (colleges, courses)
+- [x] College detail page tabs with data
+- [x] Scholarship Applications feature
+- [x] Admin sidebar link for Scholarship Applications
+
+## P1 - In Progress/Upcoming
+- [ ] Email notifications for scholarship submissions
+- [ ] Extend fee structure to 6 years annual / 12 semesters
+- [ ] Add scholarship form link to main ohcampus.com navigation
+
+## P2 - Future/Backlog
+- [ ] Re-enable OTP functionality (blocked on MSG91 template)
+- [ ] Seat status management for MySQL courses
+- [ ] Performance optimization for large course lists
+
+## Known Limitations
+- Seat status (Closing, Under Waiting) only exists for MongoDB demo courses, not MySQL courses
+- Dashboard sidebar stats may show cached values until page refresh
