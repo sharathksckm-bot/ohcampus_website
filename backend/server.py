@@ -2471,6 +2471,338 @@ async def get_scholarship_summary(
         "recent_scholarships": recent_scholarships
     }
 
+# ===================== SCHOLARSHIP APPLICATIONS ENDPOINTS =====================
+
+async def generate_application_number():
+    """Generate a human-readable application number like SCH-2026-0001"""
+    year = datetime.now(timezone.utc).year
+    # Count existing applications this year
+    count = await db.scholarship_applications.count_documents({
+        "created_at": {"$regex": f"^{year}"}
+    })
+    return f"SCH-{year}-{str(count + 1).zfill(4)}"
+
+@api_router.post("/scholarship-applications", status_code=201)
+async def create_scholarship_application(app_data: ScholarshipApplicationCreate):
+    """Create a new scholarship application (public endpoint for external form)"""
+    
+    # Check for duplicate application by email (within 24 hours)
+    existing = await db.scholarship_applications.find_one({
+        "email": app_data.email,
+        "created_at": {"$gte": (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="An application with this email was already submitted recently")
+    
+    # Create application
+    app_dict = app_data.model_dump()
+    app_dict["id"] = str(uuid.uuid4())
+    app_dict["application_number"] = await generate_application_number()
+    app_dict["status"] = "Pending"
+    app_dict["created_at"] = datetime.now(timezone.utc).isoformat()
+    app_dict["updated_at"] = datetime.now(timezone.utc).isoformat()
+    
+    # Try to match counselor from UTM source
+    if app_data.utm_source:
+        # UTM source might be counselor's email or ID
+        counselor = await db.users.find_one({
+            "$or": [
+                {"email": app_data.utm_source},
+                {"id": app_data.utm_source}
+            ],
+            "role": "counselor"
+        }, {"_id": 0})
+        if counselor:
+            app_dict["counselor_id"] = counselor["id"]
+            app_dict["counselor_name"] = counselor["name"]
+    
+    await db.scholarship_applications.insert_one(app_dict)
+    
+    # Remove MongoDB _id from response
+    app_dict.pop("_id", None)
+    
+    return {
+        "message": "Application submitted successfully",
+        "application_number": app_dict["application_number"],
+        "application": app_dict
+    }
+
+@api_router.get("/scholarship-applications")
+async def get_scholarship_applications(
+    current_user: dict = Depends(get_current_user),
+    status: Optional[str] = None,
+    search: Optional[str] = None,
+    counselor_id: Optional[str] = None,
+    utm_source: Optional[str] = None,
+    page: int = 1,
+    limit: int = 20,
+    sort_by: str = "created_at",
+    sort_order: str = "desc"
+):
+    """Get scholarship applications with role-based access"""
+    
+    # Get user details for role-based filtering
+    user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    query = {}
+    
+    # Role-based access control
+    if user.get("role") == "admin":
+        # Admin can see all applications
+        pass
+    elif user.get("designation") == "Admission Manager":
+        # Manager can see all applications
+        pass
+    elif user.get("designation") == "Team Lead":
+        # Team Lead can see their own and their team members' applications
+        team_members = await db.users.find(
+            {"team_lead_id": user["id"]},
+            {"_id": 0, "id": 1}
+        ).to_list(100)
+        team_member_ids = [m["id"] for m in team_members]
+        team_member_ids.append(user["id"])  # Include self
+        query["$or"] = [
+            {"counselor_id": {"$in": team_member_ids}},
+            {"utm_source": {"$in": team_member_ids}}
+        ]
+    else:
+        # Regular counselor can only see their own referrals
+        query["$or"] = [
+            {"counselor_id": user["id"]},
+            {"utm_source": user["id"]},
+            {"utm_source": user.get("email", "")}
+        ]
+    
+    # Additional filters
+    if status:
+        query["status"] = status
+    if search:
+        search_query = {
+            "$or": [
+                {"name": {"$regex": search, "$options": "i"}},
+                {"email": {"$regex": search, "$options": "i"}},
+                {"phone": {"$regex": search, "$options": "i"}},
+                {"application_number": {"$regex": search, "$options": "i"}}
+            ]
+        }
+        if "$or" in query:
+            query = {"$and": [query, search_query]}
+        else:
+            query.update(search_query)
+    if counselor_id and (user.get("role") == "admin" or user.get("designation") in ["Team Lead", "Admission Manager"]):
+        query["counselor_id"] = counselor_id
+    if utm_source and user.get("role") == "admin":
+        query["utm_source"] = utm_source
+    
+    # Sorting
+    sort_direction = -1 if sort_order == "desc" else 1
+    
+    # Get total count
+    total = await db.scholarship_applications.count_documents(query)
+    
+    # Get paginated results
+    skip = (page - 1) * limit
+    applications = await db.scholarship_applications.find(
+        query, {"_id": 0}
+    ).sort(sort_by, sort_direction).skip(skip).limit(limit).to_list(limit)
+    
+    return {
+        "applications": applications,
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "total_pages": (total + limit - 1) // limit
+    }
+
+@api_router.get("/scholarship-applications/stats")
+async def get_scholarship_application_stats(current_user: dict = Depends(get_current_user)):
+    """Get scholarship application statistics"""
+    
+    user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    query = {}
+    
+    # Role-based filtering (same as above)
+    if user.get("role") == "admin" or user.get("designation") == "Admission Manager":
+        pass
+    elif user.get("designation") == "Team Lead":
+        team_members = await db.users.find(
+            {"team_lead_id": user["id"]},
+            {"_id": 0, "id": 1}
+        ).to_list(100)
+        team_member_ids = [m["id"] for m in team_members]
+        team_member_ids.append(user["id"])
+        query["$or"] = [
+            {"counselor_id": {"$in": team_member_ids}},
+            {"utm_source": {"$in": team_member_ids}}
+        ]
+    else:
+        query["$or"] = [
+            {"counselor_id": user["id"]},
+            {"utm_source": user["id"]},
+            {"utm_source": user.get("email", "")}
+        ]
+    
+    # Get status counts
+    pipeline = [
+        {"$match": query} if query else {"$match": {}},
+        {"$group": {"_id": "$status", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}
+    ]
+    status_counts = await db.scholarship_applications.aggregate(pipeline).to_list(20)
+    
+    total = sum(s["count"] for s in status_counts)
+    
+    # Recent applications (last 30 days)
+    thirty_days_ago = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+    recent_query = {**query, "created_at": {"$gte": thirty_days_ago}}
+    recent_count = await db.scholarship_applications.count_documents(recent_query)
+    
+    # Today's applications
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0).isoformat()
+    today_query = {**query, "created_at": {"$gte": today_start}}
+    today_count = await db.scholarship_applications.count_documents(today_query)
+    
+    return {
+        "total": total,
+        "by_status": {s["_id"]: s["count"] for s in status_counts},
+        "recent_30_days": recent_count,
+        "today": today_count
+    }
+
+@api_router.get("/scholarship-applications/{app_id}")
+async def get_scholarship_application(app_id: str, current_user: dict = Depends(get_current_user)):
+    """Get a single scholarship application"""
+    
+    application = await db.scholarship_applications.find_one({"id": app_id}, {"_id": 0})
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check access permission
+    user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    if user.get("role") != "admin" and user.get("designation") not in ["Team Lead", "Admission Manager"]:
+        # Regular counselor - check if they own this application
+        if application.get("counselor_id") != user["id"] and application.get("utm_source") != user["id"]:
+            raise HTTPException(status_code=403, detail="Access denied")
+    
+    return application
+
+@api_router.put("/scholarship-applications/{app_id}")
+async def update_scholarship_application(
+    app_id: str, 
+    update_data: ScholarshipApplicationUpdate,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update a scholarship application (admin/manager only for status changes)"""
+    
+    application = await db.scholarship_applications.find_one({"id": app_id})
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    
+    # Only admin/manager/team lead can update status
+    if update_data.status and user.get("role") != "admin" and user.get("designation") not in ["Team Lead", "Admission Manager"]:
+        raise HTTPException(status_code=403, detail="Only admin or manager can update application status")
+    
+    # Validate status
+    if update_data.status and update_data.status not in SCHOLARSHIP_STATUSES:
+        raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {', '.join(SCHOLARSHIP_STATUSES)}")
+    
+    update_dict = {}
+    if update_data.status:
+        update_dict["status"] = update_data.status
+    if update_data.admin_notes is not None:
+        update_dict["admin_notes"] = update_data.admin_notes
+    if update_data.counselor_id is not None:
+        update_dict["counselor_id"] = update_data.counselor_id
+        # Get counselor name
+        if update_data.counselor_id:
+            counselor = await db.users.find_one({"id": update_data.counselor_id}, {"_id": 0, "name": 1})
+            if counselor:
+                update_dict["counselor_name"] = counselor["name"]
+        else:
+            update_dict["counselor_name"] = None
+    
+    if update_dict:
+        update_dict["updated_at"] = datetime.now(timezone.utc).isoformat()
+        await db.scholarship_applications.update_one({"id": app_id}, {"$set": update_dict})
+        
+        # Log activity
+        await log_activity(
+            current_user["user_id"], 
+            user.get("name", ""), 
+            current_user["email"], 
+            "update_scholarship_application",
+            "scholarship_application",
+            app_id,
+            f"Updated status to: {update_data.status}" if update_data.status else "Updated application"
+        )
+    
+    updated = await db.scholarship_applications.find_one({"id": app_id}, {"_id": 0})
+    return updated
+
+@api_router.delete("/scholarship-applications/{app_id}")
+async def delete_scholarship_application(app_id: str, current_user: dict = Depends(require_admin)):
+    """Delete a scholarship application (admin only)"""
+    
+    result = await db.scholarship_applications.delete_one({"id": app_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    return {"message": "Application deleted successfully"}
+
+@api_router.get("/counselor/scholarship-utm-link")
+async def get_counselor_utm_link(current_user: dict = Depends(get_current_user)):
+    """Generate UTM link for counselor to share"""
+    
+    user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Generate UTM link
+    base_url = "https://ohcampus.com/check-scholarship/"
+    utm_params = f"?utm_source={user['id']}&utm_medium=counselor&utm_campaign=scholarship_referral"
+    
+    return {
+        "utm_link": base_url + utm_params,
+        "counselor_id": user["id"],
+        "counselor_name": user["name"]
+    }
+
+@api_router.get("/admin/scholarship-applications/counselor-stats")
+async def get_counselor_scholarship_stats(current_user: dict = Depends(require_admin_or_manager)):
+    """Get scholarship application stats by counselor"""
+    
+    pipeline = [
+        {"$match": {"counselor_id": {"$exists": True, "$ne": None}}},
+        {"$group": {
+            "_id": "$counselor_id",
+            "counselor_name": {"$first": "$counselor_name"},
+            "total": {"$sum": 1},
+            "pending": {"$sum": {"$cond": [{"$eq": ["$status", "Pending"]}, 1, 0]}},
+            "converted": {"$sum": {"$cond": [{"$eq": ["$status", "Converted"]}, 1, 0]}},
+            "eligible": {"$sum": {"$cond": [{"$eq": ["$status", "Eligible"]}, 1, 0]}}
+        }},
+        {"$sort": {"total": -1}}
+    ]
+    
+    stats = await db.scholarship_applications.aggregate(pipeline).to_list(50)
+    
+    # Enrich with counselor details
+    for stat in stats:
+        if not stat.get("counselor_name"):
+            counselor = await db.users.find_one({"id": stat["_id"]}, {"_id": 0, "name": 1, "designation": 1})
+            if counselor:
+                stat["counselor_name"] = counselor["name"]
+                stat["designation"] = counselor.get("designation")
+    
+    return {"counselor_stats": stats}
+
 # ===================== TARGET ALERTS =====================
 
 @api_router.get("/admin/target-alerts")
