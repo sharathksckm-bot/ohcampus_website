@@ -92,16 +92,18 @@ export default function CounselorScholarships() {
         `${API_URL}/api/scholarship-applications?${params}`,
         { headers: getAuthHeaders() }
       );
-      const data = await response.json();
 
-      if (response.ok) {
-        setApplications(data.applications || []);
-        setTotalPages(data.total_pages || 1);
-      } else {
-        toast.error(data.detail || 'Failed to fetch applications');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.detail || 'Failed to fetch referrals');
+        return;
       }
+
+      const data = await response.json();
+      setApplications(data.applications || []);
+      setTotalPages(data.total_pages || 1);
     } catch (error) {
-      toast.error('Failed to fetch applications');
+      toast.error('Failed to fetch referrals');
       console.error(error);
     } finally {
       setLoading(false);
@@ -113,9 +115,9 @@ export default function CounselorScholarships() {
       const response = await fetch(`${API_URL}/api/scholarship-applications/stats`, {
         headers: getAuthHeaders(),
       });
+      if (!response.ok) return;
       const data = await response.json();
-      if (response.ok) {
-        setStats(data);
+      setStats(data);
       }
     } catch (error) {
       console.error('Failed to fetch stats:', error);
