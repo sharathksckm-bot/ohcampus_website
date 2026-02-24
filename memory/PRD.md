@@ -68,6 +68,11 @@ Create a web-based counseling platform for OhCampus counselors with features for
 - [x] College detail page tabs with data
 - [x] Scholarship Applications feature
 - [x] Admin sidebar link for Scholarship Applications
+- [x] Fixed scholarship application detail view field mappings (Feb 24, 2026)
+  - Updated ScholarshipApplications.jsx to handle both MySQL and MongoDB field names
+  - Updated CounselorScholarships.jsx with same field mapping fixes
+  - Now displays: mobile/phone, qualification, board_university, percentage, entrance_exam, district, preferred_location, etc.
+  - Document download links work correctly (marks_card_url, entrance_scorecard_url)
 
 ## P1 - In Progress/Upcoming
 - [ ] Email notifications for scholarship submissions
@@ -78,7 +83,10 @@ Create a web-based counseling platform for OhCampus counselors with features for
 - [ ] Re-enable OTP functionality (blocked on MSG91 template)
 - [ ] Seat status management for MySQL courses
 - [ ] Performance optimization for large course lists
+- [ ] Refactor deployment process for reliability (currently manual kill & restart)
+- [ ] DRY up permissions logic across endpoints
 
 ## Known Limitations
 - Seat status (Closing, Under Waiting) only exists for MongoDB demo courses, not MySQL courses
 - Dashboard sidebar stats may show cached values until page refresh
+- Preview environment (MongoDB) has sparse test data; live production (MySQL) has complete data
