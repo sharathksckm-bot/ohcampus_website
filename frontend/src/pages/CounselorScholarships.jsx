@@ -118,7 +118,6 @@ export default function CounselorScholarships() {
       if (!response.ok) return;
       const data = await response.json();
       setStats(data);
-      }
     } catch (error) {
       console.error('Failed to fetch stats:', error);
     }
