@@ -591,13 +591,19 @@ export default function ScholarshipApplications() {
                       <p>{selectedApp.email}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-[#475569]">Phone</p>
-                      <p>{selectedApp.phone}</p>
+                      <p className="text-xs text-[#475569]">Phone/Mobile</p>
+                      <p>{selectedApp.mobile || selectedApp.phone || 'Not provided'}</p>
                     </div>
                     <div>
                       <p className="text-xs text-[#475569]">Gender</p>
                       <p>{selectedApp.gender || 'Not specified'}</p>
                     </div>
+                    {(selectedApp.dob || selectedApp.date_of_birth) && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Date of Birth</p>
+                        <p>{selectedApp.dob || selectedApp.date_of_birth}</p>
+                      </div>
+                    )}
                     {selectedApp.father_name && (
                       <div>
                         <p className="text-xs text-[#475569]">Father's Name</p>
@@ -614,13 +620,14 @@ export default function ScholarshipApplications() {
                 </div>
 
                 {/* Address */}
-                {(selectedApp.address || selectedApp.city) && (
+                {(selectedApp.address || selectedApp.city || selectedApp.district || selectedApp.state) && (
                   <div>
                     <h3 className="font-medium text-[#0F172A] mb-3">Address</h3>
                     <p className="text-sm">
                       {[
                         selectedApp.address,
                         selectedApp.city,
+                        selectedApp.district,
                         selectedApp.state,
                         selectedApp.pincode,
                       ]
@@ -636,30 +643,40 @@ export default function ScholarshipApplications() {
                     Academic Information
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
-                    {selectedApp.tenth_percentage && (
+                    {(selectedApp.qualification || selectedApp.current_education) && (
                       <div>
-                        <p className="text-xs text-[#475569]">10th Percentage</p>
-                        <p>{selectedApp.tenth_percentage}%</p>
+                        <p className="text-xs text-[#475569]">Highest Qualification</p>
+                        <p>{selectedApp.qualification || selectedApp.current_education}</p>
                       </div>
                     )}
-                    {selectedApp.twelfth_percentage && (
+                    {selectedApp.board_university && (
                       <div>
-                        <p className="text-xs text-[#475569]">12th Percentage</p>
-                        <p>{selectedApp.twelfth_percentage}%</p>
+                        <p className="text-xs text-[#475569]">Board/University</p>
+                        <p>{selectedApp.board_university}</p>
+                      </div>
+                    )}
+                    {selectedApp.passing_year && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Year of Passing</p>
+                        <p>{selectedApp.passing_year}</p>
+                      </div>
+                    )}
+                    {(selectedApp.percentage || selectedApp.tenth_percentage || selectedApp.twelfth_percentage) && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Percentage/CGPA</p>
+                        <p>{selectedApp.percentage || selectedApp.tenth_percentage || selectedApp.twelfth_percentage}{selectedApp.percentage ? '' : '%'}</p>
                       </div>
                     )}
                     {selectedApp.graduation_percentage && (
                       <div>
-                        <p className="text-xs text-[#475569]">
-                          Graduation Percentage
-                        </p>
+                        <p className="text-xs text-[#475569]">Graduation Percentage</p>
                         <p>{selectedApp.graduation_percentage}%</p>
                       </div>
                     )}
-                    {selectedApp.current_education && (
-                      <div>
-                        <p className="text-xs text-[#475569]">Current Education</p>
-                        <p>{selectedApp.current_education}</p>
+                    {selectedApp.entrance_exam && (
+                      <div className="col-span-2">
+                        <p className="text-xs text-[#475569]">Entrance Exams Appeared</p>
+                        <p>{selectedApp.entrance_exam}</p>
                       </div>
                     )}
                   </div>
@@ -669,14 +686,24 @@ export default function ScholarshipApplications() {
                 <div>
                   <h3 className="font-medium text-[#0F172A] mb-3">Preferences</h3>
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-[#475569]">Preferred Stream</p>
-                      <p>{selectedApp.preferred_stream || 'Not specified'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-[#475569]">Preferred Course</p>
-                      <p>{selectedApp.preferred_course || 'Not specified'}</p>
-                    </div>
+                    {selectedApp.preferred_stream && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Preferred Stream</p>
+                        <p>{selectedApp.preferred_stream}</p>
+                      </div>
+                    )}
+                    {selectedApp.preferred_course && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Preferred Course</p>
+                        <p>{selectedApp.preferred_course}</p>
+                      </div>
+                    )}
+                    {(selectedApp.preferred_state || selectedApp.preferred_location) && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Preferred Location</p>
+                        <p>{[selectedApp.preferred_location, selectedApp.preferred_state].filter(Boolean).join(', ') || 'Not specified'}</p>
+                      </div>
+                    )}
                     {selectedApp.preferred_college && (
                       <div className="col-span-2">
                         <p className="text-xs text-[#475569]">Preferred College</p>
@@ -690,7 +717,8 @@ export default function ScholarshipApplications() {
                 {(selectedApp.marks_card_url ||
                   selectedApp.entrance_scorecard_url ||
                   selectedApp.scorecard_url ||
-                  selectedApp.aadhar_url) && (
+                  selectedApp.aadhar_url ||
+                  selectedApp.photo_url) && (
                   <div>
                     <h3 className="font-medium text-[#0F172A] mb-3">Documents</h3>
                     <div className="flex flex-wrap gap-2">
@@ -700,6 +728,7 @@ export default function ScholarshipApplications() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100"
+                          data-testid="marks-card-link"
                         >
                           <Download className="h-4 w-4" />
                           Marks Card
@@ -711,6 +740,7 @@ export default function ScholarshipApplications() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100"
+                          data-testid="scorecard-link"
                         >
                           <Download className="h-4 w-4" />
                           Entrance Scorecard
@@ -722,9 +752,22 @@ export default function ScholarshipApplications() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100"
+                          data-testid="aadhar-link"
                         >
                           <Download className="h-4 w-4" />
                           Aadhar
+                        </a>
+                      )}
+                      {selectedApp.photo_url && (
+                        <a
+                          href={selectedApp.photo_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100"
+                          data-testid="photo-link"
+                        >
+                          <Download className="h-4 w-4" />
+                          Photo
                         </a>
                       )}
                     </div>
