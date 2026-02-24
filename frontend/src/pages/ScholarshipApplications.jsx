@@ -88,14 +88,16 @@ export default function ScholarshipApplications() {
         `${API_URL}/api/scholarship-applications?${params}`,
         { headers: getAuthHeaders() }
       );
-      const data = await response.json();
 
-      if (response.ok) {
-        setApplications(data.applications || []);
-        setTotalPages(data.total_pages || 1);
-      } else {
-        toast.error(data.detail || 'Failed to fetch applications');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.detail || 'Failed to fetch applications');
+        return;
       }
+
+      const data = await response.json();
+      setApplications(data.applications || []);
+      setTotalPages(data.total_pages || 1);
     } catch (error) {
       toast.error('Failed to fetch applications');
       console.error(error);
