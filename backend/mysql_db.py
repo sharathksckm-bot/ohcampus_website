@@ -8,11 +8,11 @@ from typing import List, Dict, Any, Optional
 
 # MySQL Configuration
 MYSQL_CONFIG = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'port': int(os.environ.get('MYSQL_PORT', 3306)),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'db': os.environ.get('MYSQL_DB', 'ohcampus_beta'),
+    'host': 'localhost',
+    'port': 3306,
+    'user': 'ohcampus_ohcamhk',
+    'password': 'ohcampus123#',
+    'db': 'ohcampus_beta',
     'charset': 'utf8mb4',
     'autocommit': True
 }
