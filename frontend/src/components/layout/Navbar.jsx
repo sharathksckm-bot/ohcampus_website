@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { User, LogOut, Settings, LayoutDashboard, Building2, BookOpen, UserPlus, BarChart3 } from 'lucide-react';
+import { User, LogOut, Settings, LayoutDashboard, Building2, BookOpen, UserPlus, BarChart3, GraduationCap } from 'lucide-react';
 
 export const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
@@ -77,6 +77,16 @@ export const Navbar = () => {
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
                   Admissions
+                </Button>
+              </Link>
+              <Link to="/scholarships">
+                <Button 
+                  variant="ghost" 
+                  className={`font-body ${isActiveLink('/scholarships') ? 'bg-blue-50 text-[#0066CC]' : 'text-[#475569] hover:text-[#0066CC]'}`}
+                  data-testid="nav-scholarships"
+                >
+                  <GraduationCap className="h-4 w-4 mr-2" />
+                  Scholarships
                 </Button>
               </Link>
               {canSeePerformance && (
@@ -147,6 +157,13 @@ export const Navbar = () => {
                       >
                         <UserPlus className="mr-2 h-4 w-4" />
                         Admissions
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer md:hidden"
+                        onClick={() => navigate('/scholarships')}
+                      >
+                        <GraduationCap className="mr-2 h-4 w-4" />
+                        Scholarships
                       </DropdownMenuItem>
                       {canSeePerformance && (
                         <DropdownMenuItem 
