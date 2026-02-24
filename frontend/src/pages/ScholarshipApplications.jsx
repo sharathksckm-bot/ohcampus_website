@@ -688,6 +688,7 @@ export default function ScholarshipApplications() {
 
                 {/* Documents */}
                 {(selectedApp.marks_card_url ||
+                  selectedApp.entrance_scorecard_url ||
                   selectedApp.scorecard_url ||
                   selectedApp.aadhar_url) && (
                   <div>
@@ -704,15 +705,15 @@ export default function ScholarshipApplications() {
                           Marks Card
                         </a>
                       )}
-                      {selectedApp.scorecard_url && (
+                      {(selectedApp.entrance_scorecard_url || selectedApp.scorecard_url) && (
                         <a
-                          href={selectedApp.scorecard_url}
+                          href={selectedApp.entrance_scorecard_url || selectedApp.scorecard_url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100"
                         >
                           <Download className="h-4 w-4" />
-                          Scorecard
+                          Entrance Scorecard
                         </a>
                       )}
                       {selectedApp.aadhar_url && (
