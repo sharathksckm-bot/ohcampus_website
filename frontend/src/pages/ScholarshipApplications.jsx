@@ -66,6 +66,15 @@ export default function ScholarshipApplications() {
   const [selectedApp, setSelectedApp] = useState(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [counselors, setCounselors] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Check if user can delete applications
+  const canDelete = () => {
+    if (!currentUser) return false;
+    const role = currentUser.role || '';
+    const designation = currentUser.designation || '';
+    return role === 'admin' || designation === 'Team Lead' || designation === 'Admission Manager';
+  };
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('ohcampus_token');
@@ -73,6 +82,44 @@ export default function ScholarshipApplications() {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     };
+  };
+
+  // Fetch current user info
+  const fetchCurrentUser = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/me`, {
+        headers: getAuthHeaders(),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+    }
+  }, []);
+
+  // Delete application
+  const handleDelete = async (appId) => {
+    if (!window.confirm('Are you sure you want to delete this application?')) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/api/scholarship-applications/${appId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      
+      if (response.ok) {
+        toast.success('Application deleted successfully');
+        fetchApplications();
+        fetchStats();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to delete application');
+      }
+    } catch (error) {
+      toast.error('Failed to delete application');
+    }
   };
 
   const fetchApplications = useCallback(async () => {
