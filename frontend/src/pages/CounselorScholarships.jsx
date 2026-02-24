@@ -467,44 +467,57 @@ export default function CounselorScholarships() {
                       <p className="text-sm font-medium">{selectedApp.name}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-[#475569]">Phone</p>
-                      <p className="text-sm">{selectedApp.phone}</p>
+                      <p className="text-xs text-[#475569]">Phone/Mobile</p>
+                      <p className="text-sm">{selectedApp.mobile || selectedApp.phone || 'Not provided'}</p>
                     </div>
                     <div className="col-span-2">
                       <p className="text-xs text-[#475569]">Email</p>
                       <p className="text-sm">{selectedApp.email}</p>
                     </div>
-                  </div>
-                </div>
-
-                {/* Preferences */}
-                <div>
-                  <h3 className="font-medium text-[#0F172A] mb-2 text-sm">
-                    Course Preference
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <p className="text-xs text-[#475569]">Stream</p>
-                      <p className="text-sm">{selectedApp.preferred_stream || 'Not specified'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-[#475569]">Course</p>
-                      <p className="text-sm">{selectedApp.preferred_course || 'Not specified'}</p>
-                    </div>
+                    {selectedApp.father_name && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Father's Name</p>
+                        <p className="text-sm">{selectedApp.father_name}</p>
+                      </div>
+                    )}
+                    {selectedApp.mother_name && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Mother's Name</p>
+                        <p className="text-sm">{selectedApp.mother_name}</p>
+                      </div>
+                    )}
+                    {(selectedApp.state || selectedApp.district || selectedApp.city) && (
+                      <div className="col-span-2">
+                        <p className="text-xs text-[#475569]">Location</p>
+                        <p className="text-sm">{[selectedApp.city, selectedApp.district, selectedApp.state].filter(Boolean).join(', ')}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Academic Info */}
-                {(selectedApp.tenth_percentage || selectedApp.twelfth_percentage) && (
+                {(selectedApp.qualification || selectedApp.current_education || selectedApp.percentage || selectedApp.tenth_percentage || selectedApp.twelfth_percentage) && (
                   <div>
                     <h3 className="font-medium text-[#0F172A] mb-2 text-sm">
-                      Academic Performance
+                      Academic Information
                     </h3>
-                    <div className="grid grid-cols-3 gap-3">
-                      {selectedApp.tenth_percentage && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {(selectedApp.qualification || selectedApp.current_education) && (
                         <div>
-                          <p className="text-xs text-[#475569]">10th</p>
-                          <p className="text-sm font-medium">{selectedApp.tenth_percentage}%</p>
+                          <p className="text-xs text-[#475569]">Qualification</p>
+                          <p className="text-sm">{selectedApp.qualification || selectedApp.current_education}</p>
+                        </div>
+                      )}
+                      {selectedApp.board_university && (
+                        <div>
+                          <p className="text-xs text-[#475569]">Board/University</p>
+                          <p className="text-sm">{selectedApp.board_university}</p>
+                        </div>
+                      )}
+                      {(selectedApp.percentage || selectedApp.tenth_percentage) && (
+                        <div>
+                          <p className="text-xs text-[#475569]">Percentage/CGPA</p>
+                          <p className="text-sm font-medium">{selectedApp.percentage || `${selectedApp.tenth_percentage}%`}</p>
                         </div>
                       )}
                       {selectedApp.twelfth_percentage && (
@@ -518,6 +531,74 @@ export default function CounselorScholarships() {
                           <p className="text-xs text-[#475569]">Graduation</p>
                           <p className="text-sm font-medium">{selectedApp.graduation_percentage}%</p>
                         </div>
+                      )}
+                      {selectedApp.entrance_exam && (
+                        <div className="col-span-2">
+                          <p className="text-xs text-[#475569]">Entrance Exams</p>
+                          <p className="text-sm">{selectedApp.entrance_exam}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Preferences */}
+                <div>
+                  <h3 className="font-medium text-[#0F172A] mb-2 text-sm">
+                    Course Preference
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {selectedApp.preferred_stream && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Stream</p>
+                        <p className="text-sm">{selectedApp.preferred_stream}</p>
+                      </div>
+                    )}
+                    {selectedApp.preferred_course && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Course</p>
+                        <p className="text-sm">{selectedApp.preferred_course}</p>
+                      </div>
+                    )}
+                    {(selectedApp.preferred_location || selectedApp.preferred_state) && (
+                      <div>
+                        <p className="text-xs text-[#475569]">Preferred Location</p>
+                        <p className="text-sm">{[selectedApp.preferred_location, selectedApp.preferred_state].filter(Boolean).join(', ')}</p>
+                      </div>
+                    )}
+                    {selectedApp.preferred_college && (
+                      <div className="col-span-2">
+                        <p className="text-xs text-[#475569]">Preferred College</p>
+                        <p className="text-sm">{selectedApp.preferred_college}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Documents */}
+                {(selectedApp.marks_card_url || selectedApp.entrance_scorecard_url) && (
+                  <div>
+                    <h3 className="font-medium text-[#0F172A] mb-2 text-sm">Documents</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedApp.marks_card_url && (
+                        <a
+                          href={selectedApp.marks_card_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                        >
+                          📄 Marks Card
+                        </a>
+                      )}
+                      {selectedApp.entrance_scorecard_url && (
+                        <a
+                          href={selectedApp.entrance_scorecard_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                        >
+                          📄 Entrance Scorecard
+                        </a>
                       )}
                     </div>
                   </div>
