@@ -4,124 +4,97 @@
 Create a web-based counseling platform for OhCampus counselors with features for counselors (filtering/viewing colleges) and admins (managing fees, courses, FAQs).
 
 ## Platform Architecture
-- **Frontend**: Angular 12 (ohcampus.com)
-- **Admin Panel**: Angular (admin.ohcampus.com)
-- **Backend API**: CodeIgniter/PHP (campusapi.ohcampus.com)
-- **Database**: MySQL/MariaDB
-- **Web Server**: Nginx with PHP-FPM
-
-## Server Details
-- **Host**: 103.118.17.62
-- **SSH Port**: 22
-
-## Directory Structure
-```
-/home/ohcampus/
-├── public_html/                 # Live production frontend
-│   ├── admin.ohcampus.com/      # Admin panel
-│   ├── campusapi.ohcampus.com/  # Backend API
-│   └── (Angular build files)
-├── public_html_backup_*/        # Backups
-└── logs/
-```
+- **Frontend**: React (Counselor Portal - counselor.ohcampus.com)
+- **Admin Panel**: React (integrated in Counselor Portal)
+- **Backend API**: FastAPI/Python with MongoDB + MySQL support
+- **Database**: MongoDB (primary), MySQL (legacy data)
 
 ## What's Been Implemented
 
-### Session: Feb 23, 2026 (Latest)
+### Session: Feb 24, 2026 (Latest)
 
-#### P0 - Performance Bug Fixed ✅
-- **Issue**: `allCollegeList` API taking ~25 seconds
-- **Root Causes**:
-  1. Missing `getRankListByClgIds()` batch method (N+1 query fix incomplete)
-  2. Missing database indexes on `gallery` and `college_ranks` tables
-- **Solution**:
-  - Added batch method to `College_model.php`
-  - Created index: `idx_gallery_postid_type ON gallery (postid, type)`
-  - Created index: `idx_college_ranks_college_id ON college_ranks (college_id, category_id)`
-- **Result**: Response time reduced from ~25s to ~0.8s
+#### Scholarship Applications Integration ✅ COMPLETED
+Integrated scholarship applications into both Admin and Counselor panels.
 
-#### Admin Panel Fixed ✅
-- **Issue**: admin.ohcampus.com returning 500 error
-- **Root Cause**: Admin directory missing from production
-- **Solution**: Restored from `/home/ohcampus/public_html_backup_20260223_135832/admin.ohcampus.com`
+**Admin Panel Features** (`/admin/scholarship-applications`):
+- Dashboard with stats cards (Total, Pending, Converted, Today)
+- Applications table with search, filter by status, pagination
+- Application detail dialog with full information
+- Status update dropdown (7 statuses: Pending, Under Review, Contacted, Eligible, Not Eligible, Converted, Rejected)
+- Counselor assignment functionality
+- Admin notes textarea
+- Sidebar menu integration
 
-#### Angular Routing Fixed ✅
-- Restored `.htaccess` file for client-side routing
+**Counselor Portal Features** (`/scholarships`):
+- "My Scholarship Referrals" page for counselors
+- Stats cards (Total Referrals, Pending, Converted, Conversion Rate)
+- "Get Referral Link" button with UTM dialog
+- Copy UTM link functionality
+- Applications table (read-only status)
+- Application detail view
+
+**Backend APIs**:
+- `POST /api/scholarship-applications` - Public endpoint for creating applications
+- `GET /api/scholarship-applications` - List with role-based filtering
+- `GET /api/scholarship-applications/stats` - Statistics endpoint
+- `GET /api/scholarship-applications/{id}` - Get single application
+- `PUT /api/scholarship-applications/{id}` - Update status/notes/counselor
+- `DELETE /api/scholarship-applications/{id}` - Admin only delete
+- `GET /api/counselor/scholarship-utm-link` - Generate UTM link
+
+**Role-Based Access Control**:
+- Admin: Sees all applications
+- Admission Manager: Sees all applications
+- Team Lead: Sees own + team members' applications
+- Counselor: Sees only own referrals (by counselor_id or utm_source)
+
+**UTM Tracking**:
+- UTM link format: `https://ohcampus.com/check-scholarship/?utm_source={counselor_id}&utm_medium=counselor&utm_campaign=scholarship_referral`
+- Auto-assigns counselor when utm_source matches counselor ID or email
+
+**Application Number Format**: SCH-YYYY-NNNN (e.g., SCH-2026-0001)
 
 ### Previous Sessions
-- Fixed critical production bug (site not loading data on iPhone/Incognito)
-- Fixed multiple JavaScript bugs in Angular source code
-- Replaced expired JWT tokens throughout Angular source
-- Fixed CORS issues on backend API
-- Built and deployed new Angular frontend
+- Counselor Portal with college/course browsing
+- Admin dashboard with performance metrics
+- User management with roles (Admin, Counselor, Team Lead, Admission Manager)
+- Fee management
+- FAQ management
+- Activity logging
+- College management
+- Admissions tracking
 
 ## Pending Issues
-
-### P1 - "New" Study Abroad Form Missing
-- Current form in Git repo is older version
-- Newer form exists only in production backup compiled files
-- Needs to be extracted and re-implemented
-
-### P1 - Missing Blog Images
-- Several images returning 404:
-  - `/uploads/blogs/bpt_image_21.jpg`
-  - `/uploads/blogs/ohcampus_after_12.jpg`
-  - `/uploads/blogs/allied_health_sciences_image_1.jpg`
-
-### P2 - Scholarship Application Module ✅ COMPLETED (Feb 23, 2026)
-- **Frontend URL**: `https://ohcampus.com/check-scholarship/`
-- **Admin Panel**: `https://admin.ohcampus.com/scholarship/`
-- **Features**:
-  - 5-step multi-page form with progress bar (0% → 100%)
-  - OhCampus branded colors (#1e293b, #0f172a, #f9ab00)
-  - OhCampus logo and favicon
-  - MSG91 OTP integration for mobile verification
-  - Mobile responsive design
-  - Admin panel with search, filter, status management
-- **Backend APIs**:
-  - `sendOTP` - MSG91 SMS OTP
-  - `verifyOTP` - OTP verification
-  - `apply` - Application submission
-  - `getApplications` - Admin listing
-  - `updateStatus` - Status management (Pending/Contacted/Eligible/Not Eligible/Converted)
-
-### P1 - Missing Blog Images ✅ FIXED
-- Created symlinks from `public_html/uploads/` to `campusapi.ohcampus.com/uploads/`
-- All blog images now accessible from main domain
-
-### P2 - Mobile App Build Issues
-- Blocked on user performing clean build
+None - all requested features implemented.
 
 ## Future Tasks (Backlog)
 
-### P3 - Technical Debt
-- Refactor hardcoded JWT token architecture
-- Fix Nginx vs Apache configuration conflicts
-
 ### P3 - Features
-- Email notifications for admission deadlines
-- OTP verification (MSG91) for scholarship form
-- Admin panel for scholarship applications
+- Email notifications for new scholarship applications
+- OTP verification for scholarship form (MSG91)
+- Export scholarship applications to CSV/Excel
+- Counselor performance reports for scholarship conversions
 
-## Known Issues
-- "Not secure" warning for webmail.ohcampus.com
-- Incorrect HTTP status codes for PUT/DELETE endpoints in counselor app
+## Test Credentials
+- Admin: `admin@ohcampus.com / admin123`
+- Counselor: `counselor@ohcampus.com / counselor123`
 
-## API Endpoints
-- Main API Base: `https://campusapi.ohcampus.com/web/`
-- College List: `POST /College/getCollegeList`
-- College Details: `POST /College/getCollegeDetailsByID`
+## Key Files
+- `/app/backend/server.py` - FastAPI backend with all endpoints
+- `/app/frontend/src/pages/ScholarshipApplications.jsx` - Admin page
+- `/app/frontend/src/pages/CounselorScholarships.jsx` - Counselor page
+- `/app/frontend/src/components/layout/AdminLayout.jsx` - Admin sidebar with menu
+- `/app/frontend/src/components/layout/Navbar.jsx` - Counselor navbar
 
 ## Database Schema
-- Database: `ohcampus_beta`
-- Key Tables: `college`, `college_ranks`, `gallery`, `college_course`
+- **MongoDB Collections**:
+  - `scholarship_applications` - Scholarship application data
+  - `users` - User accounts with roles
+  - `admissions` - Admission records
+  - `colleges` - College information
+  - `courses` - Course information
 
-## 3rd Party Integrations
-- Firebase
-- Sendinblue
-- MSG91
-
-## Files Modified This Session
-- `/home/ohcampus/public_html/campusapi.ohcampus.com/application/models/web/College_model.php` - Added getRankListByClgIds()
-- `/home/ohcampus/public_html/.htaccess` - Restored for Angular routing
-- `/home/ohcampus/public_html/admin.ohcampus.com/` - Restored from backup
+## Testing Results
+- Backend: 100% (25/25 tests passed)
+- Frontend: 100% (all UI tests passed)
+- Test report: `/app/test_reports/iteration_16.json`
