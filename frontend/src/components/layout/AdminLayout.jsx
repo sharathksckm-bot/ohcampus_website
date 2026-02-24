@@ -17,6 +17,7 @@ import {
   Users,
   BarChart3,
   Activity,
+  FileText,
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -29,6 +30,11 @@ const sidebarItems = [
     name: 'Performance',
     icon: BarChart3,
     path: '/admin/performance',
+  },
+  {
+    name: 'Scholarship Applications',
+    icon: FileText,
+    path: '/admin/scholarship-applications',
   },
   {
     name: 'College Management',
