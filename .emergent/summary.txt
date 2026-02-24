@@ -1,135 +1,52 @@
 <analysis>**original_problem_statement:**
 The user wants to build a web-based counseling platform, OhCampus. The initial work involved setting up the platform and integrating a scholarship application module. However, the core of the recent work has been to fix numerous data integrity and display issues after migrating from a demo MongoDB database to a production MySQL database.
 
-The user has repeatedly requested to restore the old design (which was functional with MongoDB demo data) but have it work correctly with the live production data from MySQL (160+ featured colleges, 2500+ courses, 1000+ fee records).
-
-**Recent User Requests & Issues:**
-1.  **Correct Data Counts:** The Admin Dashboard and other pages show incorrect counts for total courses (showing 22 instead of 2539).
-2.  **Complete Data Listing:** The  page is only listing 22 courses and needs to show all of them with working filters.
-3.  **Restore Missing Content:** On college detail pages, tabs like Highlights, Courses, Fees, etc., are not displaying their content. This content needs to be fetched from the MySQL database.
-4.  **Fix Filters:** Fee filters are not working correctly.
-5.  **Fix Data Display:** Course eligibility information is rendering raw HTML. Course detail pages are not showing complete fee information.
-6.  **Performance:** Pages are taking too long to load.
-7.  **Feature Extension:** In Fee Management, the UI for annual fees needs to be extended to 6 years and semester fees to 12 semesters.
-8.  **Layout & Data Accuracy:** Ensure only featured colleges are displayed, the layout uses 4 columns, and course counts per college are accurate.
+**User's Recent Requests & Issues:**
+1.  **Fix Data Display & Counts:** The Admin Dashboard and other pages were showing incorrect counts (8 colleges, 22 courses) from a MongoDB fallback instead of the correct production data from MySQL (158+ colleges, 2300+ courses).
+2.  **Restore Missing Content:** On college detail pages, tabs like Highlights, Courses, Fees, etc., were empty.
+3.  **Fix Scholarship Application Feature:**
+    *   Referral links were generating with .
+    *   The page was showing a Failed to fetch referrals error.
+    *   Role-based permissions for viewing and deleting applications were not implemented correctly.
+    *   The Delete and Download options were not visible for authorized users.
+    *   Complete form details and uploaded documents were not displaying in the application detail view.
+4.  **Fix Public Scholarship Form:** The dropdowns on  were broken, and form submissions were failing.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A full-stack application (React + FastAPI) is deployed on a live production server. The backend connects to both a MongoDB database (for users, scholarship applications, and fee records) and a MySQL database () for core academic data (colleges, courses).
+A full-stack application (React + FastAPI) is deployed on a live production server. The backend connects to both a MongoDB database (for users, some fee records) and a MySQL database () for core academic data (colleges, courses, scholarship applications).
 
-The agent has successfully reverted the codebase multiple times to a state that correctly uses the MySQL database for college data, showing the correct count of featured colleges (161). However, this version has many bugs related to data display, filtering, and performance, as detailed by the user in their last messages. The Scholarship Application feature was implemented and then lost during a revert, and then re-implemented.
+The agent has successfully fixed the core data integrity issues. The application now correctly fetches and displays data from the MySQL database, including accurate counts on the dashboard (158 colleges, ~2400 courses). The Scholarship Application module has been extensively debugged, with permissions, referral links, and form submission issues being resolved. The agent also fixed the public-facing scholarship form at  by creating new APIs on the counselor platform and updating the form's static HTML/JS to consume them.
 
 **Last working item**:
--   Last item agent was working: The agent was starting to fix a list of critical bugs reported by the user. The user complained that analytics counts were wrong, pages were missing data (Highlights, Fees), filters were broken, and pages were loading slowly. The agent's last action was to create a comprehensively updated  file to handle all the complex data fetching and filtering requirements from the MySQL database in an efficient way.
+-   Last item agent was working: Addressing the user's report that complete form details and documents are not displaying in the Scholarship Application detail view for both admin and counselor panels.
 -   Status: IN PROGRESS
 -   Agent Testing Done: N
--   Which testing method agent to use? backend testing agent
 -   User Testing Done: N
+-   Which testing method agent to use? frontend testing agent
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Incorrect Total Courses Count on Admin Dashboard (P0)**
--   **Issue 2: Incomplete Course Listing on  Page (P0)**
--   **Issue 3: College Detail Page Tabs are Empty (P1)**
--   **Issue 4: Filters Not Working on College & Course Pages (P1)**
--   **Issue 5: Performance - Pages Load Too Slowly (P1)**
--   **Issue 6: HTML Code Rendering in Eligibility Field (P2)**
--   **Issue 7: Incomplete Fee Details on Course Page (P2)**
+-   **Issue 1: Incomplete Scholarship Application Details (P0)**
 
 Issues Detail:
--   **Issue 1: Incorrect Total Courses Count on Admin Dashboard**
-    -   **Attempted fixes:** The agent identified the backend endpoint for dashboard stats but it was returning a count of unique course *names* (22) instead of the total number of course offerings across all featured colleges (2539). The fix was attempted in the new  but not deployed/tested.
+-   **Issue 1: Incomplete Scholarship Application Details**
+    -   **Attempted fixes:** The agent investigated the backend API response and confirmed it returns all the necessary data, including document URLs. The agent then inspected the frontend component () and identified that it uses incorrect field names (e.g.,  instead of ,  instead of ) and is missing JSX to render many of the fields returned by the API (like , , , etc.).
     -   **Next debug checklist:**
-        1.  Verify the  function in  correctly calculates the total course count.
-        2.  Ensure the  endpoint in  uses this new function.
-        3.  Restart the backend and verify the API response.
-        4.  Use the  tool to confirm the Admin Dashboard UI shows the correct count (2539+).
-    -   **Why fix this issue and what will be achieved with the fix?** Provides accurate, top-level analytics to the admin user.
+        1.  Open .
+        2.  Locate the  component that renders the  details.
+        3.  Update the JSX to use the correct field names from the API response (e.g., , ).
+        4.  Add new sections/rows to display all the remaining fields from the application form (qualification, board, entrance exam details, etc.).
+        5.  Build and deploy the frontend.
+        6.  Verify by clicking the View button on a complete application.
+    -   **Why fix this issue and what will be achieved with the fix?** To allow counselors and admins to see all the information submitted by a student, which is critical for processing the scholarship application.
     -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** None
-
--   **Issue 2: Incomplete Course Listing on  Page**
-    -   **Attempted fixes:** The agent identified the  endpoint was using a function with a default limit. The new  includes an updated  function intended to support pagination and filtering.
-    -   **Next debug checklist:**
-        1.  Modify the  endpoint in  to use the new  function, passing pagination and filter parameters from the request.
-        2.  Remove any hardcoded limits in the frontend component that displays the courses.
-        3.  Test the frontend page to ensure it loads all courses and that pagination works.
-    -   **Why fix this issue and what will be achieved with the fix?** Makes all courses accessible to the user, not just the first 22.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** None
-
--   **Issue 3: College Detail Page Tabs are Empty**
-    -   **Attempted fixes:** The agent confirmed that data for Highlights, What's New, etc., exists in the MySQL database but the API is not fetching it. The new  was designed to include functions to fetch this data.
-    -   **Next debug checklist:**
-        1.  Ensure  has functions like , , etc.
-        2.  Update the  endpoint in  to call these functions and include the data in the response.
-        3.  Update the frontend college detail component to render the data in the respective tabs.
-    -   **Why fix this issue and what will be achieved with the fix?** Restores critical information on the college detail pages, making the platform useful.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** None
-
--   **Issue 4: Filters Not Working on College & Course Pages**
-    -   **Attempted fixes:** The agent identified that the API endpoints do not correctly apply the filter parameters to the database queries. The user specifically mentioned the fee filter needs to be based on first-year fees. The new  was written to accept these filter parameters.
-    -   **Next debug checklist:**
-        1.  Ensure the  and  functions in  correctly build the SQL  clauses for all filters (state, city, category, fee_range, etc.).
-        2.  Update the corresponding API endpoints in  to pass the query parameters to these functions.
-        3.  Test the API with different filter combinations using .
-        4.  Verify on the frontend that applying filters correctly narrows down the results.
-    -   **Why fix this issue and what will be achieved with the fix?** Makes the platform navigable and allows users to find relevant colleges/courses.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** None
-
--   **Issue 5: Performance - Pages Load Too Slowly**
-    -   **Attempted fixes:** The agent correctly identified that the previous code was making a separate database call for each college in a list to get its course count, causing an N+1 query problem. An optimized query was added to .
-    -   **Next debug checklist:**
-        1.  Ensure the optimized  query (using a subquery for ) is being used in .
-        2.  Remove any other N+1 query patterns in the API endpoints.
-        3.  Load the college list page and verify it loads significantly faster.
-    -   **Why fix this issue and what will be achieved with the fix?** Improves user experience by making the application responsive.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** backend
-    -   **Blocked on other issue:** None
-
--   **Issue 6: HTML Code Rendering in Eligibility Field**
-    -   **Attempted fixes:** None. This is a new issue.
-    -   **Next debug checklist:**
-        1.  Identify the frontend component rendering the course details page.
-        2.  Locate where the  field is displayed.
-        3.  Instead of rendering the content directly, use a method that correctly interprets HTML, such as React's .
-    -   **Why fix this issue and what will be achieved with the fix?** Fixes a UI bug and presents eligibility criteria in a readable format.
-    -   **Status:** NOT STARTED
     -   **Is recurring issue?** N
     -   **Should Test frontend/backend/both after fix?** frontend
     -   **Blocked on other issue:** None
 
--   **Issue 7: Incomplete Fee Details on Course Page**
-    -   **Attempted fixes:** None. This is related to Issue #3.
-    -   **Next debug checklist:**
-        1.  The API response for a course needs to include all associated fee structures with their descriptions.
-        2.  This involves updating the  or a similar function to join with fee tables.
-        3.  The frontend component must be updated to display this complete list of fees.
-    -   **Why fix this issue and what will be achieved with the fix?** Provides complete and transparent fee information to the user.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** None
-
 **In progress Task List**:
--   **Task 1: Finalize and Deploy the New Data Access Layer (P0)**
-    -   **Where to resume:** The agent has created a new, comprehensive . The next step is to integrate it fully into , replacing old data-fetching logic.
-    -   **What will be achieved with this?** This is the core task that will resolve most of the pending data-related issues (counts, filters, performance, missing content).
-    -   **Status:** IN PROGRESS
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on something:** None
+None.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
@@ -137,104 +54,94 @@ Issues Detail:
     -   **P1:** Add student/admin email notifications upon scholarship application submission.
     -   **P2:** Add a link for the scholarship form () to the main  website's navigation menu.
 -   **Future Tasks:**
-    -   **P3:** Re-enable OTP functionality (blocked on user resolving MSG91 template issues).
+    -   **P3:** Re-enable OTP functionality (currently blocked on user resolving MSG91 template issues).
 
 **Completed work in this session**
--   Successfully reverted the application to a state that uses the MySQL production database, fixing the demo content issue.
--   Correctly identified that only  colleges should be shown (161 of them).
--   Fixed the college list layout to display 4 columns.
--   Fixed category display from ID numbers to names by joining with the  table.
--   Re-implemented the Scholarship Application feature on the correct branch.
--   Diagnosed the N+1 query performance issue and the incorrect data count sources.
--   Diagnosed the  vs  mismatch for fee data and implemented a fix.
+-   **Data Integrity Fixes:**
+    -   Resolved the primary bug causing the app to show MongoDB demo data (8 colleges, 22 courses) by fixing the backend  module, correcting the frontend's  backend URL, and clearing deployment caches. The app now correctly displays **158 colleges** and **~2400 courses** from MySQL.
+    -   Restored missing content on college detail pages (Highlights, Courses, Fees tabs now work).
+-   **Scholarship Application Module:**
+    -   Fixed referral link generation to include the correct counselor ID instead of .
+    -   Implemented role-based permissions (view/delete) for Admin, Team Lead, and Counselors.
+    -   Added a Delete button and corresponding API endpoint for authorized users.
+    -   Fixed a Failed to fetch referrals error by correcting a backend variable name.
+    -   Fixed a frontend JS error () by ensuring application IDs are strings.
+    -   Corrected the API response format for stats and application lists to match what the frontend expected.
+-   **Public Scholarship Form ():**
+    -   Created new, working API endpoints on the counselor platform () to serve states, districts, courses, etc.
+    -   Created a file upload endpoint ().
+    -   Updated the live  on the  server to use these new APIs, fixing the broken dropdowns.
+    -   Fixed the form submission () endpoint to handle database schema mismatches and different  types (UUID vs. Int).
 
 **Earlier issues found/mentioned but not fixed**
 -   **Issue 1: Brittle Deployment Process**
-    -   **Debug checklist:** The agent has been manually killing processes, clearing caches, and copying files. This is error-prone. A more robust deployment script or process is needed.
-    -   **Why to solve this issue and what will be achieved with this?** To prevent caching issues and ensure changes are applied consistently, reducing debugging time.
+    -   **Debug checklist:** The agent has been manually killing processes (), clearing caches (), and copying files (, ). This is error-prone and has caused downtime. A more robust deployment script or process is needed to ensure atomic and consistent updates.
+    -   **Why to solve this issue and what will be achieved with this?** To prevent caching issues, reduce deployment errors, and ensure changes are applied consistently, reducing debugging time.
     -   **Should Test frontend/backend/both after fix:** N/A (DevOps task)
     -   **Is recurring issue?** Y
 
 **Known issue recurrence from previous fork**
--   **Issue recurrence in previous fork:** The core problem of correctly fetching and displaying data from the new MySQL source while preserving the old UI's functionality has been the central, recurring issue. The agent repeatedly toggled between a working MongoDB version (with wrong data) and a broken MySQL version (with correct data).
--   **Recurrence count:** High (at least 4-5 major reverts/attempts).
--   **Status:** IN PROGRESS (The latest attempt to build a robust  is the correct path to resolving this for good).
+-   **Issue recurrence in previous fork:** The core problem of fetching and displaying data from MySQL. This has been resolved in the current session.
+-   **Recurrence count:** High (at least 4-5 in previous forks).
+-   **Status:** RESOLVED
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Hybrid Database Architecture:** Integrating a FastAPI backend with both MongoDB (users, fees, applications) and MySQL (colleges, courses, academic data).
--   **Production Server Management:** Manually managing a live server via SSH, including process management (    PID TTY          TIME CMD
-      1 ?        00:00:00 entrypoint.sh
-     13 ?        00:00:00 e1_monitor
-     16 ?        00:00:00 entrypoint.sh
-     20 ?        00:00:01 node
-     21 ?        00:00:01 uvicorn
-     39 ?        00:00:00 supervisord
-     41 ?        00:00:00 nginx
-     42 ?        00:00:00 uvicorn
-     44 ?        00:00:00 node
-     45 ?        00:00:00 mongod
-     62 ?        00:00:00 nginx
-     63 ?        00:00:00 sh
-     64 ?        00:00:00 node
-     71 ?        00:00:05 node
-     77 ?        00:00:00 python
-     78 ?        00:00:00 python
-    160 ?        00:00:00 bash
-    162 ?        00:00:00 bash
-    163 ?        00:00:00 tee
-    165 ?        00:00:00 sudo
-    166 ?        00:00:00 bash
-    170 ?        00:00:00 supervisorctl
-    230 ?        00:00:00 ps, , ), file system navigation, log analysis, and manual service restarts ().
--   **Database Integration (aiomysql):** Writing async Python code to connect to and query a MySQL database.
--   **Code Reverting and Debugging:** The agent spent significant time reverting to previous states (from backups and git branches) to fix user-reported issues.
+-   **Hybrid Database Architecture:** Integrating a FastAPI backend with both MongoDB (users) and MySQL (academic data).
+-   **Production Server Management:** Manually managing live servers via SSH, including process management, file system navigation, log analysis, and manual service restarts.
+-   **Cross-System API Integration:** The counselor platform () now serves as the API backend for a public-facing form on the main domain ().
+-   **Role-Based Access Control (RBAC):** Permissions logic implemented in backend endpoints based on user roles (, , ) fetched from the  collection in MongoDB.
 
 **key DB schema**
--   **colleges (MySQL):** 
--   **courses (MySQL):** 
--   **college_courses (MySQL):** 
--   **category (MySQL):** 
--   **fees (MongoDB):**  (Note:  is in  format)
+-   **scholarship_applications (MySQL):** 
 -   **users (MongoDB):** 
--   **scholarship_applications (MongoDB):** 
+-   **state (MySQL):** 
+-   **city (MySQL):** 
+-   **colleges (MySQL):** 
 
 **All files of reference**
--    (Live backend application file)
--    (Live MySQL integration module)
--    (Production credentials)
--    (Local clone of the source code, branch )
--    (Counselor portal college list)
--    (Admin analytics dashboard)
--   
--   
+-   : The main FastAPI application. Contains all API endpoints, including the newly added logic for permissions and the public scholarship form.
+-   : The data access layer for MySQL. Contains all SQL queries.
+-   : The React component for viewing and managing scholarship applications. Contains the UI for the detail view that needs fixing.
+-   : The live, public-facing HTML file for the scholarship form. Its JavaScript was modified to point to the counselor backend APIs.
+
+**Areas that need refactoring**:
+-   The permissions logic is duplicated across multiple endpoints (, , etc.). This could be refactored into a single dependency function to keep it DRY.
+-   The manual deployment process is a significant risk and should be automated.
+
+**key api endpoints**
+-   : Lists applications based on user role.
+-   : Gets application stats based on user role.
+-   : Deletes an application (permission-restricted).
+-   : Generates a referral link for a counselor.
+-   : (Public) Get list of states.
+-   : (Public) Get list of cities for a state.
+-   : (Public) Submits the scholarship form.
 
 **Critical Info for New Agent**
--   **You are working on the live production server.** All actions have immediate real-world consequences.
--   **Do not revert to the pure MongoDB version again.** The user has been clear: they want the production data from MySQL to work. The problem is making the application function correctly with this data.
--   The key to success is to finalize the **single, comprehensive  module** that handles all data fetching requirements (counts, filters, joins, pagination) efficiently. Avoid patching  with direct DB calls.
--   Fee data is in MongoDB, but linked to MySQL college IDs using a  prefix (e.g., ). The backend code must correctly map the  from the API to this  format when fetching fees.
--   The backend service is managed manually. To restart, you must find and  all  processes and then start it again from the  directory. Caching issues are common, so ensuring a clean restart is critical.
+-   **Two Systems:** You are managing two interconnected but separate systems: the React/FastAPI counselor platform and the static HTML/JS public scholarship form. The public form now depends entirely on APIs served by the counselor platform.
+-   **Live Server:** All work is done directly on the live production server. Proceed with caution.
+-   **Permissions:** User permissions (, ) are fetched from the MongoDB  collection inside the API endpoints, as they are not stored in the JWT token.
+-   **IDs:** Be mindful of ID types. The scholarship application ID from MySQL is an , but the frontend expects a . The referral link  is a MongoDB UUID , but the database  is an . The code now handles these conversions, but be aware of the underlying difference.
+-   **Deployment:** The deployment process is manual and prone to error. Always verify service restarts and clear caches. A failed restart () is a common issue that causes the app to revert to serving old data from MongoDB via a fallback.
 
 **documents and test reports created in this job**
--   /app/memory/PRD.md
+-    (updated with completed tasks)
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** Requests to revert to the old design/database from yesterday because college pages, fees, and other details are broken. (COMPLETED - Agent reverted)
-2.  **User:** Clarifies that the 8 colleges being shown are demo data and incorrect. Wants the app restored to a state before the scholarship changes, preserving recent fee data updates. Mentions previous sessions where design was worked on. (COMPLETED - Agent understood and started restoring MySQL version)
-3.  **User:** Reports the restored version is still showing 8 demo colleges and incorrect course counts (22 vs 2000+). (IN PROGRESS - Agent is debugging MySQL connection)
-4.  **User:** Reports 161 colleges are now showing but course count is still wrong. (IN PROGRESS)
-5.  **User:** Provides a detailed list of bugs: incorrect course counts on dashboard, incomplete course list on  page, empty tabs on college details, broken filters, and HTML rendering issues. (PENDING - This is the current worklist)
-6.  **Agent:** Acknowledges the new list of issues and begins investigation. (LAST AGENT ACTION)
-7.  **(Older) User:** Stated It should not include free listing colleges. Let the colleges list appear in 4 columns. (COMPLETED)
-8.  **(Older) User:** After a fix, reported College pages are not opening. Previously added fee details are not displaying. (COMPLETED - Agent reverted)
-9.  **(Older) User:** After another fix, stated Revert to the front end and backend which was properly working with live data today morning. (COMPLETED - Agent reverted)
-10. **(Older) User:** Gave initial feedback to Remove records limit everywhere - In Analytics, and Fee Management. (COMPLETED, but caused other issues)
+1.  **User:** Reports the referral link generates with . (COMPLETED)
+2.  **User:** Reports a Failed to fetch referrals error. (COMPLETED)
+3.  **User:** Requests implementation of role-based permissions for viewing/deleting scholarship applications. (COMPLETED)
+4.  **User:** Reports that delete/download options are not displaying for authorized users. (COMPLETED)
+5.  **User:** Reports that the dropdowns on  are not working. (COMPLETED - by creating new APIs)
+6.  **User:** Reports that form submission from the referral UTM link is not working. (COMPLETED)
+7.  **User:** Reports that complete form details and documents are not displaying in the application detail view. (IN PROGRESS - This is the current 
+wtmp begins Tue Feb 24 14:40:11 2026)
 
 **Project Health Check:**
--   **Broken:** The application is in a broken state. While the backend now connects to the correct database, the frontend is riddled with bugs: incorrect data, missing content, broken functionality, and poor performance. Critical pages like college details and course listings are not usable.
+-   **Functional with Minor Bugs:** The application's core data integrity and feature-blocking issues are resolved. The main platform is stable. The primary remaining issue is a UI display bug.
 
 **3rd Party Integrations**
 -   React
@@ -246,7 +153,7 @@ Issues Detail:
 -   Testing agent used after significant changes: NO
 -   Troubleshoot agent used after agent stuck in loop: NO
 -   Test files created: None
--   Known regressions: Many features (fee display, course details) that worked with the old MongoDB data are now broken after the switch to MySQL.
+-   Known regressions: None from this session. Many regressions from the previous fork were fixed.
 
 **Credentials to test flow:**
 -   **Server SSH:**
@@ -259,5 +166,5 @@ Issues Detail:
     -   Counselor:  / 
 
 **What agent forgot to execute**
--   The agent has not established a stable, unified data access layer. It has been doing piecemeal patches in  and making multiple conflicting versions of , leading to constant regressions and bugs.
--   The agent has not addressed the frontend UI bugs (HTML rendering, fee year extension) reported by the user in the latest messages.</analysis>
+-   The agent did not address the user's implicit request to see download links for documents in the main application table, only in the detail modal.
+-   The agent did not fix the underlying brittle deployment process, continuing the manual  and  cycle.</analysis>
