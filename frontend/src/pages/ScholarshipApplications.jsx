@@ -67,7 +67,7 @@ export default function ScholarshipApplications() {
   const [counselors, setCounselors] = useState([]);
 
   const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('ohcampus_token');
     return {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,

@@ -71,7 +71,7 @@ export default function CounselorScholarships() {
   const [showShareDialog, setShowShareDialog] = useState(false);
 
   const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('ohcampus_token');
     return {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
