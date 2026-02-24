@@ -181,10 +181,11 @@ export default function ScholarshipApplications() {
   }, []);
 
   useEffect(() => {
+    fetchCurrentUser();
     fetchApplications();
     fetchStats();
     fetchCounselors();
-  }, [fetchApplications, fetchStats, fetchCounselors]);
+  }, [fetchCurrentUser, fetchApplications, fetchStats, fetchCounselors]);
 
   const handleStatusUpdate = async (appId, newStatus) => {
     try {
