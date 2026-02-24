@@ -94,15 +94,23 @@ Integrated scholarship applications into both Admin and Counselor panels.
 - Admissions tracking
 
 ## Pending Issues
-None - all requested features implemented.
+1. **P1**: Implement Application Export for Admission Managers - CSV export functionality
+2. **P2**: Fix Fee Records Display - Integrate fee data from MySQL fee_structure table
+3. **P3**: Sync Code to Git Repository - Live server code ahead of source control
 
 ## Future Tasks (Backlog)
 
-### P3 - Features
+### P1 - High Priority
 - Email notifications for new scholarship applications
-- OTP verification for scholarship form (MSG91)
-- Export scholarship applications to CSV/Excel
+- Add scholarship form link to main ohcampus.com navigation
+
+### P2 - Medium Priority
+- Export scholarship applications to CSV/Excel for Admission Managers
 - Counselor performance reports for scholarship conversions
+
+### P3 - Low Priority
+- OTP verification for scholarship form (blocked on MSG91 template issues)
+- Resolve "not secure" warning for webmail.ohcampus.com
 
 ## Test Credentials
 - Admin: `admin@ohcampus.com / admin123`
