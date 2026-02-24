@@ -14,6 +14,7 @@ import CompareColleges from "./pages/CompareColleges";
 import Courses from "./pages/Courses";
 import Admissions from "./pages/Admissions";
 import CounselorPerformance from "./pages/CounselorPerformance";
+import CounselorScholarships from "./pages/CounselorScholarships";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import FeeManagement from "./pages/FeeManagement";
@@ -22,6 +23,7 @@ import CollegeManagement from "./pages/CollegeManagement";
 import UserManagement from "./pages/UserManagement";
 import PerformanceDashboard from "./pages/PerformanceDashboard";
 import ActivityLog from "./pages/ActivityLog";
+import ScholarshipApplications from "./pages/ScholarshipApplications";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
