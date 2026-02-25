@@ -738,6 +738,9 @@ export default function CollegeDetail() {
                                   <span className="text-[#94A3B8]">—</span>
                                 )}
                               </TableCell>
+                              <TableCell className="font-body text-sm text-[#475569]">
+                                {fee.description || <span className="text-[#94A3B8]">—</span>}
+                              </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
