@@ -855,6 +855,7 @@ export default function Courses() {
                           <TableHead className="font-heading">Period</TableHead>
                           <TableHead className="font-heading">Tuition Fee</TableHead>
                           <TableHead className="font-heading">Hostel Fee</TableHead>
+                          <TableHead className="font-heading">Description</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -868,6 +869,9 @@ export default function Courses() {
                             </TableCell>
                             <TableCell className="font-body text-[#475569]">
                               {formatCurrency(fee.hostel_fee)}
+                            </TableCell>
+                            <TableCell className="font-body text-sm text-[#475569]">
+                              {fee.description || <span className="text-[#94A3B8]">—</span>}
                             </TableCell>
                           </TableRow>
                         ))}
