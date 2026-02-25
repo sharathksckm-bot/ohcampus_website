@@ -216,7 +216,7 @@ export default function UserManagement() {
     
     setResettingPassword(true);
     try {
-      await usersAPI.resetPassword(resetPasswordUser.id, newPassword);
+      await usersAPI.setPassword(resetPasswordUser.id, newPassword);
       toast.success(`Password reset for ${resetPasswordUser.name}`);
       setResetPasswordOpen(false);
     } catch (error) {
