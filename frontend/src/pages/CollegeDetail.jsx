@@ -718,6 +718,12 @@ export default function CollegeDetail() {
                                 Hostel Fee
                               </div>
                             </TableHead>
+                            <TableHead className="font-heading font-semibold text-[#0F172A]">
+                              <div className="flex items-center gap-1">
+                                <Info className="h-4 w-4" />
+                                Description
+                              </div>
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
