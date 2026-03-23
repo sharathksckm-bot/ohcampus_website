@@ -975,9 +975,27 @@ async def get_course_detail(course_id: str):
 
 @api_router.get("/courses/categories/list")
 async def get_course_categories():
-    """Get list of unique course categories"""
-    categories = await db.courses.distinct("category")
-    return {"categories": [c for c in categories if c]}
+    """Get list of unique course categories from MySQL"""
+    try:
+        from mysql_db import execute_query
+        
+        # Get distinct categories that have courses
+        query = """
+            SELECT DISTINCT cat.catname 
+            FROM category cat 
+            JOIN courses c ON c.course_category = cat.id 
+            WHERE cat.catname IS NOT NULL AND cat.catname != ''
+            ORDER BY cat.catname
+        """
+        results = await execute_query(query)
+        
+        categories = [row['catname'] for row in results if row.get('catname')]
+        return {"categories": categories}
+    except Exception as e:
+        print(f"Error fetching categories from MySQL: {e}")
+        # Fallback to MongoDB if MySQL fails
+        categories = await db.courses.distinct("category")
+        return {"categories": [c for c in categories if c]}
 
 # Placement Endpoints
 @api_router.get("/colleges/{college_id}/placements")
