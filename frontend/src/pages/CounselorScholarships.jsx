@@ -136,11 +136,31 @@ export default function CounselorScholarships() {
     }
   }, []);
 
+  const [shortLink, setShortLink] = useState('');
+  const [shortLinkLoading, setShortLinkLoading] = useState(false);
+
+  const fetchShortLink = useCallback(async () => {
+    try {
+      setShortLinkLoading(true);
+      const response = await fetch(`${API_URL}/api/counselor/short-link`, {
+        headers: getAuthHeaders(),
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      setShortLink(data.short_link);
+    } catch (error) {
+      console.error('Failed to fetch short link:', error);
+    } finally {
+      setShortLinkLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchApplications();
     fetchStats();
     fetchUtmLink();
-  }, [fetchApplications, fetchStats, fetchUtmLink]);
+    fetchShortLink();
+  }, [fetchApplications, fetchStats, fetchUtmLink, fetchShortLink]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(utmLink);
@@ -652,41 +672,42 @@ export default function CounselorScholarships() {
                 </div>
               </div>
 
-              {/* Scholarship Form Shortlink */}
+              {/* Short Link */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#0F172A]">Scholarship Form Direct Link</label>
+                <label className="text-sm font-medium text-[#0F172A]">Short Link</label>
                 <div className="flex gap-2">
                   <Input
-                    value={utmLink ? `${utmLink.split('?')[0]}/scholarship-form?${utmLink.split('?')[1] || ''}` : ''}
+                    value={shortLinkLoading ? 'Loading...' : shortLink}
                     readOnly
-                    className="font-mono text-sm"
-                    data-testid="scholarship-form-link-input"
+                    className="font-mono text-sm bg-green-50 border-green-200"
+                    data-testid="short-link-input"
                   />
                   <Button 
                     onClick={() => {
-                      const scholarshipLink = utmLink ? `${utmLink.split('?')[0]}/scholarship-form?${utmLink.split('?')[1] || ''}` : '';
-                      navigator.clipboard.writeText(scholarshipLink);
-                      toast.success('Scholarship form link copied to clipboard!');
+                      if (shortLink) {
+                        navigator.clipboard.writeText(shortLink);
+                        toast.success('Short link copied to clipboard!');
+                      }
                     }} 
-                    className="gap-2" 
-                    data-testid="copy-scholarship-link-btn"
+                    className="gap-2 bg-green-600 hover:bg-green-700" 
+                    data-testid="copy-short-link-btn"
+                    disabled={shortLinkLoading || !shortLink}
                   >
                     <Copy className="h-4 w-4" />
                     Copy
                   </Button>
                 </div>
-                <p className="text-xs text-[#94A3B8]">
-                  Direct link to the scholarship application form with your referral tracking
+                <p className="text-xs text-green-600 font-medium">
+                  Easy to share, easy to remember! Perfect for SMS, WhatsApp & social media.
                 </p>
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h4 className="font-medium text-blue-800 mb-2">Tips for better conversions:</h4>
                 <ul className="text-sm text-blue-700 space-y-1">
-                  <li>• Share the link on your social media</li>
-                  <li>• Send to students looking for scholarships</li>
+                  <li>• <strong>Use the Short Link</strong> for SMS, WhatsApp & social media</li>
+                  <li>• Share the Main Link in emails for full tracking info</li>
                   <li>• Include in your email signatures</li>
-                  <li>• Use the direct scholarship form link for quick applications</li>
                   <li>• Track your referrals on this page</li>
                 </ul>
               </div>

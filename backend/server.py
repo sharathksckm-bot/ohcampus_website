@@ -2774,6 +2774,82 @@ async def get_counselor_utm_link(current_user: dict = Depends(get_current_user))
         "counselor_name": user["name"]
     }
 
+# ===================== SHORT LINK SYSTEM =====================
+
+def generate_short_code(user_id: str) -> str:
+    """Generate a short code from user_id using base62 encoding"""
+    import hashlib
+    # Create a hash of the user_id and take first 6 characters
+    hash_obj = hashlib.md5(user_id.encode())
+    hash_hex = hash_obj.hexdigest()
+    # Convert to base62 (alphanumeric)
+    chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    num = int(hash_hex[:12], 16)  # Use first 12 hex chars
+    result = ""
+    while num > 0:
+        result = chars[num % 62] + result
+        num //= 62
+    return result[:6] if len(result) >= 6 else result.ljust(6, '0')
+
+@api_router.get("/counselor/short-link")
+async def get_counselor_short_link(current_user: dict = Depends(get_current_user)):
+    """Generate or retrieve short link for counselor's scholarship form"""
+    
+    user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if short link already exists for this counselor
+    existing_link = await db.short_links.find_one({"counselor_id": user["id"]}, {"_id": 0})
+    
+    if existing_link:
+        short_code = existing_link["short_code"]
+    else:
+        # Generate new short code
+        short_code = generate_short_code(user["id"])
+        
+        # Ensure uniqueness
+        while await db.short_links.find_one({"short_code": short_code}):
+            short_code = generate_short_code(user["id"] + str(uuid.uuid4())[:4])
+        
+        # Store the short link mapping
+        await db.short_links.insert_one({
+            "short_code": short_code,
+            "counselor_id": user["id"],
+            "counselor_name": user["name"],
+            "target_url": f"https://ohcampus.com/check-scholarship/?utm_source={user['id']}&utm_medium=counselor&utm_campaign=scholarship_referral",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "click_count": 0
+        })
+    
+    # Generate the short link URL
+    short_link_url = f"https://ohcampus.com/s/{short_code}"
+    
+    return {
+        "short_link": short_link_url,
+        "short_code": short_code,
+        "counselor_id": user["id"],
+        "counselor_name": user["name"]
+    }
+
+@api_router.get("/s/{short_code}")
+async def redirect_short_link(short_code: str):
+    """Redirect short link to the full URL"""
+    from fastapi.responses import RedirectResponse
+    
+    link_data = await db.short_links.find_one({"short_code": short_code})
+    
+    if not link_data:
+        raise HTTPException(status_code=404, detail="Short link not found")
+    
+    # Increment click count
+    await db.short_links.update_one(
+        {"short_code": short_code},
+        {"$inc": {"click_count": 1}}
+    )
+    
+    return RedirectResponse(url=link_data["target_url"], status_code=302)
+
 @api_router.get("/admin/scholarship-applications/counselor-stats")
 async def get_counselor_scholarship_stats(current_user: dict = Depends(require_admin_or_manager)):
     """Get scholarship application stats by counselor"""
