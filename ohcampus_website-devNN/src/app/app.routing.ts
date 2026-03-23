@@ -124,6 +124,7 @@ export const appRoutes: Route[] = [
             { path: 'termsncondition', loadChildren: () => import('app/modules/admin/termsncondition/termsncondition.module').then(m => m.TermsnconditionModule) },
             { path: 'loans', loadChildren: () => import('app/modules/admin/loans/loans.module').then(m => m.LoansModule) },
             { path: 'scholorships', loadChildren: () => import('app/modules/admin/scholarships/scholarships.module').then(m => m.ScholarshipsModule) },
+            { path: 'check-scholarship', loadChildren: () => import('app/modules/admin/check-scholarship/check-scholarship.module').then(m => m.CheckScholarshipModule) },
             { path: 'whoweare', loadChildren: () => import('app/modules/admin/whoweare/whoweare.module').then(m => m.WhoweareModule) },
             { path: 'faqs', loadChildren: () => import('app/modules/admin/faq/faq.module').then(m => m.FaqModule) },
             { path: 'collegeDetails/:id/compare/:selectedid/comparecollege/compareDetails', loadChildren: () => import('app/modules/admin/comparecolleges/comparecolleges.module').then(m => m.ComparecollegesModule) },

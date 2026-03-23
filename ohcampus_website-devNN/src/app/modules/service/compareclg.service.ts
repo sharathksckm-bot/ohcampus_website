@@ -1676,6 +1676,89 @@ export class CompareclgService {
   // ============================================================
 
   /**
+   * Submit Management Seat enquiry (unified with mobile app)
+   * Uses the same API endpoint as mobile app: User/saveManagementSeat
+   */
+  public submitManagementSeatForm(data: any): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/saveManagementSeat`,
+      {
+        StudentName: data.studentName,
+        State: data.state,
+        City: data.city,
+        CourseLevel: data.courseLevel,
+        Category: data.category,
+        interestedcourses: data.interestedCourses,
+        PreferredLocation: data.preferredLocation,
+        PreferredCollege: data.preferredCollege || [],
+        mobileNumber: data.mobileNumber,
+        email: data.email || '',
+        source: 'web'
+      }
+    );
+  }
+
+  /**
+   * Get states list for forms
+   */
+  public getStatesList(): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/getStates`,
+      { defaultToken: localStorage.getItem('defaultToken') }
+    );
+  }
+
+  /**
+   * Get cities by state for forms
+   */
+  public getCitiesByState(stateId: number): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/getCityByState`,
+      { stateId }
+    );
+  }
+
+  /**
+   * Get categories for forms
+   */
+  public getCategoriesForForms(): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/getCategory`,
+      { defaultToken: localStorage.getItem('defaultToken') }
+    );
+  }
+
+  /**
+   * Get course levels (academic categories) for forms
+   */
+  public getCourseLevelsForForms(): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/getCourseLevel`,
+      { defaultToken: localStorage.getItem('defaultToken') }
+    );
+  }
+
+  /**
+   * Get sub-categories (interested courses) by course level
+   */
+  public getSubCategoriesByLevel(levelId: number): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/getSubCategory`,
+      { academic_category: levelId }
+    );
+  }
+
+  /**
+   * Get colleges for forms
+   */
+  public getCollegesForForms(): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}User/getCollegeList`,
+      { defaultToken: localStorage.getItem('defaultToken') }
+    );
+  }
+
+  /**
    * Submit general enquiry (scholarship/management seat)
    */
   public submitEnquiry(data: any): Observable<any> {
@@ -1689,7 +1772,7 @@ export class CompareclgService {
   }
 
   /**
-   * Submit management seat enquiry
+   * Submit management seat enquiry (legacy - use submitManagementSeatForm instead)
    */
   public submitManagementEnquiry(data: any): Observable<any> {
     return this._httpClient.post(

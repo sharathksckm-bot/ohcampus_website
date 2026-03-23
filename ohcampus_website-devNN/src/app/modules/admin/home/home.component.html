@@ -595,4 +595,56 @@
         <a *ngIf="footernotoficationArr != ''"   [href]="footernotoficationArr.link" target="_blank"
             class="botomtxt">{{footernotoficationArr.notification_text}}</a>
     </div>
+
+    <!-- LEAD GENERATION COMPONENTS -->
+    
+    <!-- Scholarship Banner (after Featured Colleges section) -->
+    <div id="scholarship-section" class="scholarship-banner-wrapper" *ngIf="showLeadGeneration">
+        <app-scholarship-banner
+            (openManagementSeatForm)="openManagementSeatPopup()">
+        </app-scholarship-banner>
+    </div>
+
+    <!-- Floating CTA -->
+    <app-floating-cta
+        *ngIf="showLeadGeneration"
+        (openManagementSeatForm)="openManagementSeatPopup()">
+    </app-floating-cta>
+
+    <!-- Lead Popup (Management Seat Form) -->
+    <app-lead-popup
+        *ngIf="showLeadPopup"
+        [popupType]="leadPopupType"
+        (closePopup)="closeLeadPopup()"
+        (formSubmitted)="onLeadFormSubmitted($event)">
+    </app-lead-popup>
+
+    <!-- Exit Intent Popup -->
+    <app-exit-intent-popup
+        *ngIf="showExitIntentPopup"
+        (closePopup)="closeExitIntentPopup()"
+        (openScholarshipForm)="navigateToScholarship()"
+        (openManagementSeatForm)="openManagementSeatPopup()">
+    </app-exit-intent-popup>
+
+    <!-- Mobile App Download Banner -->
+    <div class="app-download-banner" *ngIf="showAppDownloadBanner">
+        <div class="banner-content">
+            <div class="banner-text">
+                <mat-icon>smartphone</mat-icon>
+                <div>
+                    <strong>Download OhCampus App</strong>
+                    <span>Get Rank Predictor, Mock Tests & more!</span>
+                </div>
+            </div>
+            <div class="banner-actions">
+                <a href="https://play.google.com/store/apps/details?id=com.app.ohcampus" target="_blank" class="download-btn" data-testid="app-download-btn">
+                    <mat-icon>android</mat-icon> Download
+                </a>
+                <button mat-icon-button (click)="closeAppDownloadBanner()" class="close-btn">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

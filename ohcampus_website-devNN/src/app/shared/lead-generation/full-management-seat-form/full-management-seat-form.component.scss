@@ -1,0 +1,283 @@
+.management-form-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+
+  &.modal-variant {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  &.page-variant {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background: #e0e0e0;
+    transform: scale(1.1);
+  }
+
+  mat-icon {
+    font-size: 20px;
+    color: #666;
+  }
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-top: 8px;
+
+  .header-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: #fff;
+    }
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+.success-state {
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.3s ease;
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: scaleIn 0.3s ease;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #fff;
+    }
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #11998e;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: #666;
+    margin: 0 0 20px;
+  }
+
+  .success-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f0fff4;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #11998e;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #e0e0e0;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+  color: #667eea;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-prefix {
+  color: #999;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fff5f5;
+  border-radius: 8px;
+  color: #e53935;
+  font-size: 14px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  mat-spinner {
+    display: inline-block;
+  }
+}
+
+.trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #888;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #667eea;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .management-form-container {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .form-header {
+    h2 {
+      font-size: 20px;
+    }
+
+    .header-icon {
+      width: 56px;
+      height: 56px;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  .trust-badges {
+    gap: 8px;
+
+    span {
+      font-size: 11px;
+    }
+  }
+}

@@ -1,0 +1,168 @@
+<div class="management-form-container" [ngClass]="{'modal-variant': variant === 'modal', 'page-variant': variant === 'page'}">
+  
+  <!-- Close button for modal -->
+  <button *ngIf="variant === 'modal'" class="close-btn" (click)="onClose()" data-testid="form-close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Header -->
+  <div class="form-header" *ngIf="showTitle">
+    <div class="header-icon">
+      <mat-icon>school</mat-icon>
+    </div>
+    <h2>Management Seat Application</h2>
+    <p>Get direct admission in top colleges for 2026-27</p>
+  </div>
+
+  <!-- Success State -->
+  <div class="success-state" *ngIf="isSuccess" data-testid="success-message">
+    <div class="success-icon">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    <h3>Application Submitted!</h3>
+    <p>Our counselor will contact you within 24 hours.</p>
+    <div class="success-features">
+      <span><mat-icon>phone</mat-icon> Expert Counseling</span>
+      <span><mat-icon>school</mat-icon> Top Colleges</span>
+      <span><mat-icon>verified</mat-icon> Guaranteed Support</span>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="managementForm" (ngSubmit)="onSubmit()" *ngIf="!isSuccess" data-testid="management-seat-form">
+    
+    <!-- Student Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Student Name</mat-label>
+      <input matInput formControlName="studentName" placeholder="Enter your full name" data-testid="student-name-input">
+      <mat-icon matPrefix>person</mat-icon>
+      <mat-error *ngIf="managementForm.get('studentName').hasError('required')">Name is required</mat-error>
+      <mat-error *ngIf="managementForm.get('studentName').hasError('minlength')">Name must be at least 2 characters</mat-error>
+    </mat-form-field>
+
+    <!-- Mobile Number -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Mobile Number</mat-label>
+      <input matInput formControlName="mobileNumber" placeholder="10 digit mobile number" maxlength="10" data-testid="mobile-input">
+      <mat-icon matPrefix>phone</mat-icon>
+      <mat-error *ngIf="managementForm.get('mobileNumber').hasError('required')">Mobile number is required</mat-error>
+      <mat-error *ngIf="managementForm.get('mobileNumber').hasError('pattern')">Enter valid 10 digit number</mat-error>
+    </mat-form-field>
+
+    <!-- Email (Optional) -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email (Optional)</mat-label>
+      <input matInput formControlName="email" placeholder="your@email.com" data-testid="email-input">
+      <mat-icon matPrefix>email</mat-icon>
+      <mat-error *ngIf="managementForm.get('email').hasError('email')">Enter valid email</mat-error>
+    </mat-form-field>
+
+    <!-- State -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>State</mat-label>
+      <input matInput [formControl]="stateControl" [matAutocomplete]="stateAuto" placeholder="Select State" data-testid="state-input">
+      <mat-icon matPrefix>location_on</mat-icon>
+      <mat-autocomplete #stateAuto="matAutocomplete" (optionSelected)="onStateSelected($event.option.value)">
+        <mat-option *ngFor="let state of filteredStates | async" [value]="state">
+          {{ state.statename }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="stateControl.hasError('required')">State is required</mat-error>
+    </mat-form-field>
+
+    <!-- City -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>City</mat-label>
+      <input matInput [formControl]="cityControl" [matAutocomplete]="cityAuto" placeholder="Select City" [disabled]="!selectedStateId" data-testid="city-input">
+      <mat-icon matPrefix>location_city</mat-icon>
+      <mat-autocomplete #cityAuto="matAutocomplete" (optionSelected)="onCitySelected($event.option.value)">
+        <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+          {{ city.city }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="cityControl.hasError('required')">City is required</mat-error>
+    </mat-form-field>
+
+    <!-- Category -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category</mat-label>
+      <mat-select (selectionChange)="onCategoryChange($event)" data-testid="category-select">
+        <mat-option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.catname }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>category</mat-icon>
+      <mat-error>Category is required</mat-error>
+    </mat-form-field>
+
+    <!-- Course Level -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Course Level</mat-label>
+      <mat-select (selectionChange)="onCourseLevelChange($event)" data-testid="course-level-select">
+        <mat-option *ngFor="let level of courseLevels" [value]="level.category_id">
+          {{ level.name }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>stairs</mat-icon>
+      <mat-error>Course level is required</mat-error>
+    </mat-form-field>
+
+    <!-- Interested Courses (Sub-categories) -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="subCategories.length > 0">
+      <mat-label>Interested Courses</mat-label>
+      <mat-select multiple (selectionChange)="onSubCategoryChange($event)" data-testid="interested-courses-select">
+        <mat-option *ngFor="let sc of subCategories" [value]="sc.id">
+          {{ sc.name }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>menu_book</mat-icon>
+      <mat-hint>Select one or more courses</mat-hint>
+    </mat-form-field>
+
+    <!-- Preferred Location -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="cities.length > 0">
+      <mat-label>Preferred Location</mat-label>
+      <mat-select multiple (selectionChange)="onLocationChange($event)" data-testid="preferred-location-select">
+        <mat-option *ngFor="let city of cities" [value]="city.id">
+          {{ city.city }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>place</mat-icon>
+      <mat-hint>Select preferred cities for admission</mat-hint>
+    </mat-form-field>
+
+    <!-- Preferred College (Optional) -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Preferred College (Optional)</mat-label>
+      <mat-select multiple (selectionChange)="onCollegeChange($event)" data-testid="preferred-college-select">
+        <mat-option *ngFor="let college of colleges | slice:0:100" [value]="college.id">
+          {{ college.title }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>account_balance</mat-icon>
+      <mat-hint>Select specific colleges if any</mat-hint>
+    </mat-form-field>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage" data-testid="error-message">
+      <mat-icon>error</mat-icon>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Submit Button -->
+    <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="isSubmitting" data-testid="submit-btn">
+      <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+      <span *ngIf="!isSubmitting">
+        <mat-icon>send</mat-icon>
+        Submit Application
+      </span>
+    </button>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+      <span><mat-icon>verified_user</mat-icon> 100% Secure</span>
+      <span><mat-icon>support_agent</mat-icon> Free Counseling</span>
+      <span><mat-icon>schedule</mat-icon> Quick Response</span>
+    </div>
+  </form>
+</div>

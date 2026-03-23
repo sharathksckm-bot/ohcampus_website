@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-scholarship-banner',
@@ -23,9 +24,12 @@ export class ScholarshipBannerComponent {
     { value: '98%', label: 'Success Rate' }
   ];
 
+  constructor(private router: Router) {}
+
   onApplyScholarship(): void {
-    this.openScholarshipForm.emit();
     this.trackEvent('scholarship_banner_click');
+    // Redirect to check-scholarship page
+    this.router.navigate(['/check-scholarship']);
   }
 
   onApplyManagementSeat(): void {

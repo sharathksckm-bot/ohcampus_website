@@ -165,6 +165,10 @@ export class HomeComponent implements OnInit {
     this.getlistofCertificate();
     this.generateCaptcha();
     this.getfooterNotification();
+    
+    // Lead Generation Setup
+    this.setupExitIntent();
+    this.checkAppBannerStatus();
   }
 
   rotateImages() {
@@ -584,26 +588,61 @@ export class HomeComponent implements OnInit {
   // LEAD GENERATION METHODS
   // ============================================================
   
+  showLeadGeneration = true;
+  showLeadPopup = false;
+  showExitIntentPopup = false;
+  showAppDownloadBanner = true;
+  private exitIntentShown = false;
+  
   openScholarshipForm(): void {
     this.leadPopupType = 'scholarship';
-    this.showScholarshipPopup = true;
+    this.showLeadPopup = true;
     this.trackLeadEvent('scholarship_popup_opened');
   }
 
-  openManagementSeatForm(): void {
+  openManagementSeatPopup(): void {
     this.leadPopupType = 'management';
-    this.showManagementPopup = true;
+    this.showLeadPopup = true;
     this.trackLeadEvent('management_popup_opened');
   }
 
   closeLeadPopup(): void {
-    this.showScholarshipPopup = false;
-    this.showManagementPopup = false;
+    this.showLeadPopup = false;
   }
 
-  onLeadSubmitted(data: any): void {
-    console.log('Lead submitted:', data);
-    this.trackLeadEvent('lead_submitted', data.type);
+  onLeadFormSubmitted(success: boolean): void {
+    if (success) {
+      this.trackLeadEvent('lead_form_submitted', this.leadPopupType);
+      // Close popup after success animation
+      setTimeout(() => {
+        this.showLeadPopup = false;
+      }, 3000);
+    }
+  }
+
+  navigateToScholarship(): void {
+    this.closeExitIntentPopup();
+    this.route.navigate(['/check-scholarship']);
+  }
+
+  // Exit Intent Detection
+  setupExitIntent(): void {
+    document.addEventListener('mouseout', (e: MouseEvent) => {
+      if (e.clientY <= 0 && !this.exitIntentShown && !this.showLeadPopup) {
+        this.showExitIntentPopup = true;
+        this.exitIntentShown = true;
+        this.trackLeadEvent('exit_intent_shown');
+      }
+    });
+  }
+
+  closeExitIntentPopup(): void {
+    this.showExitIntentPopup = false;
+  }
+
+  closeAppDownloadBanner(): void {
+    this.showAppDownloadBanner = false;
+    localStorage.setItem('appBannerDismissed', 'true');
   }
 
   private trackLeadEvent(eventName: string, label?: string): void {
@@ -612,6 +651,13 @@ export class HomeComponent implements OnInit {
         'event_category': 'lead_generation',
         'event_label': label || 'homepage'
       });
+    }
+  }
+
+  // Check if user has already dismissed app banner
+  private checkAppBannerStatus(): void {
+    if (localStorage.getItem('appBannerDismissed') === 'true') {
+      this.showAppDownloadBanner = false;
     }
   }
   // ============================================================

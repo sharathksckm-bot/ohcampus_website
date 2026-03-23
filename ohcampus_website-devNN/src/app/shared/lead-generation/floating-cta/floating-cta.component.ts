@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -25,7 +26,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     ])
   ]
 })
-export class FloatingCtaComponent implements OnInit {
+export class FloatingCtaComponent implements OnInit, OnDestroy {
   @Output() openScholarshipForm = new EventEmitter<void>();
   @Output() openManagementSeatForm = new EventEmitter<void>();
   @Output() openWhatsApp = new EventEmitter<void>();
@@ -37,6 +38,8 @@ export class FloatingCtaComponent implements OnInit {
 
   private ctaInterval: any;
   private pulseInterval: any;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     // Rotate CTAs every 5 seconds
@@ -68,8 +71,9 @@ export class FloatingCtaComponent implements OnInit {
   }
 
   onScholarshipClick(): void {
-    this.openScholarshipForm.emit();
     this.trackEvent('scholarship_cta_click', 'floating_cta');
+    // Redirect to check-scholarship page
+    this.router.navigate(['/check-scholarship']);
   }
 
   onManagementSeatClick(): void {
@@ -78,14 +82,14 @@ export class FloatingCtaComponent implements OnInit {
   }
 
   onWhatsAppClick(): void {
-    const phoneNumber = '919876543210'; // Replace with actual WhatsApp number
+    const phoneNumber = '918884560456'; // OhCampus WhatsApp number
     const message = encodeURIComponent('Hi, I am interested in admission counseling. Please help me with scholarship and management seat options.');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
     this.trackEvent('whatsapp_click', 'floating_cta');
   }
 
   onCallClick(): void {
-    window.open('tel:+919876543210', '_self'); // Replace with actual phone number
+    window.open('tel:+918884560456', '_self'); // OhCampus phone number
     this.trackEvent('call_click', 'floating_cta');
   }
 

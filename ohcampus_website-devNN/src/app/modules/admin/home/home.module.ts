@@ -13,6 +13,7 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { LeadGenerationModule } from 'app/shared/lead-generation/lead-generation.module';
 
 const homeRoutes: Route[] = [
   {
@@ -39,7 +40,8 @@ const homeRoutes: Route[] = [
     FormsModule,
     ReactiveFormsModule,
     MatTooltipModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    LeadGenerationModule
   ]
 })
 export class HomeModule { }

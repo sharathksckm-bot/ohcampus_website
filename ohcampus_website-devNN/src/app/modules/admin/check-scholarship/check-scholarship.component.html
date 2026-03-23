@@ -1,0 +1,228 @@
+<div class="scholarship-page" data-testid="scholarship-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="scholarship-badge">
+        <mat-icon>emoji_events</mat-icon>
+        <span>Scholarships 2026-27</span>
+      </div>
+      <h1>Win Scholarships up to <span class="highlight">₹2 Lakhs!</span></h1>
+      <p>Check your eligibility for merit-based and need-based scholarships at top colleges across India</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="number">10,000+</span>
+          <span class="label">Scholarships Awarded</span>
+        </div>
+        <div class="stat">
+          <span class="number">500+</span>
+          <span class="label">Partner Colleges</span>
+        </div>
+        <div class="stat">
+          <span class="number">₹50Cr+</span>
+          <span class="label">Scholarship Value</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="assets/images/scholarship-hero.svg" alt="Scholarship" onerror="this.style.display='none'">
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="main-content">
+    <div class="container">
+      <div class="content-grid">
+        
+        <!-- Left: Benefits -->
+        <div class="benefits-section">
+          <h2>Scholarship Categories</h2>
+          <div class="benefits-list">
+            <div class="benefit-card" *ngFor="let benefit of scholarshipBenefits">
+              <div class="benefit-icon">
+                <mat-icon>{{ benefit.icon }}</mat-icon>
+              </div>
+              <div class="benefit-content">
+                <h3>{{ benefit.title }}</h3>
+                <p>{{ benefit.desc }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Section -->
+          <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-list">
+              <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.open]="faq.open">
+                <div class="faq-question" (click)="toggleFaq(i)">
+                  <span>{{ faq.question }}</span>
+                  <mat-icon>{{ faq.open ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </div>
+                <div class="faq-answer" *ngIf="faq.open">
+                  {{ faq.answer }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="form-section">
+          <div class="form-card" *ngIf="!isSuccess">
+            <div class="form-header">
+              <mat-icon>verified</mat-icon>
+              <h2>Check Your Eligibility</h2>
+              <p>Fill in your details to know your scholarship eligibility</p>
+            </div>
+
+            <form [formGroup]="scholarshipForm" (ngSubmit)="onSubmit()" data-testid="scholarship-form">
+              
+              <!-- Student Name -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Full Name</mat-label>
+                <input matInput formControlName="studentName" placeholder="Enter your full name" data-testid="scholarship-name">
+                <mat-icon matPrefix>person</mat-icon>
+                <mat-error *ngIf="scholarshipForm.get('studentName').hasError('required')">Name is required</mat-error>
+              </mat-form-field>
+
+              <!-- Mobile -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput formControlName="mobileNumber" placeholder="10 digit mobile" maxlength="10" data-testid="scholarship-mobile">
+                <mat-icon matPrefix>phone</mat-icon>
+                <mat-error>Valid mobile number required</mat-error>
+              </mat-form-field>
+
+              <!-- Email -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email (Optional)</mat-label>
+                <input matInput formControlName="email" placeholder="your@email.com" data-testid="scholarship-email">
+                <mat-icon matPrefix>email</mat-icon>
+              </mat-form-field>
+
+              <!-- State -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>State</mat-label>
+                <input matInput [formControl]="stateControl" [matAutocomplete]="stateAuto" placeholder="Select State" data-testid="scholarship-state">
+                <mat-icon matPrefix>location_on</mat-icon>
+                <mat-autocomplete #stateAuto="matAutocomplete" (optionSelected)="onStateSelected($event.option.value)">
+                  <mat-option *ngFor="let state of filteredStates | async" [value]="state">
+                    {{ state.statename }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <!-- City -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>City</mat-label>
+                <input matInput [formControl]="cityControl" [matAutocomplete]="cityAuto" placeholder="Select City" data-testid="scholarship-city">
+                <mat-icon matPrefix>location_city</mat-icon>
+                <mat-autocomplete #cityAuto="matAutocomplete" (optionSelected)="onCitySelected($event.option.value)">
+                  <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                    {{ city.city }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <!-- Category -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Category</mat-label>
+                <mat-select (selectionChange)="onCategoryChange($event)" data-testid="scholarship-category">
+                  <mat-option *ngFor="let cat of categories" [value]="cat.id">
+                    {{ cat.catname }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>category</mat-icon>
+              </mat-form-field>
+
+              <!-- Course Level -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Course Level</mat-label>
+                <mat-select (selectionChange)="onCourseLevelChange($event)" data-testid="scholarship-level">
+                  <mat-option *ngFor="let level of courseLevels" [value]="level.category_id">
+                    {{ level.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>stairs</mat-icon>
+              </mat-form-field>
+
+              <!-- Interested Courses -->
+              <mat-form-field appearance="outline" class="full-width" *ngIf="subCategories.length > 0">
+                <mat-label>Interested Courses</mat-label>
+                <mat-select multiple (selectionChange)="onSubCategoryChange($event)" data-testid="scholarship-courses">
+                  <mat-option *ngFor="let sc of subCategories" [value]="sc.id">
+                    {{ sc.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>menu_book</mat-icon>
+              </mat-form-field>
+
+              <!-- Preferred Location -->
+              <mat-form-field appearance="outline" class="full-width" *ngIf="cities.length > 0">
+                <mat-label>Preferred Location</mat-label>
+                <mat-select multiple (selectionChange)="onLocationChange($event)" data-testid="scholarship-location">
+                  <mat-option *ngFor="let city of cities" [value]="city.id">
+                    {{ city.city }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>place</mat-icon>
+              </mat-form-field>
+
+              <!-- Error -->
+              <div class="error-msg" *ngIf="errorMessage">
+                <mat-icon>error</mat-icon> {{ errorMessage }}
+              </div>
+
+              <!-- Submit -->
+              <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="isSubmitting" data-testid="scholarship-submit">
+                <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                <span *ngIf="!isSubmitting">
+                  <mat-icon>verified</mat-icon>
+                  Check Eligibility
+                </span>
+              </button>
+
+              <p class="privacy-note">
+                <mat-icon>lock</mat-icon>
+                Your information is secure and will only be used for scholarship counseling.
+              </p>
+            </form>
+          </div>
+
+          <!-- Success State -->
+          <div class="success-card" *ngIf="isSuccess" data-testid="scholarship-success">
+            <div class="success-icon">
+              <mat-icon>celebration</mat-icon>
+            </div>
+            <h2>Application Received!</h2>
+            <p>Thank you for checking your scholarship eligibility.</p>
+            <div class="next-steps">
+              <h3>What's Next?</h3>
+              <ul>
+                <li><mat-icon>phone_callback</mat-icon> Our counselor will call you within 24 hours</li>
+                <li><mat-icon>description</mat-icon> They will assess your eligibility</li>
+                <li><mat-icon>school</mat-icon> You'll get personalized college recommendations</li>
+                <li><mat-icon>savings</mat-icon> Learn about available scholarships</li>
+              </ul>
+            </div>
+            <a mat-raised-button color="primary" routerLink="/home" class="home-btn">
+              <mat-icon>home</mat-icon>
+              Back to Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner">
+    <div class="cta-content">
+      <h2>Need Help with Admissions?</h2>
+      <p>Get expert guidance for management seat admissions in top colleges</p>
+      <a mat-raised-button routerLink="/home" fragment="management-seat" class="cta-btn" data-testid="management-cta">
+        <mat-icon>school</mat-icon>
+        Apply for Management Seat
+      </a>
+    </div>
+  </section>
+</div>
