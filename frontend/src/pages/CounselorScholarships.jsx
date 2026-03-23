@@ -625,27 +625,59 @@ export default function CounselorScholarships() {
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <LinkIcon className="h-5 w-5 text-[#0066CC]" />
-                Your Referral Link
+                Your Referral Links
               </DialogTitle>
             </DialogHeader>
 
             <div className="space-y-4">
               <p className="text-sm text-[#475569]">
-                Share this link with students. When they apply for scholarships using your link, 
+                Share these links with students. When they apply using your links, 
                 their applications will be automatically tracked under your account.
               </p>
 
-              <div className="flex gap-2">
-                <Input
-                  value={utmLink}
-                  readOnly
-                  className="font-mono text-sm"
-                  data-testid="utm-link-input"
-                />
-                <Button onClick={copyToClipboard} className="gap-2" data-testid="copy-link-btn">
-                  <Copy className="h-4 w-4" />
-                  Copy
-                </Button>
+              {/* Main Referral Link */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#0F172A]">Main Referral Link</label>
+                <div className="flex gap-2">
+                  <Input
+                    value={utmLink}
+                    readOnly
+                    className="font-mono text-sm"
+                    data-testid="utm-link-input"
+                  />
+                  <Button onClick={copyToClipboard} className="gap-2" data-testid="copy-link-btn">
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+
+              {/* Scholarship Form Shortlink */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#0F172A]">Scholarship Form Direct Link</label>
+                <div className="flex gap-2">
+                  <Input
+                    value={utmLink ? `${utmLink.split('?')[0]}/scholarship-form?${utmLink.split('?')[1] || ''}` : ''}
+                    readOnly
+                    className="font-mono text-sm"
+                    data-testid="scholarship-form-link-input"
+                  />
+                  <Button 
+                    onClick={() => {
+                      const scholarshipLink = utmLink ? `${utmLink.split('?')[0]}/scholarship-form?${utmLink.split('?')[1] || ''}` : '';
+                      navigator.clipboard.writeText(scholarshipLink);
+                      toast.success('Scholarship form link copied to clipboard!');
+                    }} 
+                    className="gap-2" 
+                    data-testid="copy-scholarship-link-btn"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </Button>
+                </div>
+                <p className="text-xs text-[#94A3B8]">
+                  Direct link to the scholarship application form with your referral tracking
+                </p>
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
@@ -654,6 +686,7 @@ export default function CounselorScholarships() {
                   <li>• Share the link on your social media</li>
                   <li>• Send to students looking for scholarships</li>
                   <li>• Include in your email signatures</li>
+                  <li>• Use the direct scholarship form link for quick applications</li>
                   <li>• Track your referrals on this page</li>
                 </ul>
               </div>

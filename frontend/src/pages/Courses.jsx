@@ -47,6 +47,7 @@ import {
   IndianRupee,
   X,
   GitCompare,
+  ExternalLink,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -78,6 +79,7 @@ export default function Courses() {
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [addressSearchQuery, setAddressSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [selectedState, setSelectedState] = useState('all');
@@ -184,6 +186,7 @@ export default function Courses() {
         limit: pageSize,
       };
       if (searchQuery) params.search = searchQuery;
+      if (addressSearchQuery) params.address = addressSearchQuery;
       if (selectedLevel && selectedLevel !== 'all') params.level = selectedLevel;
       if (selectedState && selectedState !== 'all') params.state = selectedState;
       if (selectedCity && selectedCity !== 'all') params.city = selectedCity;
@@ -220,7 +223,7 @@ export default function Courses() {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedFeeRange, pageSize]);
+  }, [searchQuery, addressSearchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedFeeRange, pageSize]);
 
   useEffect(() => {
     fetchFilters();
@@ -229,7 +232,7 @@ export default function Courses() {
   useEffect(() => {
     fetchCourses(1);
     setCurrentPage(1);
-  }, [searchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedFeeRange]);
+  }, [searchQuery, addressSearchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedFeeRange]);
 
   // Handle page change
   const handlePageChange = (page) => {
@@ -238,7 +241,7 @@ export default function Courses() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Filter courses (client-side only for category which is not in MySQL)
+  // Filter courses (client-side only for category which is not in MySQL, also address for client-side fallback)
   const filteredCourses = useMemo(() => {
     let result = courses;
 
@@ -247,8 +250,18 @@ export default function Courses() {
       result = result.filter(c => c.category === selectedCategory);
     }
 
+    // Address search - client-side fallback if server-side doesn't support it
+    if (addressSearchQuery && result.length > 0) {
+      const addressQuery = addressSearchQuery.toLowerCase();
+      result = result.filter(c => 
+        (c.college?.address && c.college.address.toLowerCase().includes(addressQuery)) ||
+        (c.college?.city && c.college.city.toLowerCase().includes(addressQuery)) ||
+        (c.college?.state && c.college.state.toLowerCase().includes(addressQuery))
+      );
+    }
+
     return result;
-  }, [courses, selectedCategory]);
+  }, [courses, selectedCategory, addressSearchQuery]);
 
   // Get unique course names for the Course filter dropdown
   const uniqueCourseNames = useMemo(() => {
@@ -391,8 +404,8 @@ export default function Courses() {
         <Card className="shadow-lg border-0">
           <CardContent className="p-4 lg:p-6">
             {/* Row 1 - Search */}
-            <div className="mb-4">
-              <div className="relative w-full">
+            <div className="mb-4 flex flex-col lg:flex-row gap-4">
+              <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
                 <Input
                   placeholder="Search courses by name, college, or location..."
@@ -400,6 +413,17 @@ export default function Courses() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 h-11 font-body border-slate-300 w-full"
                   data-testid="course-search"
+                />
+              </div>
+              {/* Address Search */}
+              <div className="relative flex-1">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
+                <Input
+                  placeholder="Search by address (e.g., Bangalore, BTM, Tumkur)..."
+                  value={addressSearchQuery}
+                  onChange={(e) => setAddressSearchQuery(e.target.value)}
+                  className="pl-10 h-11 font-body border-slate-300 w-full"
+                  data-testid="address-search"
                 />
               </div>
             </div>
@@ -925,7 +949,16 @@ export default function Courses() {
                     </div>
                     About the College
                   </h4>
-                  <p className="text-sm font-body text-[#475569] mb-2">{courseDetail.college.name}</p>
+                  <a 
+                    href={`/college/${courseDetail.college.id || courseDetail.college._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-body text-[#0066CC] hover:text-[#0055AA] hover:underline cursor-pointer flex items-center gap-1 mb-2"
+                    data-testid="course-detail-college-link"
+                  >
+                    {courseDetail.college.name}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                   <p className="text-xs font-body text-[#94A3B8]">{courseDetail.college.address}</p>
                   <div className="mt-2 flex items-center gap-2 text-xs">
                     <Badge variant="secondary">{courseDetail.college.category}</Badge>

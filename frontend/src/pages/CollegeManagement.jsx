@@ -65,6 +65,7 @@ import {
   Calendar,
   Info,
   AlertTriangle,
+  ExternalLink,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -98,6 +99,7 @@ export default function CollegeManagement() {
   const [filters, setFilters] = useState({ states: [], cities: [], categories: [], courses: [] });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [addressSearchQuery, setAddressSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState('all');
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -148,13 +150,23 @@ export default function CollegeManagement() {
   const filteredColleges = useMemo(() => {
     let result = colleges;
 
-    // Search filter
+    // Search filter (name, city, state)
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(c =>
         c.name.toLowerCase().includes(query) ||
         c.city.toLowerCase().includes(query) ||
         c.state.toLowerCase().includes(query)
+      );
+    }
+
+    // Address search filter
+    if (addressSearchQuery) {
+      const addressQuery = addressSearchQuery.toLowerCase();
+      result = result.filter(c =>
+        (c.address && c.address.toLowerCase().includes(addressQuery)) ||
+        c.city.toLowerCase().includes(addressQuery) ||
+        c.state.toLowerCase().includes(addressQuery)
       );
     }
 
@@ -182,7 +194,7 @@ export default function CollegeManagement() {
     }
 
     return result;
-  }, [colleges, courses, searchQuery, selectedState, selectedCity, selectedCategory, selectedCourse]);
+  }, [colleges, courses, searchQuery, addressSearchQuery, selectedState, selectedCity, selectedCategory, selectedCourse]);
 
   // Group colleges by different criteria
   const collegesByState = useMemo(() => {
@@ -340,13 +352,14 @@ export default function CollegeManagement() {
   // Clear all filters
   const clearFilters = () => {
     setSearchQuery('');
+    setAddressSearchQuery('');
     setSelectedState('all');
     setSelectedCity('all');
     setSelectedCategory('all');
     setSelectedCourse('all');
   };
 
-  const hasActiveFilters = searchQuery || selectedState !== 'all' || selectedCity !== 'all' || selectedCategory !== 'all' || selectedCourse !== 'all';
+  const hasActiveFilters = searchQuery || addressSearchQuery || selectedState !== 'all' || selectedCity !== 'all' || selectedCategory !== 'all' || selectedCourse !== 'all';
 
   // Render college card
   const renderCollegeCard = (college, showCategory = true) => {
@@ -356,13 +369,29 @@ export default function CollegeManagement() {
     const availableCourses = collegeCourses.filter(c => c.seat_status === 'Available').length;
     const closingCourses = collegeCourses.filter(c => c.seat_status === 'Closing').length;
 
+    // Function to open college detail in new tab
+    const openCollegeInNewTab = (e) => {
+      e.preventDefault();
+      window.open(`/college/${college.id}`, '_blank');
+    };
+
     return (
       <Card key={college.id} className="hover:shadow-md transition-shadow" data-testid={`college-card-${college.id}`}>
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-heading font-semibold text-[#0F172A]">{college.name}</h3>
+                <a 
+                  href={`/college/${college.id}`}
+                  onClick={openCollegeInNewTab}
+                  className="font-heading font-semibold text-[#0066CC] hover:text-[#0055AA] hover:underline cursor-pointer flex items-center gap-1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid={`college-link-${college.id}`}
+                >
+                  {college.name}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
                 <Badge className="bg-[#FF6B35] text-white text-xs">
                   <Star className="h-3 w-3 mr-1" />
                   Featured
@@ -508,83 +537,101 @@ export default function CollegeManagement() {
         {/* Search and Filters */}
         <Card>
           <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Search */}
-              <div className="relative flex-1 lg:max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
-                <Input
-                  placeholder="Search colleges by name, city, or state..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-10 font-body w-full"
-                  data-testid="college-search"
-                />
+            <div className="flex flex-col gap-4">
+              {/* Search Row */}
+              <div className="flex flex-col lg:flex-row gap-4">
+                {/* College Name Search */}
+                <div className="relative flex-1 lg:max-w-sm">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
+                  <Input
+                    placeholder="Search colleges by name, city, or state..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 h-10 font-body w-full"
+                    data-testid="college-search"
+                  />
+                </div>
+
+                {/* Address Search */}
+                <div className="relative flex-1 lg:max-w-sm">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
+                  <Input
+                    placeholder="Search by address (e.g., Bangalore, BTM, Tumkur)..."
+                    value={addressSearchQuery}
+                    onChange={(e) => setAddressSearchQuery(e.target.value)}
+                    className="pl-10 h-10 font-body w-full"
+                    data-testid="address-search"
+                  />
+                </div>
               </div>
 
-              {/* State Filter */}
-              <Select value={selectedState} onValueChange={setSelectedState}>
-                <SelectTrigger className="w-full lg:w-40 h-10" data-testid="state-filter">
-                  <MapPin className="h-4 w-4 mr-2 text-[#94A3B8]" />
-                  <SelectValue placeholder="State" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All States</SelectItem>
-                  {filters.states.map(state => (
-                    <SelectItem key={state} value={state}>{state}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Filters Row */}
+              <div className="flex flex-col lg:flex-row gap-4">
+                {/* State Filter */}
+                <Select value={selectedState} onValueChange={setSelectedState}>
+                  <SelectTrigger className="w-full lg:w-40 h-10" data-testid="state-filter">
+                    <MapPin className="h-4 w-4 mr-2 text-[#94A3B8]" />
+                    <SelectValue placeholder="State" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All States</SelectItem>
+                    {filters.states.map(state => (
+                      <SelectItem key={state} value={state}>{state}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              {/* City Filter */}
-              <Select value={selectedCity} onValueChange={setSelectedCity}>
-                <SelectTrigger className="w-full lg:w-40 h-10" data-testid="city-filter">
-                  <Building2 className="h-4 w-4 mr-2 text-[#94A3B8]" />
-                  <SelectValue placeholder="City" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Cities</SelectItem>
-                  {filters.cities.map(city => (
-                    <SelectItem key={city} value={city}>{city}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                {/* City Filter */}
+                <Select value={selectedCity} onValueChange={setSelectedCity}>
+                  <SelectTrigger className="w-full lg:w-40 h-10" data-testid="city-filter">
+                    <Building2 className="h-4 w-4 mr-2 text-[#94A3B8]" />
+                    <SelectValue placeholder="City" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Cities</SelectItem>
+                    {filters.cities.map(city => (
+                      <SelectItem key={city} value={city}>{city}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              {/* Category Filter */}
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full lg:w-44 h-10" data-testid="category-filter">
-                  <GraduationCap className="h-4 w-4 mr-2 text-[#94A3B8]" />
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {filters.categories.map(cat => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                {/* Category Filter */}
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full lg:w-44 h-10" data-testid="category-filter">
+                    <GraduationCap className="h-4 w-4 mr-2 text-[#94A3B8]" />
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {filters.categories.map(cat => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              {/* Course Filter */}
-              <Select value={selectedCourse} onValueChange={setSelectedCourse}>
-                <SelectTrigger className="w-full lg:w-44 h-10" data-testid="course-filter">
-                  <BookOpen className="h-4 w-4 mr-2 text-[#94A3B8]" />
-                  <SelectValue placeholder="Course" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Courses</SelectItem>
-                  {filters.courses.slice(0, 20).map(course => (
-                    <SelectItem key={course} value={course}>
-                      {course.length > 30 ? course.substring(0, 30) + '...' : course}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                {/* Course Filter */}
+                <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                  <SelectTrigger className="w-full lg:w-44 h-10" data-testid="course-filter">
+                    <BookOpen className="h-4 w-4 mr-2 text-[#94A3B8]" />
+                    <SelectValue placeholder="Course" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Courses</SelectItem>
+                    {filters.courses.slice(0, 20).map(course => (
+                      <SelectItem key={course} value={course}>
+                        {course.length > 30 ? course.substring(0, 30) + '...' : course}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              {hasActiveFilters && (
-                <Button variant="ghost" onClick={clearFilters} className="h-10">
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
-                </Button>
-              )}
+                {hasActiveFilters && (
+                  <Button variant="ghost" onClick={clearFilters} className="h-10">
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </Button>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
