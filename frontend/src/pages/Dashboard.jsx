@@ -44,7 +44,8 @@ import {
   ChevronDown,
   Check,
   IndianRupee,
-  Layers
+  Layers,
+  ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -172,6 +173,7 @@ export default function Dashboard() {
     feeRange: ''
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const [addressSearchQuery, setAddressSearchQuery] = useState('');
   const [colleges, setColleges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtersLoading, setFiltersLoading] = useState(true);
@@ -259,6 +261,16 @@ export default function Dashboard() {
           selectedFilters.categories.includes(c.category)
         );
       }
+
+      // Client-side filtering for address search
+      if (addressSearchQuery) {
+        const addressQuery = addressSearchQuery.toLowerCase();
+        filteredColleges = filteredColleges.filter(c => 
+          (c.address && c.address.toLowerCase().includes(addressQuery)) ||
+          (c.city && c.city.toLowerCase().includes(addressQuery)) ||
+          (c.state && c.state.toLowerCase().includes(addressQuery))
+        );
+      }
       
       setColleges(filteredColleges);
     } catch (error) {
@@ -267,7 +279,7 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [selectedFilters, searchQuery]);
+  }, [selectedFilters, searchQuery, addressSearchQuery]);
 
   // Seed database
   const handleSeed = async () => {
@@ -430,6 +442,16 @@ export default function Dashboard() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 h-12 font-body border-slate-300 focus:ring-[#0066CC] focus:border-[#0066CC]"
                     data-testid="search-input"
+                  />
+                </div>
+                <div className="relative flex-1">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#94A3B8]" />
+                  <Input
+                    placeholder="Search by address (e.g., Bangalore, BTM, Tumkur)..."
+                    value={addressSearchQuery}
+                    onChange={(e) => setAddressSearchQuery(e.target.value)}
+                    className="pl-10 h-12 font-body border-slate-300 focus:ring-[#0066CC] focus:border-[#0066CC]"
+                    data-testid="address-search-input"
                   />
                 </div>
                 {!compareMode && (
@@ -685,7 +707,14 @@ export default function Dashboard() {
                   selectedForCompare.find(c => c.id === college.id) ? 'ring-2 ring-[#FF6B35]' : ''
                 }`}
                 style={{ animationDelay: `${index * 50}ms` }}
-                onClick={() => compareMode ? toggleCompareSelection(college) : navigate(`/college/${college.id}`)}
+                onClick={(e) => {
+                  if (compareMode) {
+                    toggleCompareSelection(college);
+                  } else {
+                    // Open in new tab
+                    window.open(`/college/${college.id}`, '_blank');
+                  }
+                }}
                 data-testid={`college-card-${college.id}`}
               >
                 <CardContent className="p-3">
@@ -763,7 +792,7 @@ export default function Dashboard() {
                       </span>
                       <div className="flex items-center text-[#0066CC] font-body text-xs font-semibold group-hover:gap-1 transition-all">
                         View
-                        <ArrowRight className="h-3 w-3 ml-0.5 group-hover:translate-x-1 transition-transform" />
+                        <ExternalLink className="h-3 w-3 ml-0.5" />
                       </div>
                     </div>
                   )}
