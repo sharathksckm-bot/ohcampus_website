@@ -584,6 +584,7 @@ async def get_all_courses_with_colleges(
         INNER JOIN courses c ON cc.courseid = c.id
         INNER JOIN college col ON cc.collegeid = col.id
         LEFT JOIN academic_categories ac ON c.academic_category = ac.category_id
+        LEFT JOIN category course_cat ON c.course_category = course_cat.id
         LEFT JOIN state s ON col.stateid = s.id
         LEFT JOIN city ct ON col.cityid = ct.id
         WHERE (col.package_type = 'feature_listing' OR col.package_type = 'featured_listing')
@@ -611,12 +612,14 @@ async def get_all_courses_with_colleges(
             col.title as college_name,
             col.accreditation,
             col.address as college_address,
+            course_cat.catname as course_category,
             s.statename as state,
             ct.city as city
         FROM college_course cc
         INNER JOIN courses c ON cc.courseid = c.id
         INNER JOIN college col ON cc.collegeid = col.id
         LEFT JOIN academic_categories ac ON c.academic_category = ac.category_id
+        LEFT JOIN category course_cat ON c.course_category = course_cat.id
         LEFT JOIN state s ON col.stateid = s.id
         LEFT JOIN city ct ON col.cityid = ct.id
         WHERE (col.package_type = 'feature_listing' OR col.package_type = 'featured_listing')
@@ -688,6 +691,14 @@ async def get_all_courses_with_colleges(
         params.extend([f"%{address}%", f"%{address}%", f"%{address}%"])
         count_params.extend([f"%{address}%", f"%{address}%", f"%{address}%"])
     
+    # Category filter (course category like Engineering, Management, etc.)
+    if category:
+        category_condition = " AND course_cat.catname = %s"
+        query += category_condition
+        count_query += category_condition
+        params.append(category)
+        count_params.append(category)
+    
     # Get total count
     count_result = await execute_query(count_query, tuple(count_params) if count_params else None)
     total = count_result[0]['total'] if count_result else 0
@@ -714,6 +725,7 @@ async def get_all_courses_with_colleges(
             "scope": row['scope'] or '',
             "job_profile": row['job_profile'] or '',
             "total_fees": row['total_fees'] or '',
+            "category": row.get('course_category') or '',
             "college": {
                 "id": f"c-{row['collegeid']}",
                 "name": row['college_name'] or '',

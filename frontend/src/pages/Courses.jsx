@@ -191,6 +191,8 @@ export default function Courses() {
       if (selectedState && selectedState !== 'all') params.state = selectedState;
       if (selectedCity && selectedCity !== 'all') params.city = selectedCity;
       if (selectedCourseName && selectedCourseName !== 'all') params.course_name = selectedCourseName;
+      // Category filter - server-side
+      if (selectedCategory && selectedCategory !== 'all') params.category = selectedCategory;
       
       // Fee range filter - server-side
       if (selectedFeeRange && selectedFeeRange !== 'all') {
@@ -223,7 +225,7 @@ export default function Courses() {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, addressSearchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedFeeRange, pageSize]);
+  }, [searchQuery, addressSearchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedCategory, selectedFeeRange, pageSize]);
 
   useEffect(() => {
     fetchFilters();
@@ -232,7 +234,7 @@ export default function Courses() {
   useEffect(() => {
     fetchCourses(1);
     setCurrentPage(1);
-  }, [searchQuery, addressSearchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedFeeRange]);
+  }, [searchQuery, addressSearchQuery, selectedLevel, selectedState, selectedCity, selectedCourseName, selectedCategory, selectedFeeRange]);
 
   // Handle page change
   const handlePageChange = (page) => {
@@ -241,14 +243,9 @@ export default function Courses() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Filter courses (client-side only for category which is not in MySQL, also address for client-side fallback)
+  // Filter courses (client-side only for address fallback if server-side doesn't support it)
   const filteredCourses = useMemo(() => {
     let result = courses;
-
-    // Category filter - still client-side as it's not in MySQL schema
-    if (selectedCategory !== 'all') {
-      result = result.filter(c => c.category === selectedCategory);
-    }
 
     // Address search - client-side fallback if server-side doesn't support it
     if (addressSearchQuery && result.length > 0) {
@@ -261,7 +258,7 @@ export default function Courses() {
     }
 
     return result;
-  }, [courses, selectedCategory, addressSearchQuery]);
+  }, [courses, addressSearchQuery]);
 
   // Get unique course names for the Course filter dropdown
   const uniqueCourseNames = useMemo(() => {
