@@ -1671,15 +1671,63 @@ export class CompareclgService {
     );
   }
 
+  // ============================================================
+  // LEAD GENERATION API METHODS
+  // ============================================================
 
+  /**
+   * Submit general enquiry (scholarship/management seat)
+   */
+  public submitEnquiry(data: any): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}Common/submitEnquiry`,
+      {
+        ...data,
+        defaultToken: localStorage.getItem('defaultToken')
+      }
+    );
+  }
 
-  //  public abc(email): Observable<any> {
-  //   // console.log(clgId)   
-  //   return this._httpClient.post(
-  //     `https://coderlab.cdrlb.com/PropertyReselling/api/login`,
-  //     {
-  //       email:email
-  //     }
-  //   );
-  // }
+  /**
+   * Submit management seat enquiry
+   */
+  public submitManagementEnquiry(data: any): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}ManagementSeat/saveManagementSeatForm`,
+      {
+        studentname: data.name,
+        mobile: data.phone,
+        email: data.email || '',
+        college_id: data.college_id || '',
+        college_name: data.college_name || '',
+        course_name: data.course_name || '',
+        source: data.source || 'website',
+        defaultToken: localStorage.getItem('defaultToken')
+      }
+    );
+  }
+
+  /**
+   * Get course list for forms (simple version without search)
+   */
+  public getCoursesForForms(): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}Common/getCourseList`,
+      { defaultToken: localStorage.getItem('defaultToken') }
+    );
+  }
+
+  /**
+   * Submit scholarship eligibility check
+   */
+  public checkScholarshipEligibility(data: any): Observable<any> {
+    return this._httpClient.post(
+      `${this.apiurl}Common/checkScholarshipEligibility`,
+      {
+        ...data,
+        defaultToken: localStorage.getItem('defaultToken')
+      }
+    );
+  }
 }
+

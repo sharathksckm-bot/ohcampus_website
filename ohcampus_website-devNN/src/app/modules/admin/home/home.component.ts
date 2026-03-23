@@ -40,9 +40,9 @@ export class HomeComponent implements OnInit {
   public cityFilterCtrl: FormControl = new FormControl();
 
   private _onDestroy = new Subject<void>();
-  public courseTypeFilter: ReplaySubject<[]> = new ReplaySubject<[]>(1);
-  public stateTypeFilter: ReplaySubject<[]> = new ReplaySubject<[]>(1);
-  public cityTypeFilter: ReplaySubject<[]> = new ReplaySubject<[]>(1);
+  public courseTypeFilter: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  public stateTypeFilter: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  public cityTypeFilter: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
 
   projectcountstop: any = setInterval(() => {
     this.collegecount = this.collegecount + 10;
@@ -98,6 +98,15 @@ export class HomeComponent implements OnInit {
   eventId: any;
   selectedcourse: any;
   footernotoficationArr: any = [];
+
+  // ============================================================
+  // LEAD GENERATION PROPERTIES
+  // ============================================================
+  showScholarshipPopup = false;
+  showManagementPopup = false;
+  leadPopupType: 'scholarship' | 'management' = 'scholarship';
+  // ============================================================
+
   constructor(
     private _formBuilder: FormBuilder,
     private CompareclgService: CompareclgService,
@@ -243,7 +252,7 @@ export class HomeComponent implements OnInit {
   //gET fEATURED cOLEGE List
   getFeaturedColleges() {
     this.CompareclgService.getFeaturedColleges().subscribe(res => {
-      this.featuredClgArr = res.data;
+      this.featuredClgArr = res?.data || [];
       // this.featuredClgArr.slice(0, 8);
     })
   }
@@ -260,7 +269,7 @@ export class HomeComponent implements OnInit {
   //Get Treanding College List
   getTrendingClgs() {
     this.CompareclgService.getTrendingColleges().subscribe(res => {
-      this.trendingClgArr = res.trendingClg;
+      this.trendingClgArr = res?.trendingClg || [];
       console.log(this.trendingClgArr)
     })
   }
@@ -284,51 +293,55 @@ export class HomeComponent implements OnInit {
 
   getBlogs() {
     this.CompareclgService.getBlogsbyCat(this.searchCategory, '').subscribe(res => {
-      this.ArticleArr = res.response_data;
-      // console.log(this.ArticleArr)
-      this.articleimage = this.ArticleArr[0].image;
-      this.articleTitle = this.ArticleArr[0].title;
-      this.articleId = this.ArticleArr[0].id;
-      this.articlepost_rate_date = this.ArticleArr[0].updated_date;
+      this.ArticleArr = res?.response_data || [];
+      if (this.ArticleArr.length > 0) {
+        this.articleimage = this.ArticleArr[0]?.image || '';
+        this.articleTitle = this.ArticleArr[0]?.title || '';
+        this.articleId = this.ArticleArr[0]?.id || '';
+        this.articlepost_rate_date = this.ArticleArr[0]?.updated_date || '';
 
-      this.ArticleArr.splice(0, 1);
-      // console.log(this.ArticleArr)
+        this.ArticleArr.splice(0, 1);
+      }
     })
   }
 
   //get Events
   getEvents() {
     this.CompareclgService.getEvents('').subscribe(res => {
-      this.eventsArr = res.response_data;
-      this.eventName = this.eventsArr[0].event_name;
-      this.eventId = this.eventsArr[0].event_id;
-      this.eventImage = this.eventsArr[0].image;
-      this.eventStartDate = this.eventsArr[0].event_start_date;
-      this.eventEndDate = this.eventsArr[0].event_end_date;
+      this.eventsArr = res?.response_data || [];
+      if (this.eventsArr.length > 0) {
+        this.eventName = this.eventsArr[0]?.event_name || '';
+        this.eventId = this.eventsArr[0]?.event_id || '';
+        this.eventImage = this.eventsArr[0]?.image || '';
+        this.eventStartDate = this.eventsArr[0]?.event_start_date || '';
+        this.eventEndDate = this.eventsArr[0]?.event_end_date || '';
+      }
     })
   }
 
   //get category
   getCategory() {
     this.CompareclgService.getCategory().subscribe(res => {
-      this.categoryArr = res.response_data;
+      this.categoryArr = res?.response_data || [];
     })
   }
 
   //Get Tab data
   onTabChange(event: any): void {
-    this.catId = this.categoryArr[event.index].id;
-    this.imagebyCat = this.categoryArr[event.index].catname
-    this.selectedCategoryId = event.tab?.categoryId;
-    if (this.selectedCategoryId !== null) {
-      this.getCoursesByCatId(this.catId);
+    if (this.categoryArr && this.categoryArr.length > event.index) {
+      this.catId = this.categoryArr[event.index]?.id;
+      this.imagebyCat = this.categoryArr[event.index]?.catname;
+      this.selectedCategoryId = event.tab?.categoryId;
+      if (this.selectedCategoryId !== null) {
+        this.getCoursesByCatId(this.catId);
+      }
     }
   }
 
   //Get course by category
   getCoursesByCatId(categoryId) {
     this.CompareclgService.getCoursesByCatId(categoryId).subscribe(res => {
-      this.CourseByCatArr = res.data
+      this.CourseByCatArr = res?.data || [];
     })
   }
 
@@ -395,13 +408,13 @@ export class HomeComponent implements OnInit {
 
   getCourseCategory() {
     this.CompareclgService.getCourseCategory().subscribe(res => {
-      this.CourseCategoryArr = res.data;
+      this.CourseCategoryArr = res?.data || [];
     })
   }
 
 
   private coursefilter() {
-    if (!this.CoursesArr) {
+    if (!this.CoursesArr || !Array.isArray(this.CoursesArr)) {
       return;
     }
 
@@ -416,12 +429,12 @@ export class HomeComponent implements OnInit {
     // filter the banks
 
     this.courseTypeFilter.next(
-      this.CoursesArr.filter(bank => bank.name.toLowerCase().indexOf(search) > -1)
+      this.CoursesArr.filter(bank => bank?.name?.toLowerCase()?.indexOf(search) > -1)
     );
   }
 
   private statefilter() {
-    if (!this.stateArr) {
+    if (!this.stateArr || !Array.isArray(this.stateArr)) {
       return;
     }
 
@@ -436,12 +449,12 @@ export class HomeComponent implements OnInit {
     // filter the banks
 
     this.stateTypeFilter.next(
-      this.stateArr.filter(bank => bank.statename.toLowerCase().indexOf(search) > -1)
+      this.stateArr.filter(bank => bank?.statename?.toLowerCase()?.indexOf(search) > -1)
     );
   }
 
   private cityfilter() {
-    if (!this.cityArr) {
+    if (!this.cityArr || !Array.isArray(this.cityArr)) {
       return;
     }
 
@@ -456,7 +469,7 @@ export class HomeComponent implements OnInit {
     // filter the banks
 
     this.cityTypeFilter.next(
-      this.cityArr.filter(bank => bank.city.toLowerCase().indexOf(search) > -1)
+      this.cityArr.filter(bank => bank?.city?.toLowerCase()?.indexOf(search) > -1)
     );
   }
 
@@ -465,14 +478,14 @@ export class HomeComponent implements OnInit {
     this.courseLoader = true;
     this.CompareclgService.getCourseByCategory(this.EnquiryForm.value.course_category, '').subscribe(res => {
       this.courseLoader = false;
-      this.CoursesArr = res.data;
+      this.CoursesArr = res?.data || [];
       this.courseTypeFilter.next(this.CoursesArr.slice());
     })
   }
 
   getStateList() {
     this.CompareclgService.getStateList('').subscribe(res => {
-      this.stateArr = res.data;
+      this.stateArr = res?.data || [];
       this.stateTypeFilter.next(this.stateArr.slice());
     })
   }
@@ -491,7 +504,7 @@ export class HomeComponent implements OnInit {
 
   getCityByState() {
     this.CompareclgService.getCityByState('', this.EnquiryForm.value.state).subscribe(res => {
-      this.cityArr = res.data;
+      this.cityArr = res?.data || [];
       this.cityTypeFilter.next(this.cityArr.slice());
     })
   }
@@ -522,7 +535,7 @@ export class HomeComponent implements OnInit {
 
   getTrendingSpecilization() {
     this.CompareclgService.getTrendingSpecilization().subscribe(res => {
-      this.TrendingSpecilizationArr = res.TrendingSpecilization;
+      this.TrendingSpecilizationArr = res?.TrendingSpecilization || [];
     })
   }
 
@@ -532,7 +545,7 @@ export class HomeComponent implements OnInit {
 
   getlistofCertificate() {
     this.CompareclgService.getlistofCertificate().subscribe(res => {
-      this.certificatesArr = res.certificates;
+      this.certificatesArr = res?.certificates || [];
     })
   }
 
@@ -558,7 +571,7 @@ export class HomeComponent implements OnInit {
   getfooterNotification() {
     this.CompareclgService.getfooterNotification().subscribe((res) => {
       console.log(res);
-      if (res.response_code == 200) {
+      if (res?.response_code == 200 && res?.response_data?.length > 0) {
         this.footernotoficationArr = res.response_data[0];
       }
       else{
@@ -566,4 +579,42 @@ export class HomeComponent implements OnInit {
       }
     })
   }
+
+  // ============================================================
+  // LEAD GENERATION METHODS
+  // ============================================================
+  
+  openScholarshipForm(): void {
+    this.leadPopupType = 'scholarship';
+    this.showScholarshipPopup = true;
+    this.trackLeadEvent('scholarship_popup_opened');
+  }
+
+  openManagementSeatForm(): void {
+    this.leadPopupType = 'management';
+    this.showManagementPopup = true;
+    this.trackLeadEvent('management_popup_opened');
+  }
+
+  closeLeadPopup(): void {
+    this.showScholarshipPopup = false;
+    this.showManagementPopup = false;
+  }
+
+  onLeadSubmitted(data: any): void {
+    console.log('Lead submitted:', data);
+    this.trackLeadEvent('lead_submitted', data.type);
+  }
+
+  private trackLeadEvent(eventName: string, label?: string): void {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', eventName, {
+        'event_category': 'lead_generation',
+        'event_label': label || 'homepage'
+      });
+    }
+  }
+  // ============================================================
 }
+
+declare function gtag(...args: any[]): void;

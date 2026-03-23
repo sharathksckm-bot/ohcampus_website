@@ -1,0 +1,61 @@
+<!-- Management Seat Quick Form -->
+<div class="management-seat-form" [class.variant-inline]="variant === 'inline'" [class.variant-card]="variant === 'card'">
+  
+  <!-- Success State -->
+  <div class="success-state" *ngIf="isSuccess">
+    <mat-icon>check_circle</mat-icon>
+    <span>Thank you! We'll contact you soon.</span>
+    <button class="whatsapp-mini-btn" (click)="onWhatsAppClick()">
+      <i class="fab fa-whatsapp"></i>
+      Get Instant Response
+    </button>
+  </div>
+
+  <!-- Form State -->
+  <ng-container *ngIf="!isSuccess">
+    <div class="form-header">
+      <div class="header-icon">
+        <mat-icon>assignment_turned_in</mat-icon>
+      </div>
+      <div class="header-text">
+        <h4>Get Management Seat Assistance</h4>
+        <p *ngIf="!collegeName">Limited Quota Seats Available</p>
+        <p *ngIf="collegeName">{{ collegeName }}</p>
+      </div>
+    </div>
+
+    <div class="benefits-mini">
+      <span><mat-icon>check</mat-icon> Direct Admission</span>
+      <span><mat-icon>check</mat-icon> Expert Counseling</span>
+    </div>
+
+    <form [formGroup]="quickForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="input-group">
+          <mat-icon>person</mat-icon>
+          <input type="text" formControlName="name" placeholder="Your Name *">
+        </div>
+        <div class="input-group">
+          <mat-icon>phone</mat-icon>
+          <input type="tel" formControlName="phone" placeholder="Phone Number *" maxlength="10">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+        <mat-spinner *ngIf="isSubmitting" diameter="18"></mat-spinner>
+        <span *ngIf="!isSubmitting">Get Free Counseling</span>
+      </button>
+    </form>
+
+    <div class="form-footer">
+      <span class="privacy-note">
+        <mat-icon>lock</mat-icon>
+        Your data is 100% secure
+      </span>
+      <button class="whatsapp-link" (click)="onWhatsAppClick()">
+        <i class="fab fa-whatsapp"></i>
+        WhatsApp
+      </button>
+    </div>
+  </ng-container>
+</div>

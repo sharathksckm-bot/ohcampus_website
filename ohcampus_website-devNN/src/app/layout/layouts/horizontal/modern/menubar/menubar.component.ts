@@ -84,9 +84,9 @@ export class MenubarComponent implements OnInit {
 
   getCategoryList() {
     this.CompareclgService.getCategoryForMenu().subscribe(res => {
-      this.categoryArr = res.response_data;
+      this.categoryArr = res?.response_data || [];
       // if (this.categoryArr.length > 4) {
-        this.categoryArrMore = this.categoryArr.slice(4);
+        this.categoryArrMore = this.categoryArr.slice(4) || [];
     // }
       // this.remainingData=this.categoryArrMore.slice(6);
       // console.log(this.categoryArrMore);
@@ -95,8 +95,7 @@ export class MenubarComponent implements OnInit {
 
   getCityList() {
     this.CompareclgService.getCityList().subscribe(res => {
-      this.cityArr = res.data;
-
+      this.cityArr = res?.data || [];
     })
   }
 

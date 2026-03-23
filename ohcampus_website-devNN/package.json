@@ -7,9 +7,9 @@
     "private": true,
     "scripts": {
         "ng": "ng",
-        "start": "cross-env NODE_OPTIONS='--max-old-space-size=16384' ng serve",
-        "build": "cross-env NODE_OPTIONS='--max-old-space-size=16384' ng build",
-        "build-prod": "cross-env NODE_OPTIONS='--max-old-space-size=16384' ng build --prod",
+        "start": "cross-env NODE_OPTIONS='--max-old-space-size=16384 --openssl-legacy-provider' ng serve",
+        "build": "cross-env NODE_OPTIONS='--max-old-space-size=16384 --openssl-legacy-provider' ng build",
+        "build-prod": "cross-env NODE_OPTIONS='--max-old-space-size=16384 --openssl-legacy-provider' ng build --prod",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
         "lint": "ng lint"

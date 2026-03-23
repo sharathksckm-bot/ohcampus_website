@@ -241,7 +241,7 @@
                         <div class="flex flex-col flex-auto lg:col-span-1 md:col-span-2">
                             <fuse-card class="flex flex-col w-full px-3 md:px-8 md:px-8 pt-6 pb-4 filter-list">
                                 <div class="flex flex-col overflow-y-auto" style="height:500px;">
-                                    <div class="flex items-center mt-6" *ngFor="let article of ArticleArr | slice:0:5">
+                                    <div class="flex items-center mt-6" *ngFor="let article of (ArticleArr?.length > 0 ? (ArticleArr | slice:0:5) : [])">
                                         <img class="w-14 h-14 mr-4 rounded object-cover" [src]="article?.image">
                                         <div class="flex flex-col min-w-0">
                                             <div class="font-medium leading-none cursor-pointer article"
@@ -281,7 +281,7 @@
                             <fuse-card class="flex flex-col w-full px-8 pt-6 pb-4 filter-list">
 
                                 <div class="flex flex-col overflow-y-auto" style="height:500px;">
-                                    <div class="flex items-center  mt-6 " *ngFor="let event of  eventsArr | slice :0:5">
+                                    <div class="flex items-center  mt-6 " *ngFor="let event of (eventsArr?.length > 0 ? (eventsArr | slice:0:5) : [])">
                                         <img class="w-14 h-14 mr-4 rounded object-cover" [src]="event?.image">
                                         <div class="flex flex-col min-w-0">
                                             <div class="font-semibold leading-none cursor-pointer article"
@@ -314,7 +314,7 @@
                     <div class="contentSec bg-card rounded-lg p-8 py-10 ">
                         <p class="text-3xl font-semibold">Trending Specializations</p>
                         <p>Elevate your skill game with more than 11,000 courses from 470+ Specializations</p>
-                        <ul class="taglist mt-2">
+                        <ul class="taglist mt-2" *ngIf="TrendingSpecilizationArr?.length > 0">
                             <li *ngFor="let item of TrendingSpecilizationArr| slice: 0:itemsToShow ; let i = index">
                                 <a class="capsule capsule--blue ripple"
                                     (click)="getcourseList(item.keyword)">{{item.keyword}}</a>
@@ -338,7 +338,7 @@
                     <div class="contentSec bg-card rounded-lg p-8 py-10">
                         <p class="text-3xl font-semibold">Trending Certifications</p>
                         <p>Gain Professional expertise with online courses to amplify your employbility</p>
-                        <ul class="taglist mt-2">
+                        <ul class="taglist mt-2" *ngIf="certificatesArr?.length > 0">
                             <li *ngFor="let item of certificatesArr| slice: 0:certificateToShow ; let i = index">
                                 <a class="capsule capsule--blue ripple"
                                     (click)="getCertificate(item.id)">{{item.name}}</a>
@@ -590,7 +590,7 @@
 
 
         <!-- <div class="fixed text-center" style="width: 100%;bottom:3%;z-index: 111;">
-           <button class="btn-primary px-10" mat-flat-button color="primary"> <a href="https://predictor.ohcampus.com" target="_blank" >KCET 2025 College Predictor For Free</a></button>
+           <button class="btn-primary px-10" mat-flat-button color="primary"> <a href="https://predictor.ohcampus.com" target="_blank" >KCET 2026 College Predictor For Free</a></button>
        </div> -->
         <a *ngIf="footernotoficationArr != ''"   [href]="footernotoficationArr.link" target="_blank"
             class="botomtxt">{{footernotoficationArr.notification_text}}</a>

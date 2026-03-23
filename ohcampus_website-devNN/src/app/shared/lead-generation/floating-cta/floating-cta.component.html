@@ -1,0 +1,59 @@
+<!-- Floating CTA Container -->
+<div class="floating-cta-container" [@slideIn]="isVisible ? 'visible' : 'hidden'">
+  
+  <!-- Main CTA Button -->
+  <div class="main-cta" [@pulse]="pulseState" (click)="toggleExpand()">
+    <div class="cta-content" *ngIf="!isExpanded">
+      <ng-container *ngIf="currentCTA === 'scholarship'">
+        <mat-icon class="cta-icon">school</mat-icon>
+        <span class="cta-text">Get Scholarship</span>
+      </ng-container>
+      <ng-container *ngIf="currentCTA === 'management'">
+        <mat-icon class="cta-icon">assignment</mat-icon>
+        <span class="cta-text">Management Seat</span>
+      </ng-container>
+    </div>
+    <mat-icon *ngIf="isExpanded" class="close-icon">close</mat-icon>
+  </div>
+
+  <!-- Expanded Options -->
+  <div class="expanded-options" *ngIf="isExpanded">
+    <button class="option-btn scholarship-btn" (click)="onScholarshipClick()">
+      <mat-icon>school</mat-icon>
+      <div class="btn-content">
+        <span class="btn-title">Apply for Scholarship</span>
+        <span class="btn-subtitle">Up to ₹2 Lakhs</span>
+      </div>
+    </button>
+    
+    <button class="option-btn management-btn" (click)="onManagementSeatClick()">
+      <mat-icon>assignment_turned_in</mat-icon>
+      <div class="btn-content">
+        <span class="btn-title">Get Management Seat</span>
+        <span class="btn-subtitle">Limited Seats Available</span>
+      </div>
+    </button>
+    
+    <button class="option-btn whatsapp-btn" (click)="onWhatsAppClick()">
+      <i class="fab fa-whatsapp"></i>
+      <div class="btn-content">
+        <span class="btn-title">WhatsApp Us</span>
+        <span class="btn-subtitle">Quick Response</span>
+      </div>
+    </button>
+    
+    <button class="option-btn call-btn" (click)="onCallClick()">
+      <mat-icon>phone</mat-icon>
+      <div class="btn-content">
+        <span class="btn-title">Call Now</span>
+        <span class="btn-subtitle">Free Counseling</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Urgency Badge -->
+  <div class="urgency-badge" *ngIf="!isExpanded">
+    <span class="pulse-dot"></span>
+    <span>Limited Seats!</span>
+  </div>
+</div>

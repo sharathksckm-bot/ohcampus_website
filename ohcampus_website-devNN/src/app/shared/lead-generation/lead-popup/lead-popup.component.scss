@@ -1,0 +1,411 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.popup-container {
+  background: white;
+  border-radius: 20px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.4s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  mat-icon {
+    font-size: 20px;
+    color: #333;
+  }
+
+  &:hover {
+    background: white;
+    transform: rotate(90deg);
+  }
+}
+
+.popup-header {
+  padding: 30px 25px 20px;
+  text-align: center;
+  border-radius: 20px 20px 0 0;
+
+  &.scholarship {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  &.management {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  .header-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+  }
+
+  h2 {
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.benefits-list {
+  padding: 20px 25px 10px;
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #4caf50;
+    }
+
+    span {
+      font-size: 13px;
+      color: #555;
+    }
+  }
+}
+
+.urgency-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff3cd;
+  padding: 10px 15px;
+  margin: 0 25px 15px;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+
+  mat-icon {
+    font-size: 18px;
+    color: #856404;
+  }
+
+  span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #856404;
+  }
+}
+
+form {
+  padding: 0 25px;
+
+  .form-group {
+    margin-bottom: 12px;
+
+    &.optional {
+      margin-bottom: 20px;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  mat-form-field {
+    ::ng-deep {
+      .mat-form-field-wrapper {
+        margin: 0;
+        padding: 0;
+      }
+
+      .mat-form-field-prefix {
+        margin-right: 8px;
+        color: #888;
+      }
+    }
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #9bd61e 0%, #7ab318 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(155, 214, 30, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  mat-spinner {
+    ::ng-deep circle {
+      stroke: white;
+    }
+  }
+}
+
+.trust-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px 25px;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: #4caf50;
+    }
+
+    span {
+      font-size: 11px;
+      color: #777;
+    }
+  }
+}
+
+.whatsapp-alternative {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 25px 25px;
+
+  span {
+    font-size: 13px;
+    color: #888;
+  }
+
+  .whatsapp-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #25d366;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: #128c7e;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Success State
+.success-state {
+  padding: 50px 30px;
+  text-align: center;
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: scaleIn 0.5s ease;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: white;
+    }
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 10px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 25px;
+  }
+
+  .whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #25d366;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 20px;
+    }
+
+    &:hover {
+      background: #128c7e;
+    }
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Mobile Responsive
+@media (max-width: 480px) {
+  .popup-container {
+    max-width: 100%;
+    margin: 10px;
+    border-radius: 15px;
+  }
+
+  .popup-header {
+    padding: 25px 20px 15px;
+    border-radius: 15px 15px 0 0;
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+
+  .benefits-list {
+    padding: 15px 20px 10px;
+  }
+
+  .urgency-banner {
+    margin: 0 20px 15px;
+  }
+
+  form {
+    padding: 0 20px;
+  }
+
+  .trust-indicators {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 20px;
+  }
+
+  .whatsapp-alternative {
+    padding: 15px 20px 20px;
+  }
+
+  .success-state {
+    padding: 40px 20px;
+  }
+}

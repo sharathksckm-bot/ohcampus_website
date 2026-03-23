@@ -1,0 +1,82 @@
+<!-- Hero Scholarship Banner Section -->
+<section class="scholarship-hero-banner">
+  <div class="banner-content">
+    <!-- Left Content -->
+    <div class="banner-left">
+      <div class="badge">
+        <mat-icon>local_offer</mat-icon>
+        <span>Limited Time Offer</span>
+      </div>
+      
+      <h1>Get Scholarships &amp; Secure Your Management Seat Today</h1>
+      
+      <p class="subtitle">
+        Don't miss the opportunity to study at top colleges with scholarships up to ₹2 Lakhs. 
+        Limited management quota seats available for 2026-27 admissions.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="cta-buttons">
+        <button class="btn-primary" (click)="onApplyScholarship()">
+          <mat-icon>school</mat-icon>
+          Apply for Scholarship
+        </button>
+        <button class="btn-secondary" (click)="onApplyManagementSeat()">
+          <mat-icon>assignment_turned_in</mat-icon>
+          Get Management Seat Assistance
+        </button>
+      </div>
+
+      <!-- Trust Indicators -->
+      <div class="trust-badges">
+        <div class="badge-item">
+          <mat-icon>verified</mat-icon>
+          <span>100% Free Counseling</span>
+        </div>
+        <div class="badge-item">
+          <mat-icon>speed</mat-icon>
+          <span>Quick Processing</span>
+        </div>
+        <div class="badge-item">
+          <mat-icon>support_agent</mat-icon>
+          <span>Expert Guidance</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Content - Stats -->
+    <div class="banner-right">
+      <div class="stats-card">
+        <div class="card-header">
+          <mat-icon>trending_up</mat-icon>
+          <span>Our Impact</span>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item" *ngFor="let stat of trustStats">
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        </div>
+        
+        <!-- Urgency Message -->
+        <div class="urgency-box">
+          <div class="pulse-indicator"></div>
+          <span>Limited Seats Available for 2026-27!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scholarship Types Row -->
+  <div class="scholarship-types">
+    <div class="type-card" *ngFor="let item of scholarshipHighlights">
+      <div class="type-icon">
+        <mat-icon>{{ item.icon }}</mat-icon>
+      </div>
+      <div class="type-content">
+        <h4>{{ item.title }}</h4>
+        <p>{{ item.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>

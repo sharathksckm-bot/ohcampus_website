@@ -1,0 +1,112 @@
+<!-- Lead Popup Overlay -->
+<div class="popup-overlay" *ngIf="isVisible" (click)="closePopup()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    
+    <!-- Close Button -->
+    <button class="close-btn" (click)="closePopup()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <!-- Success State -->
+    <div class="success-state" *ngIf="isSuccess">
+      <div class="success-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <h3>Thank You!</h3>
+      <p>Our counselor will contact you within 24 hours.</p>
+      <button class="whatsapp-btn" (click)="onWhatsAppClick()">
+        <i class="fab fa-whatsapp"></i>
+        Get Instant Response on WhatsApp
+      </button>
+    </div>
+
+    <!-- Form State -->
+    <div class="form-state" *ngIf="!isSuccess">
+      <!-- Header -->
+      <div class="popup-header" [class.scholarship]="type === 'scholarship'" [class.management]="type === 'management'">
+        <div class="header-icon">
+          <mat-icon *ngIf="type === 'scholarship'">school</mat-icon>
+          <mat-icon *ngIf="type === 'management'">assignment_turned_in</mat-icon>
+        </div>
+        <h2>{{ title }}</h2>
+        <p>{{ subtitle }}</p>
+      </div>
+
+      <!-- Benefits -->
+      <div class="benefits-list">
+        <div class="benefit-item" *ngFor="let benefit of benefits">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ benefit }}</span>
+        </div>
+      </div>
+
+      <!-- Urgency Banner -->
+      <div class="urgency-banner">
+        <mat-icon>schedule</mat-icon>
+        <span *ngIf="type === 'scholarship'">Early bird deadline approaching!</span>
+        <span *ngIf="type === 'management'">Only few seats remaining!</span>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Your Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter your full name">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="leadForm.get('name')?.hasError('required')">Name is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone" placeholder="10-digit mobile number" maxlength="10">
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error *ngIf="leadForm.get('phone')?.hasError('required')">Phone is required</mat-error>
+            <mat-error *ngIf="leadForm.get('phone')?.hasError('pattern')">Enter valid 10-digit number</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group optional">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Course Interest (Optional)</mat-label>
+            <mat-select formControlName="course">
+              <mat-option value="">Select course</mat-option>
+              <mat-option *ngFor="let course of courses" [value]="course.id">
+                {{ course.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>school</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+          <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+          <span *ngIf="!isSubmitting">{{ ctaText }}</span>
+        </button>
+      </form>
+
+      <!-- Trust Indicators -->
+      <div class="trust-indicators">
+        <div class="trust-item">
+          <mat-icon>verified</mat-icon>
+          <span>100% Free Counseling</span>
+        </div>
+        <div class="trust-item">
+          <mat-icon>security</mat-icon>
+          <span>Your data is secure</span>
+        </div>
+      </div>
+
+      <!-- WhatsApp Alternative -->
+      <div class="whatsapp-alternative">
+        <span>Or get instant help on</span>
+        <button class="whatsapp-link" (click)="onWhatsAppClick()">
+          <i class="fab fa-whatsapp"></i>
+          WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 const homeRoutes: Route[] = [
   {
       path     : '',

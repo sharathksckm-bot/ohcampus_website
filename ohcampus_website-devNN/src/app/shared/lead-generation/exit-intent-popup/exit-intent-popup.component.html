@@ -1,0 +1,74 @@
+<!-- Exit Intent Popup -->
+<div class="exit-popup-overlay" *ngIf="isVisible" (click)="closePopup()">
+  <div class="exit-popup-container" (click)="$event.stopPropagation()">
+    
+    <button class="close-btn" (click)="closePopup()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <!-- Success State -->
+    <div class="success-state" *ngIf="isSuccess">
+      <div class="success-icon">
+        <mat-icon>celebration</mat-icon>
+      </div>
+      <h3>Awesome!</h3>
+      <p>Our scholarship expert will call you shortly.</p>
+    </div>
+
+    <!-- Form State -->
+    <ng-container *ngIf="!isSuccess">
+      <div class="popup-content">
+        <div class="offer-badge">
+          <mat-icon>local_offer</mat-icon>
+          <span>EXCLUSIVE OFFER</span>
+        </div>
+
+        <div class="gift-icon">
+          <mat-icon>card_giftcard</mat-icon>
+        </div>
+
+        <h2>Wait! Don't Miss Out!</h2>
+        <p class="main-text">
+          Unlock <strong>Scholarship Opportunities</strong> worth up to 
+          <span class="highlight">₹2 Lakhs</span>
+        </p>
+
+        <p class="sub-text">
+          Get free counseling &amp; scholarship guidance. Just enter your number!
+        </p>
+
+        <form [formGroup]="quickForm" (ngSubmit)="onSubmit()">
+          <div class="input-wrapper">
+            <span class="country-code">+91</span>
+            <input type="tel" formControlName="phone" placeholder="Enter Mobile Number" maxlength="10">
+          </div>
+          <div class="error-msg" *ngIf="quickForm.get('phone')?.touched && quickForm.get('phone')?.invalid">
+            Please enter a valid 10-digit number
+          </div>
+
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+            <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+            <span *ngIf="!isSubmitting">
+              <mat-icon>school</mat-icon>
+              Get Free Scholarship Info
+            </span>
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <button class="whatsapp-btn" (click)="onWhatsAppClick()">
+          <i class="fab fa-whatsapp"></i>
+          Chat on WhatsApp
+        </button>
+
+        <p class="privacy-note">
+          <mat-icon>lock</mat-icon>
+          We respect your privacy. No spam, ever.
+        </p>
+      </div>
+    </ng-container>
+  </div>
+</div>
