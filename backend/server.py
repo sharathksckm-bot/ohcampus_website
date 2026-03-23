@@ -861,7 +861,8 @@ async def get_courses_with_college(
     fee_min: Optional[int] = None,
     fee_max: Optional[int] = None,
     state: Optional[str] = None,
-    city: Optional[str] = None
+    city: Optional[str] = None,
+    address: Optional[str] = None
 ):
     """Get all courses with their college information - MySQL with pagination and filters"""
     try:
@@ -878,7 +879,8 @@ async def get_courses_with_college(
             fee_max=fee_max,
             state=state,
             city=city,
-            course_name=course_name
+            course_name=course_name,
+            address=address
         )
         
         # Enrich courses with MongoDB fee data for fee range filtering
@@ -2822,8 +2824,8 @@ async def get_counselor_short_link(current_user: dict = Depends(get_current_user
             "click_count": 0
         })
     
-    # Generate the short link URL
-    short_link_url = f"https://ohcampus.com/s/{short_code}"
+    # Generate the short link URL - use the counselor portal API
+    short_link_url = f"https://counselor.ohcampus.com/api/s/{short_code}"
     
     return {
         "short_link": short_link_url,

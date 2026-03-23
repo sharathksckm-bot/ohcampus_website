@@ -573,7 +573,8 @@ async def get_all_courses_with_colleges(
     fee_max: Optional[int] = None,
     state: Optional[str] = None,
     city: Optional[str] = None,
-    course_name: Optional[str] = None
+    course_name: Optional[str] = None,
+    address: Optional[str] = None
 ) -> Dict[str, Any]:
     """Fetch courses from featured colleges with pagination and filters"""
     
@@ -609,6 +610,7 @@ async def get_all_courses_with_colleges(
             ac.name as academic_level,
             col.title as college_name,
             col.accreditation,
+            col.address as college_address,
             s.statename as state,
             ct.city as city
         FROM college_course cc
@@ -678,6 +680,14 @@ async def get_all_courses_with_colleges(
         params.append(course_name)
         count_params.append(course_name)
     
+    # Address filter (partial match on college address)
+    if address:
+        address_condition = " AND (col.address LIKE %s OR ct.city LIKE %s OR s.statename LIKE %s)"
+        query += address_condition
+        count_query += address_condition
+        params.extend([f"%{address}%", f"%{address}%", f"%{address}%"])
+        count_params.extend([f"%{address}%", f"%{address}%", f"%{address}%"])
+    
     # Get total count
     count_result = await execute_query(count_query, tuple(count_params) if count_params else None)
     total = count_result[0]['total'] if count_result else 0
@@ -708,6 +718,7 @@ async def get_all_courses_with_colleges(
                 "id": f"c-{row['collegeid']}",
                 "name": row['college_name'] or '',
                 "accreditation": row['accreditation'] or '',
+                "address": row.get('college_address') or '',
                 "state": row['state'] or '',
                 "city": row['city'] or ''
             }
