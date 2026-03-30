@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Scholarship Eligibility - OhCampus</title>
+    <meta name="description" content="Check your eligibility to get scholarship up to 2 lakhs at OhCampus.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-dark: #1d4ed8;
+            --accent-green: #88d834;
+            --accent-green-hover: #7bc62e;
+            --text-dark: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-light); min-height: 100vh; }
+        
+        .header { background: var(--bg-white); color: var(--text-dark); padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-dark); }
+        .header-logo img { height: 50px; }
+        .header-nav { display: flex; align-items: center; gap: 8px; }
+        .header-nav a { color: var(--text-dark); text-decoration: none; padding: 0.5rem 1rem; font-weight: 500; opacity: 0.9; transition: all 0.3s; border-radius: 6px; }
+        .header-nav a:hover { opacity: 1; background: rgba(37,99,235,0.1); }
+        .header-btn { background: var(--accent-green); color: var(--text-dark); padding: 0.5rem 1.25rem; border-radius: 6px; font-weight: 600; text-decoration: none; }
+        .header-btn:hover { background: var(--accent-green-hover); }
+        
+        .banner { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%); color: white; padding: 2rem 1rem 1.5rem; text-align: center; }
+        .banner h1 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 500; opacity: 0.95; }
+        .banner .amount { font-size: 3rem; font-weight: 700; color: var(--accent-green); }
+        
+        .container { max-width: 680px; margin: -1rem auto 2rem; padding: 0 1rem; position: relative; z-index: 10; }
+        
+        .progress-container { background: var(--bg-white); border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .progress-header .step-text { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
+        .progress-header .percentage { font-size: 1.25rem; font-weight: 700; color: var(--accent-green); }
+        .progress-bar { background: var(--border); border-radius: 10px; height: 8px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, var(--accent-green), #a3e635); height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+        .step-indicators { display: flex; justify-content: space-between; margin-top: 0.75rem; }
+        .step-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
+        .step-dot.active { background: var(--accent-green); transform: scale(1.3); box-shadow: 0 0 0 3px rgba(136,216,52,0.2); }
+        .step-dot.completed { background: var(--success); }
+        
+        .form-card { background: var(--bg-white); border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; }
+        .form-body { padding: 1.5rem 2rem; }
+        
+        .step { display: none; }
+        .step.active { display: block; }
+        
+        .step-title { text-align: center; margin-bottom: 1.5rem; }
+        .step-title i { font-size: 2rem; color: var(--primary-blue); margin-bottom: 0.5rem; display: block; }
+        .step-title h2 { color: var(--text-dark); font-size: 1.3rem; margin-bottom: 0.25rem; }
+        .step-title p { color: var(--text-secondary); font-size: 0.85rem; }
+        
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--text-dark); font-size: 0.85rem; }
+        .form-group label .required { color: var(--error); }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--border); border-radius: 10px; font-size: 0.95rem; transition: all 0.3s ease; font-family: inherit; background: var(--bg-white); color: var(--text-dark); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .form-group input.error { border-color: var(--error); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .checkbox-item { display: flex; align-items: center; gap: 6px; padding: 0.6rem 1rem; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.3s; background: var(--bg-white); font-size: 0.9rem; }
+        .checkbox-item:hover { border-color: var(--primary-blue); }
+        .checkbox-item.selected { border-color: var(--accent-green); background: rgba(136,216,52,0.1); }
+        .checkbox-item input { display: none; }
+        
+        .radio-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .radio-item { display: flex; align-items: center; gap: 6px; padding: 0.6rem 1rem; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.3s; background: var(--bg-white); font-size: 0.9rem; }
+        .radio-item:hover { border-color: var(--primary-blue); }
+        .radio-item.selected { border-color: var(--accent-green); background: rgba(136,216,52,0.1); }
+        .radio-item input { display: none; }
+        
+        .file-upload { border: 2px dashed var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.3s; background: var(--bg-light); }
+        .file-upload:hover { border-color: var(--primary-blue); background: var(--bg-white); }
+        .file-upload i { font-size: 1.5rem; color: var(--primary-blue); margin-bottom: 0.5rem; }
+        .file-upload p { color: var(--text-secondary); font-size: 0.8rem; }
+        .file-upload input { display: none; }
+        .file-list { margin-top: 0.5rem; }
+        .file-item { display: flex; align-items: center; gap: 8px; padding: 0.5rem 0.75rem; background: var(--bg-light); border-radius: 6px; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-dark); }
+        .file-item .remove { color: var(--error); cursor: pointer; margin-left: auto; }
+        
+        .nav-buttons { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .nav-btn { flex: 1; padding: 0.9rem; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .nav-btn.prev { background: var(--bg-light); color: var(--text-secondary); border: 2px solid var(--border); }
+        .nav-btn.prev:hover { background: var(--border); }
+        .nav-btn.next { background: var(--accent-green); color: var(--text-dark); }
+        .nav-btn.next:hover { background: var(--accent-green-hover); }
+        .nav-btn.submit { background: var(--accent-green); color: var(--text-dark); }
+        .nav-btn.submit:hover { background: var(--accent-green-hover); }
+        
+        .success-container { text-align: center; padding: 2.5rem 2rem; display: none; }
+        .success-container.show { display: block; }
+        .success-icon { width: 70px; height: 70px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+        .success-icon i { font-size: 2rem; color: white; }
+        .success-container h2 { color: var(--text-dark); font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .success-container .app-id { font-size: 1.1rem; color: var(--primary-blue); font-weight: 600; margin: 1rem 0; padding: 0.75rem; background: var(--bg-light); border-radius: 8px; }
+        
+        .loading { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: var(--text-dark); animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .motivation-text { text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-top: 1rem; padding: 0.6rem; background: linear-gradient(135deg, rgba(136,216,52,0.1), rgba(37,99,235,0.1)); border-radius: 8px; }
+        .motivation-text span { color: var(--accent-green); font-weight: 600; }
+        
+        .footer { text-align: center; padding: 1.5rem; color: var(--text-secondary); font-size: 0.8rem; }
+        
+        .college-dropdown { display: none; position: absolute; background: white; border: 1px solid var(--border); border-radius: 8px; max-height: 200px; overflow-y: auto; width: 100%; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .college-dropdown-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .college-dropdown-item:hover { background: var(--bg-light); }
+        
+        @media (max-width: 600px) {
+            .header { padding: 0.75rem 1rem; }
+            .header-logo img { height: 40px; }
+            .header-nav a { padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+            .banner { padding: 1.5rem 1rem 1rem; }
+            .banner .amount { font-size: 2.2rem; }
+            .form-body { padding: 1.25rem; }
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .nav-buttons { flex-direction: column; }
+            .nav-btn.prev { order: 2; }
+            .checkbox-group, .radio-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="header-logo">
+            <img src="/assets/images/logo/ohcampus-logo.png" alt="OhCampus">
+        </a>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <a href="/allCollegeList">Colleges</a>
+            <a href="/courselist">Courses</a>
+            <a href="#" class="header-btn">Sign Up</a>
+        </nav>
+    </header>
+
+    <div class="banner">
+        <h1><i class="fas fa-graduation-cap"></i> Check your eligibility to get scholarship upto</h1>
+        <div class="amount">₹2,00,000</div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="step-text">Step <span id="currentStep">1</span> of 5</span>
+                <span class="percentage"><span id="progressPercent">20</span>% Complete</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+            </div>
+            <div class="step-indicators">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-dot" data-step="3"></div>
+                <div class="step-dot" data-step="4"></div>
+                <div class="step-dot" data-step="5"></div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-body">
+                <div class="success-container" id="successContainer">
+                    <div class="success-icon"><i class="fas fa-check"></i></div>
+                    <h2>Application Submitted!</h2>
+                    <div class="app-id">Application ID: <span id="applicationId"></span></div>
+                    <p>We will review your application and contact you within 24-48 hours.</p>
+                    <p style="margin-top:1rem;color:var(--success);"><i class="fas fa-envelope"></i> Acknowledgement email sent to your email address.</p>
+                </div>
+
+                <form id="scholarshipForm">
+                    <!-- Step 1: Personal Details (20%) -->
+                    <div class="step active" data-step="1">
+                        <div class="step-title">
+                            <i class="fas fa-user-circle"></i>
+                            <h2>Personal Details</h2>
+                            <p>Let's start with your basic information</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="name" id="nameInput" required placeholder="Enter your full name">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Father Name <span class="required">*</span></label>
+                                <input type="text" name="father_name" id="fatherNameInput" required placeholder="Father name">
+                            </div>
+                            <div class="form-group">
+                                <label>Mother Name <span class="required">*</span></label>
+                                <input type="text" name="mother_name" id="motherNameInput" required placeholder="Mother name">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Mobile Number <span class="required">*</span></label>
+                                <input type="tel" name="mobile" id="mobileInput" required placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10">
+                            </div>
+                            <div class="form-group">
+                                <label>Email ID <span class="required">*</span></label>
+                                <input type="email" name="email" id="emailInput" required placeholder="your.email@example.com">
+                            </div>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input type="date" name="dob" id="dobInput">
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select name="gender" id="genderSelect">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>State <span class="required">*</span></label>
+                                <select name="state" id="stateSelect" required>
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>District</label>
+                                <select name="district" id="districtSelect">
+                                    <option value="">Select District</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>City/Town</label>
+                                <input type="text" name="city" id="cityInput" placeholder="Enter your city">
+                            </div>
+                        </div>
+                        <div class="motivation-text">🎯 Great start! <span>4 more steps</span> to check your eligibility.</div>
+                        <div class="nav-buttons">
+                            <button type="button" class="nav-btn next" id="step1Next">Continue <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Academic Details (40%) -->
+                    <div class="step" data-step="2">
+                        <div class="step-title">
+                            <i class="fas fa-book"></i>
+                            <h2>Academic Details</h2>
+                            <p>Tell us about your educational background</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Highest Qualification <span class="required">*</span></label>
+                            <div class="radio-group" id="qualificationGroup">
+                                <label class="radio-item" onclick="selectRadio(this, 'qualification')">
+                                    <input type="radio" name="qualification" value="10th"> 10th
+                                </label>
+                                <label class="radio-item" onclick="selectRadio(this, 'qualification')">
+                                    <input type="radio" name="qualification" value="12th / 2nd PUC"> 12th / 2nd PUC
+                                </label>
+                                <label class="radio-item" onclick="selectRadio(this, 'qualification')">
+                                    <input type="radio" name="qualification" value="Diploma"> Diploma
+                                </label>
+                                <label class="radio-item" onclick="selectRadio(this, 'qualification')">
+                                    <input type="radio" name="qualification" value="UG"> UG
+                                </label>
+                                <label class="radio-item" onclick="selectRadio(this, 'qualification')">
+                                    <input type="radio" name="qualification" value="PG"> PG
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Board / University</label>
+                                <input type="text" name="board_university" id="boardInput" placeholder="e.g., CBSE, Karnataka Board">
+                            </div>
+                            <div class="form-group">
+                                <label>Year of Passing</label>
+                                <select name="passing_year" id="passingYear">
+                                    <option value="">Select Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Percentage / CGPA</label>
+                            <input type="text" name="percentage" id="percentageInput" placeholder="e.g., 85% or 8.5 CGPA">
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Marks Card <span class="required">*</span> (PDF/JPG/PNG, Max 5MB)</label>
+                            <div class="file-upload" id="marksCardUpload" onclick="document.getElementById('marksCardInput').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload or drag and drop</p>
+                                <input type="file" id="marksCardInput" accept=".pdf,.jpg,.jpeg,.png" required onchange="handleFileUpload(this, 'marksCardList', 'marksCardUpload', 'marksCard')">
+                            </div>
+                            <div class="file-list" id="marksCardList"></div>
+                        </div>
+                        <div class="motivation-text">📚 Great! You're <span>halfway there</span> 🎉</div>
+                        <div class="nav-buttons">
+                            <button type="button" class="nav-btn prev" id="step2Prev"><i class="fas fa-arrow-left"></i> Back</button>
+                            <button type="button" class="nav-btn next" id="step2Next">Continue <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Course Preference (60%) -->
+                    <div class="step" data-step="3">
+                        <div class="step-title">
+                            <i class="fas fa-university"></i>
+                            <h2>Course Preference</h2>
+                            <p>What would you like to study?</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Stream <span class="required">*</span></label>
+                            <select name="preferred_stream" id="streamSelect" required onchange="loadCoursesByStream()">
+                                <option value="">Select Stream</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Medicine and Health Sciences">Medicine and Health Sciences</option>
+                                <option value="Management">Management</option>
+                                <option value="Arts and Science">Arts and Science</option>
+                                <option value="Pharmacy">Pharmacy</option>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Paramedical">Paramedical</option>
+                                <option value="Law">Law</option>
+                                <option value="Education">Education</option>
+                                <option value="Design and Architecture">Design and Architecture</option>
+                                <option value="Hotel Management">Hotel Management</option>
+                                <option value="Computer Applications">Computer Applications</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Course <span class="required">*</span></label>
+                            <select name="preferred_course" id="courseSelect" required>
+                                <option value="">Select Stream First</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Entrance Exams Appeared</label>
+                            <div class="checkbox-group" id="entranceExamGroup">
+                                <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                                    <input type="checkbox" name="entrance_exam" value="NEET"> NEET
+                                </label>
+                                <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                                    <input type="checkbox" name="entrance_exam" value="KCET"> KCET
+                                </label>
+                                <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                                    <input type="checkbox" name="entrance_exam" value="JEE"> JEE
+                                </label>
+                                <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                                    <input type="checkbox" name="entrance_exam" value="COMEDK"> COMEDK
+                                </label>
+                                <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                                    <input type="checkbox" name="entrance_exam" value="Others"> Others
+                                </label>
+                            </div>
+                        </div>
+                        <div class="motivation-text">🚀 Just <span>one more step</span> to check your scholarship eligibility!</div>
+                        <div class="nav-buttons">
+                            <button type="button" class="nav-btn prev" id="step3Prev"><i class="fas fa-arrow-left"></i> Back</button>
+                            <button type="button" class="nav-btn next" id="step3Next">Continue <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: College Preference (80%) -->
+                    <div class="step" data-step="4">
+                        <div class="step-title">
+                            <i class="fas fa-building"></i>
+                            <h2>College Preference</h2>
+                            <p>Where would you like to study?</p>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Preferred State</label>
+                                <select name="preferred_state" id="prefStateSelect">
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Preferred City</label>
+                                <input type="text" name="preferred_location" id="prefLocationInput" placeholder="e.g., Bangalore">
+                            </div>
+                        </div>
+                        <div class="form-group" style="position:relative;">
+                            <label>Preferred College (Optional)</label>
+                            <input type="text" name="preferred_college" id="collegeSearch" placeholder="Type college name to search..." autocomplete="off">
+                            <div class="college-dropdown" id="collegeDropdown"></div>
+                        </div>
+                        <div class="motivation-text">🎉 Complete now to know your <span>scholarship benefits</span>!</div>
+                        <div class="nav-buttons">
+                            <button type="button" class="nav-btn prev" id="step4Prev"><i class="fas fa-arrow-left"></i> Back</button>
+                            <button type="button" class="nav-btn next" id="step4Next">Continue <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Document Upload (100%) -->
+                    <div class="step" data-step="5">
+                        <div class="step-title">
+                            <i class="fas fa-file-upload"></i>
+                            <h2>Document Upload</h2>
+                            <p>Upload your documents for verification</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Entrance Exam Scorecard (Optional, Max 5MB)</label>
+                            <div class="file-upload" id="scorecardUpload" onclick="document.getElementById('scorecardInput').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload scorecard</p>
+                                <input type="file" id="scorecardInput" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this, 'scorecardList', 'scorecardUpload', 'entranceScorecard')">
+                            </div>
+                            <div class="file-list" id="scorecardList"></div>
+                        </div>
+                        <div class="motivation-text">✅ You're at <span>100%</span>! Submit to check your scholarship eligibility.</div>
+                        <div class="nav-buttons">
+                            <button type="button" class="nav-btn prev" id="step5Prev"><i class="fas fa-arrow-left"></i> Back</button>
+                            <button type="submit" class="nav-btn submit" id="submitBtn"><i class="fas fa-check-circle"></i> Check My Scholarship Eligibility</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <footer class="footer"><p>&copy; 2026 OhCampus. All rights reserved.</p></footer>
+    </div>
+
+    <script>
+        var API_BASE = 'https://campusapi.ohcampus.com/web/ScholarshipApplication';
+        var currentStep = 1;
+        var totalSteps = 5;
+        var uploadedFiles = { marksCard: [], additionalMarks: [], scorecard: [] };
+        
+        // Capture UTM parameters
+        var utmParams = {};
+        function getUrlParams() {
+            var params = new URLSearchParams(window.location.search);
+            utmParams = {
+                utm_source: params.get('utm_source') || '',
+                utm_medium: params.get('utm_medium') || '',
+                utm_campaign: params.get('utm_campaign') || '',
+                counselor_id: params.get('counselor_id') || ''
+            };
+            // Store in localStorage to persist across page refreshes
+            if (utmParams.counselor_id) {
+                localStorage.setItem('scholarship_utm', JSON.stringify(utmParams));
+            } else {
+                var stored = localStorage.getItem('scholarship_utm');
+                if (stored) utmParams = JSON.parse(stored);
+            }
+        }
+        getUrlParams();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            setTimeout(function() {
+                loadStates();
+                populateYears();
+                loadFormData();
+            }, 100);
+            
+            document.getElementById('step1Next').addEventListener('click', function() { if (validateStep(1)) { saveFormData(); nextStep(); } });
+            document.getElementById('step2Prev').addEventListener('click', function() { saveFormData(); prevStep(); });
+            document.getElementById('step2Next').addEventListener('click', function() { if (validateStep(2)) { saveFormData(); nextStep(); } });
+            document.getElementById('step3Prev').addEventListener('click', function() { saveFormData(); prevStep(); });
+            document.getElementById('step3Next').addEventListener('click', function() { if (validateStep(3)) { saveFormData(); nextStep(); } });
+            document.getElementById('step4Prev').addEventListener('click', function() { saveFormData(); prevStep(); });
+            document.getElementById('step4Next').addEventListener('click', function() { saveFormData(); nextStep(); });
+            document.getElementById('step5Prev').addEventListener('click', function() { saveFormData(); prevStep(); });
+            
+            document.getElementById('stateSelect').addEventListener('change', loadDistricts);
+            document.getElementById('collegeSearch').addEventListener('input', function() { searchColleges(this.value); });
+        });
+
+        function updateProgress() {
+            var progress = currentStep * 20;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = progress;
+            document.getElementById('currentStep').textContent = currentStep;
+            document.querySelectorAll('.step-dot').forEach(function(dot, index) {
+                dot.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) dot.classList.add('completed');
+                else if (index + 1 === currentStep) dot.classList.add('active');
+            });
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+            document.querySelector('.step[data-step="' + step + '"]').classList.add('active');
+            currentStep = step;
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextStep() { if (currentStep < totalSteps) showStep(currentStep + 1); }
+        function prevStep() { if (currentStep > 1) showStep(currentStep - 1); }
+
+        function validateStep(step) {
+            var stepEl = document.querySelector('.step[data-step="' + step + '"]');
+            var requiredFields = stepEl.querySelectorAll('input[required]:not([type="file"]), select[required]');
+            var isValid = true;
+            var missingFields = [];
+            
+            requiredFields.forEach(function(field) {
+                if (!field.value.trim()) { 
+                    field.classList.add('error'); 
+                    isValid = false;
+                    var label = field.closest('.form-group').querySelector('label');
+                    if (label) missingFields.push(label.textContent.replace('*', '').trim());
+                } else { 
+                    field.classList.remove('error'); 
+                }
+            });
+            
+            // Check for file upload in step 2
+            if (step === 2) {
+                var marksCardList = document.getElementById('marksCardList');
+                if (marksCardList.children.length === 0) {
+                    isValid = false;
+                    missingFields.push('Marks Card Upload');
+                    document.getElementById('marksCardUpload').style.borderColor = 'var(--error)';
+                } else {
+                    document.getElementById('marksCardUpload').style.borderColor = 'var(--success)';
+                }
+            }
+            
+            if (!isValid) {
+                alert('Please fill all required fields:\n- ' + missingFields.join('\n- '));
+            }
+            return isValid;
+        }
+
+        function selectRadio(el, name) {
+            document.querySelectorAll('input[name="' + name + '"]').forEach(function(r) {
+                r.closest('.radio-item').classList.remove('selected');
+            });
+            el.classList.add('selected');
+            el.querySelector('input').checked = true;
+        }
+
+        function toggleCheckbox(el) {
+            var cb = el.querySelector('input[type="checkbox"]');
+            cb.checked = !cb.checked;
+            el.classList.toggle('selected', cb.checked);
+        }
+
+        function populateYears() {
+            var select = document.getElementById('passingYear');
+            var currentYear = new Date().getFullYear();
+            for (var y = currentYear + 1; y >= currentYear - 15; y--) {
+                select.innerHTML += '<option value="' + y + '">' + y + '</option>';
+            }
+        }
+
+        function loadStates() {
+            fetch(API_BASE + '/getStates', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.response_code === '200' && data.data) {
+                        var select = document.getElementById('stateSelect');
+                        var prefSelect = document.getElementById('prefStateSelect');
+                        data.data.forEach(function(state) {
+                            var opt = '<option value="' + state.title + '" data-id="' + state.id + '">' + state.title + '</option>';
+                            select.innerHTML += opt;
+                            prefSelect.innerHTML += opt;
+                        });
+                    }
+                })
+                .catch(function(e) { console.error('Error loading states:', e); });
+        }
+
+        function loadDistricts() {
+            var stateSelect = document.getElementById('stateSelect');
+            var stateId = stateSelect.options[stateSelect.selectedIndex].dataset.id;
+            var districtSelect = document.getElementById('districtSelect');
+            districtSelect.innerHTML = '<option value="">Select District</option>';
+            if (!stateId) return;
+            
+            fetch(API_BASE + '/getDistricts', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ state: stateId }) 
+            })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.response_code === '200' && data.data) {
+                        data.data.forEach(function(d) { 
+                            districtSelect.innerHTML += '<option value="' + d.title + '">' + d.title + '</option>'; 
+                        });
+                    }
+                })
+                .catch(function(e) { console.error('Error loading districts:', e); });
+        }
+
+        function loadCoursesByStream() {
+            var stream = document.getElementById('streamSelect').value;
+            var courseSelect = document.getElementById('courseSelect');
+            courseSelect.innerHTML = '<option value="">Select Course</option>';
+            
+            if (!stream) {
+                courseSelect.innerHTML = '<option value="">Select Stream First</option>';
+                return;
+            }
+            
+            // Course categories mapped to streams
+            var streamCourses = {
+                'Engineering': ['B.Tech', 'B.E.', 'M.Tech', 'M.E.', 'B.Tech in Computer Science', 'B.Tech in Electronics', 'B.Tech in Mechanical', 'B.Tech in Civil', 'B.Tech in Electrical', 'B.Tech in Information Technology', 'B.Tech in Biotechnology', 'B.Tech in Chemical', 'B.Tech in Aerospace', 'B.Tech in Automobile', 'Diploma in Engineering'],
+                'Medicine and Health Sciences': ['MBBS', 'BDS', 'BAMS', 'BHMS', 'B.Sc Nursing', 'M.Sc Nursing', 'MD', 'MS', 'DNB', 'BPT', 'MPT', 'B.Sc Allied Health Sciences', 'GNM', 'ANM'],
+                'Management': ['BBA', 'MBA', 'BMS', 'BBM', 'PGDM', 'BCA', 'MCA', 'B.Com', 'M.Com', 'Executive MBA', 'MBA in Finance', 'MBA in Marketing', 'MBA in HR', 'MBA in Operations'],
+                'Arts and Science': ['B.A.', 'M.A.', 'B.Sc', 'M.Sc', 'B.Sc Physics', 'B.Sc Chemistry', 'B.Sc Mathematics', 'B.Sc Biology', 'B.Sc Biotechnology', 'B.Sc Microbiology', 'B.A. Economics', 'B.A. English', 'B.A. Psychology', 'B.A. Sociology', 'B.A. Political Science'],
+                'Pharmacy': ['B.Pharm', 'M.Pharm', 'D.Pharm', 'Pharm.D', 'B.Pharm + MBA', 'M.Pharm in Pharmaceutics', 'M.Pharm in Pharmacology'],
+                'Agriculture': ['B.Sc Agriculture', 'M.Sc Agriculture', 'B.Tech Agricultural Engineering', 'B.Sc Horticulture', 'B.Sc Forestry', 'B.V.Sc', 'B.F.Sc'],
+                'Paramedical': ['B.Sc MLT', 'B.Sc Radiology', 'B.Sc Optometry', 'B.Sc Dialysis Technology', 'B.Sc Operation Theatre', 'B.Sc Cardiac Care', 'B.Sc Respiratory Therapy', 'Diploma in Medical Lab Technology'],
+                'Law': ['LLB', 'LLM', 'BA LLB', 'BBA LLB', 'B.Com LLB', 'B.Sc LLB'],
+                'Education': ['B.Ed', 'M.Ed', 'D.El.Ed', 'B.P.Ed', 'M.P.Ed'],
+                'Design and Architecture': ['B.Arch', 'M.Arch', 'B.Des', 'M.Des', 'B.Plan', 'Interior Design', 'Fashion Design', 'Graphic Design'],
+                'Hotel Management': ['BHM', 'BHMCT', 'B.Sc Hotel Management', 'Diploma in Hotel Management', 'MBA in Hospitality'],
+                'Computer Applications': ['BCA', 'MCA', 'B.Sc IT', 'M.Sc IT', 'B.Sc Computer Science', 'M.Sc Computer Science', 'PGDCA', 'B.Tech CSE']
+            };
+            
+            var courses = streamCourses[stream] || [];
+            courses.forEach(function(course) {
+                courseSelect.innerHTML += '<option value="' + course + '">' + course + '</option>';
+            });
+        }
+
+        function searchColleges(query) {
+            var dropdown = document.getElementById('collegeDropdown');
+            if (query.length < 3) { dropdown.style.display = 'none'; return; }
+            
+            fetch(API_BASE + '/getColleges', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ search: query }) 
+            })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    dropdown.innerHTML = '';
+                    if (data.response_code === '200' && data.data && data.data.length > 0) {
+                        dropdown.style.display = 'block';
+                        data.data.slice(0, 10).forEach(function(c) {
+                            var div = document.createElement('div');
+                            div.className = 'college-dropdown-item';
+                            div.textContent = c.title;
+                            div.onclick = function() { 
+                                document.getElementById('collegeSearch').value = c.title; 
+                                dropdown.style.display = 'none'; 
+                            };
+                            dropdown.appendChild(div);
+                        });
+                    } else { dropdown.style.display = 'none'; }
+                })
+                .catch(function(e) { console.error('Error:', e); });
+        }
+
+        // Store uploaded file URLs
+        var uploadedFileUrls = {
+            marksCard: null,
+            entranceScorecard: null
+        };
+
+        function handleFileUpload(input, listId, uploadBoxId, fileType) {
+            var fileList = document.getElementById(listId);
+            var uploadBox = uploadBoxId ? document.getElementById(uploadBoxId) : null;
+            
+            Array.from(input.files).forEach(function(file) {
+                if (file.size > 5 * 1024 * 1024) { 
+                    alert(file.name + ' exceeds 5MB limit.'); 
+                    return; 
+                }
+                
+                // Show uploading state
+                var fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.id = 'file-' + Date.now();
+                fileItem.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading ' + file.name + '...';
+                fileList.appendChild(fileItem);
+                
+                // Upload file to server
+                var formData = new FormData();
+                formData.append('file', file);
+                
+                fetch(API_BASE + '/uploadDocument', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.response_code === '200') {
+                        // Store the URL
+                        if (fileType === 'marksCard') {
+                            uploadedFileUrls.marksCard = data.file_url;
+                        } else if (fileType === 'entranceScorecard') {
+                            uploadedFileUrls.entranceScorecard = data.file_url;
+                        }
+                        
+                        // Update UI
+                        fileItem.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> ' + file.name + ' <span class="remove" onclick="removeFile(this, \'' + listId + '\', \'' + (uploadBoxId || '') + '\', \'' + fileType + '\')"><i class="fas fa-times"></i></span>';
+                        fileItem.dataset.url = data.file_url;
+                        
+                        if (uploadBox) {
+                            uploadBox.style.borderColor = 'var(--success)';
+                            uploadBox.style.background = 'rgba(34, 197, 94, 0.1)';
+                        }
+                    } else {
+                        fileItem.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--error)"></i> Upload failed: ' + (data.response_message || 'Error');
+                        setTimeout(function() { fileItem.remove(); }, 3000);
+                    }
+                })
+                .catch(function(e) {
+                    console.error('Upload error:', e);
+                    fileItem.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--error)"></i> Upload failed';
+                    setTimeout(function() { fileItem.remove(); }, 3000);
+                });
+            });
+        }
+
+        function removeFile(el, listId, uploadBoxId, fileType) {
+            el.parentElement.remove();
+            
+            // Clear the stored URL
+            if (fileType === 'marksCard') {
+                uploadedFileUrls.marksCard = null;
+            } else if (fileType === 'entranceScorecard') {
+                uploadedFileUrls.entranceScorecard = null;
+            }
+            
+            var fileList = document.getElementById(listId);
+            if (fileList.children.length === 0 && uploadBoxId) {
+                var uploadBox = document.getElementById(uploadBoxId);
+                if (uploadBox) {
+                    uploadBox.style.borderColor = '';
+                    uploadBox.style.background = '';
+                }
+            }
+        }
+
+        function saveFormData() {
+            var formData = {};
+            var form = document.getElementById('scholarshipForm');
+            var inputs = form.querySelectorAll('input, select');
+            inputs.forEach(function(input) {
+                if (input.type === 'checkbox') {
+                    if (!formData[input.name]) formData[input.name] = [];
+                    if (input.checked) formData[input.name].push(input.value);
+                } else if (input.type === 'radio') {
+                    if (input.checked) formData[input.name] = input.value;
+                } else if (input.type !== 'file') {
+                    formData[input.name] = input.value;
+                }
+            });
+            localStorage.setItem('scholarshipFormData', JSON.stringify(formData));
+        }
+
+        function loadFormData() {
+            var saved = localStorage.getItem('scholarshipFormData');
+            if (!saved) return;
+            var formData = JSON.parse(saved);
+            Object.keys(formData).forEach(function(key) {
+                var el = document.querySelector('[name="' + key + '"]');
+                if (!el) return;
+                if (el.type === 'checkbox') {
+                    document.querySelectorAll('[name="' + key + '"]').forEach(function(cb) {
+                        if (formData[key].includes(cb.value)) {
+                            cb.checked = true;
+                            cb.closest('.checkbox-item').classList.add('selected');
+                        }
+                    });
+                } else if (el.type === 'radio') {
+                    document.querySelectorAll('[name="' + key + '"]').forEach(function(r) {
+                        if (r.value === formData[key]) {
+                            r.checked = true;
+                            r.closest('.radio-item').classList.add('selected');
+                        }
+                    });
+                } else {
+                    el.value = formData[key];
+                }
+            });
+        }
+
+        document.getElementById('scholarshipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<span class="loading"></span> Submitting...';
+            submitBtn.disabled = true;
+            
+            var formData = new FormData(this);
+            var data = {};
+            formData.forEach(function(value, key) { 
+                if (key === 'entrance_exam') {
+                    if (!data[key]) data[key] = [];
+                    data[key].push(value);
+                } else if (value) {
+                    data[key] = value;
+                }
+            });
+            if (data.entrance_exam) data.entrance_exam = data.entrance_exam.join(', ');
+            
+            // Add UTM parameters to submission
+            if (utmParams.counselor_id) data.counselor_id = utmParams.counselor_id;
+            if (utmParams.utm_source) data.utm_source = utmParams.utm_source;
+            if (utmParams.utm_medium) data.utm_medium = utmParams.utm_medium;
+            if (utmParams.utm_campaign) data.utm_campaign = utmParams.utm_campaign;
+            
+            // Add uploaded file URLs
+            if (uploadedFileUrls.marksCard) data.marks_card_url = uploadedFileUrls.marksCard;
+            if (uploadedFileUrls.entranceScorecard) data.entrance_scorecard_url = uploadedFileUrls.entranceScorecard;
+            
+            fetch(API_BASE + '/apply', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(data) 
+            })
+                .then(function(r) { return r.json(); })
+                .then(function(result) {
+                    if (result.response_code === '200') {
+                        localStorage.removeItem('scholarshipFormData');
+                        localStorage.removeItem('scholarship_utm');
+                        document.getElementById('applicationId').textContent = result.application_id;
+                        document.getElementById('scholarshipForm').style.display = 'none';
+                        document.getElementById('successContainer').classList.add('show');
+                        document.querySelector('.progress-container').style.display = 'none';
+                    } else {
+                        alert(result.response_message || 'Submission failed.');
+                        submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Check My Scholarship Eligibility';
+                        submitBtn.disabled = false;
+                    }
+                })
+                .catch(function(e) {
+                    alert('Network error. Please try again.');
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Check My Scholarship Eligibility';
+                    submitBtn.disabled = false;
+                });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#collegeSearch') && !e.target.closest('#collegeDropdown')) {
+                document.getElementById('collegeDropdown').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

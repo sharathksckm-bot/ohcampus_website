@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholarship Applications - OhCampus Admin</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2563eb; --primary-dark: #1d4ed8; --accent: #88d834; --text-primary: #1e293b; --text-secondary: #64748b; --bg-light: #f8fafc; --bg-white: #ffffff; --border: #e2e8f0; --success: #22c55e; --warning: #f59e0b; --error: #ef4444; --info: #3b82f6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-light); min-height: 100vh; display: flex; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--text-primary); color: white; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 1rem; }
+        .sidebar-logo img { height: 36px; }
+        .sidebar-logo span { font-size: 0.8rem; opacity: 0.7; display: block; margin-top: 4px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 12px; padding: 0.875rem 1.5rem; color: rgba(255,255,255,0.7); text-decoration: none; transition: all 0.2s; font-size: 0.9rem; }
+        .sidebar-menu li a:hover { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu li a.active { background: var(--primary); color: white; border-left: 3px solid var(--accent); }
+        .sidebar-menu li a i { width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 1rem 0; }
+        
+        /* Main Content */
+        .main-content { flex: 1; margin-left: 260px; padding: 2rem; }
+        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .page-header h1 { font-size: 1.5rem; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .page-header h1 i { color: var(--primary); }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-white); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .stat-card .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .stat-card .stat-icon.total { background: rgba(37,99,235,0.1); color: var(--primary); }
+        .stat-card .stat-icon.pending { background: rgba(245,158,11,0.1); color: var(--warning); }
+        .stat-card .stat-icon.eligible { background: rgba(34,197,94,0.1); color: var(--success); }
+        .stat-card .stat-icon.converted { background: rgba(136,216,52,0.1); color: var(--accent); }
+        .stat-card .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+        .stat-card .stat-label { color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem; }
+        
+        /* Filters */
+        .filters { background: var(--bg-white); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .filters-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 180px; }
+        .filter-group label { display: block; margin-bottom: 0.5rem; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; }
+        .filter-group input, .filter-group select { width: 100%; padding: 0.625rem 0.875rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; }
+        .filter-group input:focus, .filter-group select:focus { outline: none; border-color: var(--primary); }
+        .btn { padding: 0.625rem 1.25rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-success { background: var(--accent); color: var(--text-primary); }
+        .btn-success:hover { background: #7bc62e; }
+        .btn-secondary { background: var(--bg-light); color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+        
+        /* Table */
+        .table-container { background: var(--bg-white); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+        .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .table-header h2 { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-light); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); }
+        td { font-size: 0.875rem; }
+        tr:hover { background: var(--bg-light); }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-contacted { background: #dbeafe; color: #1e40af; }
+        .status-eligible { background: #dcfce7; color: #166534; }
+        .status-not-eligible { background: #fee2e2; color: #991b1b; }
+        .status-converted { background: #d1fae5; color: #065f46; }
+        .actions { display: flex; gap: 0.5rem; }
+        .action-btn { padding: 0.375rem 0.625rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
+        .action-btn.view { background: var(--bg-light); color: var(--text-primary); }
+        .action-btn.view:hover { background: var(--primary); color: white; }
+        .action-btn.download { background: rgba(136,216,52,0.1); color: #65a30d; }
+        .action-btn.download:hover { background: var(--accent); color: var(--text-primary); }
+        
+        /* Pagination */
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+        .pagination-info { color: var(--text-secondary); font-size: 0.875rem; }
+        .pagination-buttons { display: flex; gap: 0.5rem; }
+        .page-btn { padding: 0.5rem 0.875rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-white); cursor: pointer; font-size: 0.875rem; }
+        .page-btn:hover { background: var(--bg-light); }
+        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: var(--bg-white); border-radius: 16px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 1.125rem; color: var(--text-primary); }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+        .modal-body { padding: 1.5rem; }
+        .detail-section { margin-bottom: 1.5rem; }
+        .detail-section h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .detail-item { }
+        .detail-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .detail-value { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
+        .detail-value a { color: var(--primary); text-decoration: none; }
+        .detail-value a:hover { text-decoration: underline; }
+        .status-select { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; width: 100%; }
+        .document-card { background: var(--bg-light); border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem; }
+        .document-card i { font-size: 1.5rem; color: var(--primary); }
+        .document-card .doc-info { flex: 1; }
+        .document-card .doc-name { font-weight: 500; color: var(--text-primary); }
+        .document-card .doc-size { font-size: 0.8rem; color: var(--text-secondary); }
+        
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-secondary); }
+        .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+        .loading { text-align: center; padding: 3rem; color: var(--text-secondary); }
+        
+        @media (max-width: 1024px) {
+            .sidebar { width: 70px; }
+            .sidebar-logo span, .sidebar-menu li a span { display: none; }
+            .sidebar-menu li a { justify-content: center; padding: 1rem; }
+            .main-content { margin-left: 70px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .filters-row { flex-direction: column; }
+            .filter-group { min-width: 100%; }
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="/assets/images/logo/logo-text-on-dark.svg" alt="OhCampus" onerror="this.src='/assets/images/logo/logo.png'">
+            <span>Admin Panel</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="/dashboards/project"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+            <li><a href="/pages/colleges"><i class="fas fa-university"></i> <span>Colleges</span></a></li>
+            <li><a href="/pages/courses"><i class="fas fa-book"></i> <span>Courses</span></a></li>
+            <li><a href="/pages/exams"><i class="fas fa-file-alt"></i> <span>Exams</span></a></li>
+            <div class="sidebar-divider"></div>
+            <li><a href="/scholarship/" class="active"><i class="fas fa-graduation-cap"></i> <span>Scholarship Applications</span></a></li>
+            <div class="sidebar-divider"></div>
+            <li><a href="/pages/users"><i class="fas fa-users"></i> <span>Users</span></a></li>
+            <li><a href="/pages/settings"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-graduation-cap"></i> Scholarship Applications</h1>
+            <div>
+                <button class="btn btn-success" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon total"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
+                <div class="stat-value" id="pendingCount">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon eligible"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value" id="eligibleCount">0</div>
+                <div class="stat-label">Eligible</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon converted"><i class="fas fa-star"></i></div>
+                <div class="stat-value" id="convertedCount">0</div>
+                <div class="stat-label">Converted</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" id="searchInput" placeholder="Name, Mobile, Email..." onkeyup="debounceSearch()">
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="statusFilter" onchange="loadApplications()">
+                        <option value="">All Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Eligible">Eligible</option>
+                        <option value="Not Eligible">Not Eligible</option>
+                        <option value="Converted">Converted</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Stream</label>
+                    <select id="streamFilter" onchange="loadApplications()">
+                        <option value="">All Streams</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Management">Management</option>
+                        <option value="Arts & Science">Arts & Science</option>
+                        <option value="Pharmacy">Pharmacy</option>
+                        <option value="Agriculture">Agriculture</option>
+                        <option value="Paramedical">Paramedical</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="flex:0;">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-secondary" onclick="clearFilters()"><i class="fas fa-times"></i> Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Applications</h2>
+                <span id="resultCount" style="color:var(--text-secondary); font-size:0.875rem;"></span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Applicant</th>
+                        <th>Mobile</th>
+                        <th>Course / Stream</th>
+                        <th>State</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationsTable">
+                    <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="pagination-info" id="paginationInfo">Showing 0 of 0</div>
+                <div class="pagination-buttons" id="paginationButtons"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-graduate"></i> Application Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://campusapi.ohcampus.com/web/ScholarshipApplication';
+        let currentPage = 1;
+        let totalPages = 1;
+        let searchTimeout;
+        let allApplications = [];
+
+        document.addEventListener('DOMContentLoaded', () => { loadApplications(); loadStats(); });
+
+        function debounceSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => { currentPage = 1; loadApplications(); }, 300); }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('streamFilter').value = '';
+            currentPage = 1; loadApplications();
+        }
+
+        async function loadStats() {
+            try {
+                const statuses = ['', 'Pending', 'Eligible', 'Converted'];
+                const counts = await Promise.all(statuses.map(status => 
+                    fetch(API_BASE + '/getApplications', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ filters: status ? { application_status: status } : {}, limit: 1 })
+                    }).then(r => r.json())
+                ));
+                document.getElementById('totalCount').textContent = counts[0].total || 0;
+                document.getElementById('pendingCount').textContent = counts[1].total || 0;
+                document.getElementById('eligibleCount').textContent = counts[2].total || 0;
+                document.getElementById('convertedCount').textContent = counts[3].total || 0;
+            } catch (e) { console.error('Error loading stats:', e); }
+        }
+
+        async function loadApplications() {
+            const search = document.getElementById('searchInput').value;
+            const status = document.getElementById('statusFilter').value;
+            const stream = document.getElementById('streamFilter').value;
+            const filters = {};
+            if (status) filters.application_status = status;
+            if (stream) filters.preferred_stream = stream;
+
+            document.getElementById('applicationsTable').innerHTML = '<tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>';
+
+            try {
+                const response = await fetch(API_BASE + '/getApplications', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ search, filters, page: currentPage, limit: 15 })
+                });
+                const data = await response.json();
+                if (data.response_code === '200') {
+                    totalPages = data.pages || 1;
+                    allApplications = data.data || [];
+                    renderTable(allApplications);
+                    renderPagination(data.total, data.page, data.limit);
+                    document.getElementById('resultCount').textContent = data.total + ' applications found';
+                }
+            } catch (e) {
+                console.error('Error:', e);
+                document.getElementById('applicationsTable').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Error loading data</p></td></tr>';
+            }
+        }
+
+        function renderTable(applications) {
+            if (applications.length === 0) {
+                document.getElementById('applicationsTable').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i><p>No applications found</p></td></tr>';
+                return;
+            }
+            document.getElementById('applicationsTable').innerHTML = applications.map(app => `
+                <tr>
+                    <td><strong>#${app.id}</strong></td>
+                    <td>
+                        <div style="font-weight:600;">${app.name}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">${app.email}</div>
+                    </td>
+                    <td>${app.mobile} ${app.otp_verified == 1 ? '<i class="fas fa-check-circle" style="color:var(--success);font-size:0.75rem;"></i>' : ''}</td>
+                    <td>
+                        <div>${app.preferred_course ? (app.preferred_course.length > 25 ? app.preferred_course.substring(0, 25) + '...' : app.preferred_course) : '-'}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">${app.preferred_stream || '-'}</div>
+                    </td>
+                    <td>${app.state || '-'}</td>
+                    <td><span class="status-badge status-${app.application_status.toLowerCase().replace(' ', '-')}">${app.application_status}</span></td>
+                    <td style="font-size:0.8rem;">${new Date(app.created_at).toLocaleDateString()}</td>
+                    <td class="actions">
+                        <button class="action-btn view" onclick="viewApplication(${app.id})" title="View Details"><i class="fas fa-eye"></i></button>
+                        ${app.marks_card_url ? '<button class="action-btn download" onclick="downloadDoc(\'' + app.marks_card_url + '\')" title="Download Marks Card"><i class="fas fa-download"></i></button>' : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination(total, page, limit) {
+            const start = (page - 1) * limit + 1;
+            const end = Math.min(page * limit, total);
+            document.getElementById('paginationInfo').textContent = `Showing ${total > 0 ? start : 0}-${end} of ${total}`;
+            let buttons = '';
+            buttons += `<button class="page-btn" onclick="goToPage(${page - 1})" ${page <= 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+            for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) {
+                buttons += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            buttons += `<button class="page-btn" onclick="goToPage(${page + 1})" ${page >= totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationButtons').innerHTML = buttons;
+        }
+
+        function goToPage(page) { if (page >= 1 && page <= totalPages) { currentPage = page; loadApplications(); } }
+
+        async function viewApplication(id) {
+            try {
+                const response = await fetch(API_BASE + '/getApplicationById', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                const data = await response.json();
+                if (data.response_code === '200' && data.data) {
+                    const app = data.data;
+                    document.getElementById('modalBody').innerHTML = `
+                        <div class="detail-section">
+                            <h4>Personal Information</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item"><div class="detail-label">Application ID</div><div class="detail-value">#${app.id}</div></div>
+                                <div class="detail-item"><div class="detail-label">Full Name</div><div class="detail-value">${app.name}</div></div>
+                                <div class="detail-item"><div class="detail-label">Mobile</div><div class="detail-value">${app.mobile} ${app.otp_verified == 1 ? '<span style="color:var(--success);"><i class="fas fa-check-circle"></i> Verified</span>' : '<span style="color:var(--warning);">Not Verified</span>'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${app.email}</div></div>
+                                <div class="detail-item"><div class="detail-label">Date of Birth</div><div class="detail-value">${app.dob || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Gender</div><div class="detail-value">${app.gender || '-'}</div></div>
+                            </div>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Location</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item"><div class="detail-label">State</div><div class="detail-value">${app.state || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">District</div><div class="detail-value">${app.district || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">City</div><div class="detail-value">${app.city || '-'}</div></div>
+                            </div>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Academic Details</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item"><div class="detail-label">Qualification</div><div class="detail-value">${app.qualification || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Board/University</div><div class="detail-value">${app.board_university || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Passing Year</div><div class="detail-value">${app.passing_year || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Percentage/CGPA</div><div class="detail-value">${app.percentage || '-'}</div></div>
+                            </div>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Course Preferences</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item"><div class="detail-label">Preferred Course</div><div class="detail-value">${app.preferred_course || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Preferred Stream</div><div class="detail-value">${app.preferred_stream || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Entrance Exams</div><div class="detail-value">${app.entrance_exam || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Preferred Location</div><div class="detail-value">${app.preferred_location || '-'}</div></div>
+                                <div class="detail-item"><div class="detail-label">Preferred College</div><div class="detail-value">${app.preferred_college || '-'}</div></div>
+                            </div>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Documents</h4>
+                            ${app.marks_card_url ? `
+                                <div class="document-card">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <div class="doc-info">
+                                        <div class="doc-name">Marks Card</div>
+                                        <div class="doc-size">Uploaded Document</div>
+                                    </div>
+                                    <button class="btn btn-success" onclick="downloadDoc('${app.marks_card_url}')"><i class="fas fa-download"></i> Download</button>
+                                </div>
+                            ` : '<p style="color:var(--text-secondary);">No marks card uploaded</p>'}
+                            ${app.entrance_scorecard_url ? `
+                                <div class="document-card">
+                                    <i class="fas fa-file-alt"></i>
+                                    <div class="doc-info">
+                                        <div class="doc-name">Entrance Scorecard</div>
+                                        <div class="doc-size">Uploaded Document</div>
+                                    </div>
+                                    <button class="btn btn-success" onclick="downloadDoc('${app.entrance_scorecard_url}')"><i class="fas fa-download"></i> Download</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="detail-section">
+                            <h4>Application Status</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item"><div class="detail-label">Applied On</div><div class="detail-value">${new Date(app.created_at).toLocaleString()}</div></div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Current Status</div>
+                                    <select class="status-select" onchange="updateStatus(${app.id}, this.value)">
+                                        <option value="Pending" ${app.application_status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Contacted" ${app.application_status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+                                        <option value="Eligible" ${app.application_status === 'Eligible' ? 'selected' : ''}>Eligible</option>
+                                        <option value="Not Eligible" ${app.application_status === 'Not Eligible' ? 'selected' : ''}>Not Eligible</option>
+                                        <option value="Converted" ${app.application_status === 'Converted' ? 'selected' : ''}>Converted</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('detailModal').classList.add('show');
+                }
+            } catch (e) { console.error('Error:', e); alert('Error loading details'); }
+        }
+
+        async function updateStatus(id, status) {
+            try {
+                const response = await fetch(API_BASE + '/updateStatus', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, status })
+                });
+                const data = await response.json();
+                if (data.response_code === '200') { loadApplications(); loadStats(); }
+                else { alert('Failed to update status'); }
+            } catch (e) { console.error('Error:', e); alert('Error updating status'); }
+        }
+
+        function downloadDoc(url) { if (url) window.open(url, '_blank'); }
+
+        function closeModal() { document.getElementById('detailModal').classList.remove('show'); }
+
+        async function exportCSV() {
+            try {
+                const response = await fetch(API_BASE + '/getApplications', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ page: 1, limit: 10000 })
+                });
+                const data = await response.json();
+                if (data.response_code === '200' && data.data.length > 0) {
+                    const headers = ['ID', 'Name', 'Mobile', 'Email', 'DOB', 'Gender', 'State', 'District', 'City', 'Qualification', 'Board', 'Year', 'Percentage', 'Course', 'Stream', 'Entrance Exam', 'Preferred Location', 'Preferred College', 'Status', 'Applied On'];
+                    let csv = headers.join(',') + '\n';
+                    data.data.forEach(app => {
+                        const row = [
+                            app.id, ' + (app.name || ).replace(/"/g, ) + ', app.mobile, app.email, app.dob || '', app.gender || '',
+                            ' + (app.state || ).replace(/"/g, ) + ', ' + (app.district || ).replace(/"/g, ) + ', ' + (app.city || ).replace(/"/g, ) + ',
+                            ' + (app.qualification || ).replace(/"/g, ) + ', ' + (app.board_university || ).replace(/"/g, ) + ', app.passing_year || '', app.percentage || '',
+                            ' + (app.preferred_course || ).replace(/"/g, ) + ', ' + (app.preferred_stream || ).replace(/"/g, ) + ',
+                            ' + (app.entrance_exam || ).replace(/"/g, ) + ', ' + (app.preferred_location || ).replace(/"/g, ) + ',
+                            ' + (app.preferred_college || ).replace(/"/g, ) + ', app.application_status, app.created_at
+                        ];
+                        csv += row.join(',') + '\n';
+                    });
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = 'scholarship_applications_' + new Date().toISOString().split('T')[0] + '.csv';
+                    a.click(); URL.revokeObjectURL(url);
+                } else { alert('No data to export'); }
+            } catch (e) { console.error('Error:', e); alert('Error exporting data'); }
+        }
+
+        document.getElementById('detailModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+    </script>
+</body>
+</html>

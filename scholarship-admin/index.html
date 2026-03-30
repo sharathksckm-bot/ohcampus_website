@@ -1,0 +1,356 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholarship Applications - Admin | OhCampus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb; --primary-dark: #1d4ed8; --success: #22c55e;
+            --warning: #f59e0b; --danger: #ef4444; --gray-50: #f9fafb;
+            --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-500: #6b7280;
+            --gray-700: #374151; --gray-900: #111827;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray-50); min-height: 100vh; }
+        
+        .header { background: var(--gray-900); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+        .header a { color: white; text-decoration: none; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+        
+        .stats-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .stat-box { background: white; padding: 1.25rem 1.5rem; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-width: 150px; }
+        .stat-box .label { font-size: 0.75rem; color: var(--gray-500); text-transform: uppercase; }
+        .stat-box .value { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
+        
+        .card { background: white; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .card-header h2 { font-size: 1rem; }
+        
+        .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .filters input, .filters select { padding: 0.5rem 0.75rem; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 0.85rem; }
+        .filters input { width: 200px; }
+        
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-sm { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-200); }
+        th { background: var(--gray-50); font-weight: 600; color: var(--gray-600); font-size: 0.75rem; text-transform: uppercase; }
+        tr:hover { background: var(--gray-50); }
+        
+        .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-contacted { background: #dbeafe; color: #1e40af; }
+        .badge-eligible { background: #dcfce7; color: #166534; }
+        .badge-not-eligible { background: #fee2e2; color: #991b1b; }
+        .badge-converted { background: #d1fae5; color: #065f46; }
+        
+        .doc-btn { padding: 0.25rem 0.5rem; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 4px; color: var(--primary); text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 3px; }
+        .doc-btn:hover { background: var(--gray-200); }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: white; border-radius: 10px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; }
+        .modal-close { background: none; border: none; font-size: 1.25rem; cursor: pointer; }
+        .modal-body { padding: 1.25rem; }
+        
+        .detail-row { display: flex; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); }
+        .detail-label { width: 35%; font-weight: 500; color: var(--gray-500); font-size: 0.85rem; }
+        .detail-value { width: 65%; font-size: 0.9rem; }
+        
+        .pagination { display: flex; justify-content: center; gap: 0.25rem; padding: 1rem; }
+        .pagination button { padding: 0.4rem 0.75rem; border: 1px solid var(--gray-200); background: white; border-radius: 4px; cursor: pointer; }
+        .pagination button.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .empty { text-align: center; padding: 3rem; color: var(--gray-500); }
+        
+        @media (max-width: 768px) {
+            .filters { flex-direction: column; width: 100%; }
+            .filters input, .filters select { width: 100%; }
+            th, td { padding: 0.5rem; font-size: 0.75rem; }
+            .hide-mobile { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1><i class="fas fa-graduation-cap"></i> Scholarship Applications</h1>
+        <a href="https://admin.ohcampus.com"><i class="fas fa-arrow-left"></i> Back to Admin</a>
+    </header>
+
+    <div class="container">
+        <div class="stats-row">
+            <div class="stat-box"><div class="label">Total</div><div class="value" id="statTotal">0</div></div>
+            <div class="stat-box"><div class="label">Pending</div><div class="value" id="statPending" style="color:var(--warning)">0</div></div>
+            <div class="stat-box"><div class="label">Contacted</div><div class="value" id="statContacted" style="color:var(--primary)">0</div></div>
+            <div class="stat-box"><div class="label">Eligible</div><div class="value" id="statEligible" style="color:var(--success)">0</div></div>
+            <div class="stat-box"><div class="label">Converted</div><div class="value" id="statConverted" style="color:#065f46">0</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>All Applications</h2>
+                <div class="filters">
+                    <input type="text" id="searchInput" placeholder="Search name, mobile, email...">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Eligible">Eligible</option>
+                        <option value="Not Eligible">Not Eligible</option>
+                        <option value="Converted">Converted</option>
+                    </select>
+                    <select id="streamFilter">
+                        <option value="">All Streams</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Medicine and Health Sciences">Medicine</option>
+                        <option value="Management">Management</option>
+                        <option value="Arts and Science">Arts & Science</option>
+                        <option value="Pharmacy">Pharmacy</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadApplications()"><i class="fas fa-search"></i> Search</button>
+                    <button class="btn btn-success" onclick="exportCSV()"><i class="fas fa-download"></i> Export</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th class="hide-mobile">Email</th>
+                            <th class="hide-mobile">Stream</th>
+                            <th>Status</th>
+                            <th>Docs</th>
+                            <th class="hide-mobile">Counselor</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Application Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        var API_BASE = 'https://campusapi.ohcampus.com/web/ScholarshipApplication';
+        var currentPage = 1;
+        var allData = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApplications();
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loadApplications();
+            });
+        });
+
+        function loadApplications() {
+            var search = document.getElementById('searchInput').value;
+            var status = document.getElementById('statusFilter').value;
+            var stream = document.getElementById('streamFilter').value;
+            
+            var filters = {};
+            if (status) filters.status = status;
+            if (stream) filters.stream = stream;
+            
+            fetch(API_BASE + '/getApplications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ search: search, filters: filters, page: currentPage, limit: 50 })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.response_code === '200') {
+                    allData = data.data || [];
+                    renderTable(allData);
+                    updateStats(allData);
+                    renderPagination(data.pages, data.page);
+                }
+            })
+            .catch(function(e) { console.error('Error:', e); });
+        }
+
+        function renderTable(apps) {
+            var tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            if (!apps || apps.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="empty"><i class="fas fa-inbox"></i><p>No applications found</p></td></tr>';
+                return;
+            }
+            
+            apps.forEach(function(app) {
+                var statusClass = 'badge-' + (app.application_status || 'pending').toLowerCase().replace(' ', '-');
+                var docs = '';
+                if (app.marks_card_url) docs += '<a href="' + app.marks_card_url + '" target="_blank" class="doc-btn"><i class="fas fa-file"></i> MC</a> ';
+                if (app.entrance_scorecard_url) docs += '<a href="' + app.entrance_scorecard_url + '" target="_blank" class="doc-btn"><i class="fas fa-file"></i> ES</a>';
+                if (!docs) docs = '-';
+                
+                var row = '<tr>' +
+                    '<td>' + app.id + '</td>' +
+                    '<td>' + (app.name || '-') + '</td>' +
+                    '<td>' + (app.mobile || '-') + '</td>' +
+                    '<td class="hide-mobile">' + (app.email || '-') + '</td>' +
+                    '<td class="hide-mobile">' + (app.preferred_stream || '-') + '</td>' +
+                    '<td><span class="badge ' + statusClass + '">' + (app.application_status || 'Pending') + '</span></td>' +
+                    '<td>' + docs + '</td>' +
+                    '<td class="hide-mobile">' + (app.counselor_name || '-') + '</td>' +
+                    '<td>' + formatDate(app.created_at) + '</td>' +
+                    '<td>' +
+                        '<button class="btn btn-sm" style="background:var(--gray-100)" onclick="viewApplication(' + app.id + ')"><i class="fas fa-eye"></i></button> ' +
+                        '<select class="btn btn-sm" style="padding:0.25rem;font-size:0.7rem" onchange="updateStatus(' + app.id + ', this.value)">' +
+                            '<option value="">Status</option>' +
+                            '<option value="Pending">Pending</option>' +
+                            '<option value="Contacted">Contacted</option>' +
+                            '<option value="Eligible">Eligible</option>' +
+                            '<option value="Not Eligible">Not Eligible</option>' +
+                            '<option value="Converted">Converted</option>' +
+                        '</select>' +
+                    '</td></tr>';
+                tbody.innerHTML += row;
+            });
+        }
+
+        function updateStats(apps) {
+            var stats = { total: apps.length, Pending: 0, Contacted: 0, Eligible: 0, 'Not Eligible': 0, Converted: 0 };
+            apps.forEach(function(app) {
+                if (stats.hasOwnProperty(app.application_status)) stats[app.application_status]++;
+            });
+            document.getElementById('statTotal').textContent = stats.total;
+            document.getElementById('statPending').textContent = stats.Pending;
+            document.getElementById('statContacted').textContent = stats.Contacted;
+            document.getElementById('statEligible').textContent = stats.Eligible;
+            document.getElementById('statConverted').textContent = stats.Converted;
+        }
+
+        function renderPagination(totalPages, current) {
+            var pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            if (totalPages <= 1) return;
+            for (var i = 1; i <= Math.min(totalPages, 10); i++) {
+                var btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = i === current ? 'active' : '';
+                btn.onclick = (function(page) { return function() { currentPage = page; loadApplications(); }; })(i);
+                pagination.appendChild(btn);
+            }
+        }
+
+        function viewApplication(id) {
+            fetch(API_BASE + '/getApplicationById', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.response_code === '200' && data.data) {
+                    var app = data.data;
+                    var html = '';
+                    var fields = [
+                        ['ID', app.id], ['Name', app.name], ['Father Name', app.father_name], ['Mother Name', app.mother_name],
+                        ['Mobile', app.mobile], ['Email', app.email], ['DOB', app.dob], ['Gender', app.gender],
+                        ['State', app.state], ['District', app.district], ['City', app.city],
+                        ['Qualification', app.qualification], ['Board/University', app.board_university],
+                        ['Passing Year', app.passing_year], ['Percentage', app.percentage],
+                        ['Stream', app.preferred_stream], ['Course', app.preferred_course],
+                        ['Entrance Exams', app.entrance_exam], ['Preferred Location', app.preferred_location],
+                        ['Preferred College', app.preferred_college], ['Counselor', app.counselor_name],
+                        ['Status', app.application_status], ['Applied On', app.created_at]
+                    ];
+                    fields.forEach(function(f) {
+                        html += '<div class="detail-row"><div class="detail-label">' + f[0] + '</div><div class="detail-value">' + (f[1] || '-') + '</div></div>';
+                    });
+                    
+                    // Documents
+                    html += '<div class="detail-row"><div class="detail-label">Documents</div><div class="detail-value">';
+                    if (app.marks_card_url) html += '<a href="' + app.marks_card_url + '" target="_blank" class="doc-btn" style="margin-right:0.5rem"><i class="fas fa-download"></i> Download Marks Card</a>';
+                    if (app.entrance_scorecard_url) html += '<a href="' + app.entrance_scorecard_url + '" target="_blank" class="doc-btn"><i class="fas fa-download"></i> Download Scorecard</a>';
+                    if (!app.marks_card_url && !app.entrance_scorecard_url) html += 'No documents';
+                    html += '</div></div>';
+                    
+                    document.getElementById('modalBody').innerHTML = html;
+                    document.getElementById('detailModal').classList.add('show');
+                }
+            });
+        }
+
+        function updateStatus(id, status) {
+            if (!status) return;
+            fetch(API_BASE + '/updateStatus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, status: status })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.response_code === '200') {
+                    alert('Status updated!');
+                    loadApplications();
+                } else {
+                    alert('Error: ' + data.response_message);
+                }
+            });
+        }
+
+        function exportCSV() {
+            var csv = 'ID,Name,Father Name,Mother Name,Mobile,Email,State,City,Qualification,Stream,Course,Status,Counselor,Date,Marks Card URL,Scorecard URL\n';
+            allData.forEach(function(app) {
+                csv += [
+                    app.id, '"' + (app.name || '') + '"', '"' + (app.father_name || '') + '"', '"' + (app.mother_name || '') + '"',
+                    app.mobile, app.email, '"' + (app.state || '') + '"', '"' + (app.city || '') + '"',
+                    '"' + (app.qualification || '') + '"', '"' + (app.preferred_stream || '') + '"', '"' + (app.preferred_course || '') + '"',
+                    app.application_status, '"' + (app.counselor_name || '') + '"', app.created_at,
+                    app.marks_card_url || '', app.entrance_scorecard_url || ''
+                ].join(',') + '\n';
+            });
+            
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'scholarship_applications_' + new Date().toISOString().slice(0,10) + '.csv';
+            a.click();
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            var d = new Date(dateStr);
+            return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>

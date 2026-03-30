@@ -1,0 +1,783 @@
+/**
+ * OhCampus Lead Generation System
+ * Version: 1.4.0
+ * Fixed: Predictor teaser positioning above Featured Colleges
+ * Fixed: Scholarship link to /check-scholarship/
+ */
+
+(function() {
+    'use strict';
+    
+    var BRAND_COLORS = {
+        primary: '#1a73e8',
+        primaryDark: '#0d47a1',
+        secondary: '#ff6f00',
+        secondaryDark: '#e65100',
+        success: '#00c853',
+        successDark: '#00a844',
+        white: '#ffffff',
+        dark: '#1e293b',
+        gray: '#64748b'
+    };
+    
+    var OHCAMPUS_LEADGEN = {
+        config: {
+            apiUrl: 'https://campusapi.ohcampus.com/web',
+            playStoreUrl: 'https://play.google.com/store/apps/details?id=com.app.ohcampus',
+            appStoreUrl: 'https://apps.apple.com/app/ohcampus/id123456789',
+            whatsappNumber: '918884560456',
+            scholarshipUrl: 'https://ohcampus.com/check-scholarship/',
+            colors: BRAND_COLORS
+        },
+        
+        init: function() {
+            var self = this;
+            this.hideOldWhatsApp();
+            this.injectStyles();
+            
+            this.waitForAngular(function() {
+                if (window.location.pathname === '/' || window.location.pathname === '/home') {
+                    self.createPredictorTeaser();
+                    self.createServiceMatrix();
+                }
+                self.enhanceCollegePages();
+            });
+            
+            this.createSmartAppBanner();
+            this.setupScrollTriggers();
+            this.trackUserBehavior();
+            console.log('OhCampus Lead Generation System v1.4.0 initialized');
+        },
+        
+        waitForAngular: function(callback) {
+            var attempts = 0;
+            var maxAttempts = 40;
+            var interval = setInterval(function() {
+                attempts++;
+                // Wait for Featured Colleges section to appear
+                var featuredSection = document.querySelector('h2, h3, .section-title');
+                var hasContent = false;
+                if (featuredSection) {
+                    var text = featuredSection.innerText || '';
+                    hasContent = text.toLowerCase().includes('featured') || text.toLowerCase().includes('college');
+                }
+                
+                if (hasContent || attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    setTimeout(callback, 500);
+                }
+            }, 200);
+        },
+        
+        hideOldWhatsApp: function() {
+            var checkAndHide = function() {
+                var selectors = [
+                    '.icon-link.whatsapp',
+                    '[class*="whatsapp"][class*="text-green"]',
+                    '.fab.fa-whatsapp',
+                    'a[href*="wa.me"]:not(.ohc-floating-btn)'
+                ];
+                
+                selectors.forEach(function(selector) {
+                    var elements = document.querySelectorAll(selector);
+                    elements.forEach(function(el) {
+                        var parent = el.closest('div[style*="fixed"], button, .fixed');
+                        if (parent && !parent.classList.contains('ohc-floating-cta')) {
+                            parent.style.cssText = 'display: none !important; visibility: hidden !important;';
+                        }
+                    });
+                });
+            };
+            
+            checkAndHide();
+            setTimeout(checkAndHide, 1000);
+            setTimeout(checkAndHide, 3000);
+        },
+        
+        injectStyles: function() {
+            var c = this.config.colors;
+            var styles = '\
+                .ohc-predictor-wrapper {\
+                    width: 100%;\
+                    padding: 30px 5%;\
+                    box-sizing: border-box;\
+                    background: linear-gradient(180deg, #f0f7ff 0%, #e3f2fd 100%);\
+                    display: block;\
+                    clear: both;\
+                }\
+                .ohc-predictor-teaser {\
+                    background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);\
+                    border: 2px solid ' + c.primary + ';\
+                    border-radius: 16px;\
+                    padding: 28px 36px;\
+                    max-width: 900px;\
+                    margin: 0 auto;\
+                    box-shadow: 0 8px 32px rgba(26, 115, 232, 0.15);\
+                    display: block;\
+                }\
+                .ohc-predictor-teaser h3 {\
+                    margin: 0 0 8px;\
+                    font-size: 22px;\
+                    color: ' + c.primaryDark + ';\
+                    font-weight: 700;\
+                    text-align: center;\
+                }\
+                .ohc-predictor-teaser > p {\
+                    margin: 0 0 20px;\
+                    color: ' + c.gray + ';\
+                    font-size: 14px;\
+                    text-align: center;\
+                }\
+                .ohc-predictor-input-group {\
+                    display: flex;\
+                    gap: 12px;\
+                    justify-content: center;\
+                    align-items: center;\
+                    flex-wrap: wrap;\
+                }\
+                .ohc-predictor-input {\
+                    padding: 12px 16px;\
+                    border: 2px solid #90caf9;\
+                    border-radius: 10px;\
+                    font-size: 15px;\
+                    transition: all 0.2s;\
+                    background: white;\
+                    box-sizing: border-box;\
+                    width: 200px;\
+                }\
+                .ohc-predictor-input:focus {\
+                    outline: none;\
+                    border-color: ' + c.primary + ';\
+                    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);\
+                }\
+                .ohc-predictor-btn {\
+                    background: linear-gradient(135deg, ' + c.primary + ' 0%, ' + c.primaryDark + ' 100%);\
+                    color: white;\
+                    border: none;\
+                    padding: 12px 28px;\
+                    border-radius: 10px;\
+                    font-size: 15px;\
+                    font-weight: 700;\
+                    cursor: pointer;\
+                    transition: all 0.2s;\
+                    box-shadow: 0 4px 16px rgba(26, 115, 232, 0.4);\
+                    white-space: nowrap;\
+                }\
+                .ohc-predictor-btn:hover {\
+                    transform: translateY(-2px);\
+                    box-shadow: 0 6px 20px rgba(26, 115, 232, 0.5);\
+                }\
+                \
+                .ohc-modal-overlay {\
+                    position: fixed;\
+                    top: 0; left: 0; right: 0; bottom: 0;\
+                    background: rgba(13, 71, 161, 0.85);\
+                    backdrop-filter: blur(8px);\
+                    display: flex;\
+                    align-items: center;\
+                    justify-content: center;\
+                    z-index: 10001;\
+                    opacity: 0;\
+                    visibility: hidden;\
+                    transition: all 0.3s;\
+                }\
+                .ohc-modal-overlay.visible { opacity: 1; visibility: visible; }\
+                .ohc-modal {\
+                    background: linear-gradient(180deg, #ffffff 0%, #e3f2fd 100%);\
+                    border-radius: 20px;\
+                    padding: 36px;\
+                    max-width: 460px;\
+                    width: 92%;\
+                    text-align: center;\
+                    transform: scale(0.9);\
+                    transition: transform 0.3s;\
+                    position: relative;\
+                    box-shadow: 0 20px 50px rgba(26, 115, 232, 0.4);\
+                    border: 2px solid ' + c.primary + ';\
+                }\
+                .ohc-modal-overlay.visible .ohc-modal { transform: scale(1); }\
+                .ohc-modal-close {\
+                    position: absolute;\
+                    top: 12px;\
+                    right: 12px;\
+                    background: ' + c.primary + ';\
+                    border: none;\
+                    font-size: 18px;\
+                    cursor: pointer;\
+                    color: white;\
+                    width: 32px;\
+                    height: 32px;\
+                    border-radius: 50%;\
+                    display: flex;\
+                    align-items: center;\
+                    justify-content: center;\
+                }\
+                .ohc-modal h2 {\
+                    margin: 0 0 10px;\
+                    font-size: 26px;\
+                    background: linear-gradient(135deg, ' + c.primary + ' 0%, ' + c.secondary + ' 100%);\
+                    -webkit-background-clip: text;\
+                    -webkit-text-fill-color: transparent;\
+                    background-clip: text;\
+                    font-weight: 800;\
+                }\
+                .ohc-modal p { color: ' + c.gray + '; margin: 0 0 16px; font-size: 15px; line-height: 1.5; }\
+                .ohc-blurred-results {\
+                    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%);\
+                    border: 2px solid ' + c.primary + ';\
+                    border-radius: 12px;\
+                    padding: 16px;\
+                    margin: 16px 0;\
+                    filter: blur(4px);\
+                    user-select: none;\
+                    font-size: 14px;\
+                }\
+                .ohc-app-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }\
+                .ohc-app-btn {\
+                    display: flex;\
+                    align-items: center;\
+                    gap: 8px;\
+                    padding: 12px 24px;\
+                    border-radius: 12px;\
+                    text-decoration: none;\
+                    font-weight: 700;\
+                    transition: all 0.2s;\
+                    background: linear-gradient(135deg, ' + c.primary + ' 0%, ' + c.primaryDark + ' 100%);\
+                    color: white;\
+                    box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);\
+                    font-size: 14px;\
+                }\
+                .ohc-app-btn:hover { transform: translateY(-2px); }\
+                .ohc-app-btn.secondary {\
+                    background: linear-gradient(135deg, ' + c.secondary + ' 0%, ' + c.secondaryDark + ' 100%);\
+                    box-shadow: 0 4px 14px rgba(255, 111, 0, 0.4);\
+                }\
+                \
+                .ohc-lead-form { background: white; border-radius: 16px; padding: 28px; }\
+                .ohc-lead-form h3 { margin: 0 0 6px; color: ' + c.primaryDark + '; font-size: 20px; font-weight: 700; }\
+                .ohc-lead-form > p { margin: 0 0 20px; color: ' + c.gray + '; font-size: 14px; }\
+                .ohc-form-group { margin-bottom: 16px; }\
+                .ohc-form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: ' + c.dark + '; font-size: 13px; }\
+                .ohc-form-group input, .ohc-form-group select, .ohc-form-group textarea {\
+                    width: 100%;\
+                    padding: 12px 14px;\
+                    border: 2px solid #e0e0e0;\
+                    border-radius: 10px;\
+                    font-size: 14px;\
+                    transition: all 0.2s;\
+                    box-sizing: border-box;\
+                    background: white;\
+                }\
+                .ohc-form-group input:focus, .ohc-form-group select:focus, .ohc-form-group textarea:focus {\
+                    outline: none;\
+                    border-color: ' + c.primary + ';\
+                }\
+                .ohc-submit-btn {\
+                    background: linear-gradient(135deg, ' + c.primary + ' 0%, ' + c.primaryDark + ' 100%);\
+                    color: white;\
+                    border: none;\
+                    padding: 14px 28px;\
+                    border-radius: 12px;\
+                    font-size: 15px;\
+                    font-weight: 700;\
+                    cursor: pointer;\
+                    width: 100%;\
+                    transition: all 0.2s;\
+                }\
+                .ohc-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }\
+                \
+                .ohc-service-matrix {\
+                    background: linear-gradient(180deg, #f8fafc 0%, #e3f2fd 100%);\
+                    border-radius: 20px;\
+                    padding: 32px;\
+                    margin: 32px 5%;\
+                    border: 2px solid #90caf9;\
+                }\
+                .ohc-service-matrix h3 { margin: 0 0 24px; text-align: center; color: ' + c.primaryDark + '; font-size: 24px; font-weight: 700; }\
+                .ohc-service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }\
+                .ohc-service-card {\
+                    background: white;\
+                    border-radius: 14px;\
+                    padding: 24px 16px;\
+                    text-align: center;\
+                    cursor: pointer;\
+                    transition: all 0.3s;\
+                    border: 2px solid transparent;\
+                    text-decoration: none;\
+                    display: block;\
+                }\
+                .ohc-service-card:hover { border-color: ' + c.primary + '; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(26, 115, 232, 0.15); }\
+                .ohc-service-card-icon { font-size: 36px; margin-bottom: 12px; }\
+                .ohc-service-card h4 { margin: 0 0 8px; font-size: 16px; color: ' + c.dark + '; font-weight: 700; }\
+                .ohc-service-card p { margin: 0; font-size: 13px; color: ' + c.gray + '; }\
+                \
+                .ohc-floating-cta { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }\
+                .ohc-floating-btn {\
+                    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);\
+                    color: white;\
+                    border: none;\
+                    padding: 16px 24px;\
+                    border-radius: 50px;\
+                    font-size: 15px;\
+                    font-weight: 700;\
+                    cursor: pointer;\
+                    display: flex;\
+                    align-items: center;\
+                    gap: 10px;\
+                    box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);\
+                    transition: all 0.3s;\
+                    text-decoration: none;\
+                    animation: ohc-pulse 2s infinite;\
+                }\
+                .ohc-floating-btn:hover { transform: scale(1.05); }\
+                \
+                @keyframes ohc-pulse {\
+                    0%, 100% { box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5); }\
+                    50% { box-shadow: 0 6px 28px rgba(37, 211, 102, 0.7), 0 0 0 6px rgba(37, 211, 102, 0.1); }\
+                }\
+                \
+                .ohc-smart-banner {\
+                    position: fixed;\
+                    top: 0;\
+                    left: 0;\
+                    right: 0;\
+                    background: linear-gradient(135deg, ' + c.primary + ' 0%, ' + c.primaryDark + ' 100%);\
+                    color: white;\
+                    padding: 12px 16px;\
+                    display: flex;\
+                    align-items: center;\
+                    justify-content: space-between;\
+                    z-index: 10000;\
+                    transform: translateY(-100%);\
+                    transition: transform 0.3s ease;\
+                }\
+                .ohc-smart-banner.visible { transform: translateY(0); }\
+                .ohc-smart-banner-content { display: flex; align-items: center; gap: 12px; flex: 1; }\
+                .ohc-smart-banner-icon { width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; }\
+                .ohc-smart-banner-icon img { width: 32px; height: 32px; }\
+                .ohc-smart-banner-text h4 { margin: 0; font-size: 14px; font-weight: 700; }\
+                .ohc-smart-banner-text p { margin: 2px 0 0; font-size: 11px; opacity: 0.9; }\
+                .ohc-smart-banner-cta {\
+                    background: linear-gradient(135deg, ' + c.secondary + ' 0%, ' + c.secondaryDark + ' 100%);\
+                    color: white;\
+                    border: none;\
+                    padding: 10px 20px;\
+                    border-radius: 20px;\
+                    font-weight: 700;\
+                    cursor: pointer;\
+                    font-size: 13px;\
+                }\
+                .ohc-smart-banner-close { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 50%; margin-left: 10px; }\
+                \
+                @media (max-width: 900px) {\
+                    .ohc-service-grid { grid-template-columns: repeat(2, 1fr); }\
+                }\
+                @media (max-width: 600px) {\
+                    .ohc-predictor-wrapper { padding: 20px 4%; }\
+                    .ohc-predictor-teaser { padding: 20px 16px; }\
+                    .ohc-predictor-teaser h3 { font-size: 18px; }\
+                    .ohc-predictor-input-group { flex-direction: column; width: 100%; }\
+                    .ohc-predictor-input { width: 100%; }\
+                    .ohc-predictor-btn { width: 100%; }\
+                    .ohc-service-grid { grid-template-columns: 1fr 1fr; }\
+                    .ohc-floating-btn { padding: 12px 18px; font-size: 14px; }\
+                    .ohc-service-matrix { padding: 24px 16px; margin: 24px 3%; }\
+                }\
+            ';
+            
+            var styleSheet = document.createElement('style');
+            styleSheet.id = 'ohc-leadgen-styles';
+            styleSheet.textContent = styles;
+            document.head.appendChild(styleSheet);
+        },
+        
+        isMobile: function() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        },
+        
+        createSmartAppBanner: function() {
+            if (!this.isMobile()) return;
+            if (sessionStorage.getItem('ohc_banner_dismissed')) return;
+            
+            var banner = document.createElement('div');
+            banner.className = 'ohc-smart-banner';
+            banner.innerHTML = '\
+                <div class="ohc-smart-banner-content">\
+                    <div class="ohc-smart-banner-icon">\
+                        <img src="/assets/images/logo/logo.png" alt="OhCampus" onerror="this.style.display=\'none\'">\
+                    </div>\
+                    <div class="ohc-smart-banner-text">\
+                        <h4>OhCampus App</h4>\
+                        <p>Get accurate College Predictions</p>\
+                    </div>\
+                </div>\
+                <button class="ohc-smart-banner-cta" id="ohc-banner-cta">Open App</button>\
+                <button class="ohc-smart-banner-close" id="ohc-banner-close">&times;</button>';
+            
+            document.body.prepend(banner);
+            
+            document.getElementById('ohc-banner-cta').addEventListener('click', function() { OHCAMPUS_LEADGEN.openAppStore(); });
+            document.getElementById('ohc-banner-close').addEventListener('click', function() { OHCAMPUS_LEADGEN.dismissBanner(); });
+            
+            setTimeout(function() { banner.classList.add('visible'); }, 500);
+        },
+        
+        dismissBanner: function() {
+            var banner = document.querySelector('.ohc-smart-banner');
+            if (banner) {
+                banner.classList.remove('visible');
+                sessionStorage.setItem('ohc_banner_dismissed', 'true');
+            }
+        },
+        
+        openAppStore: function() {
+            this.trackEvent('app_download_click', { source: 'smart_banner' });
+            window.location.href = this.config.playStoreUrl;
+        },
+        
+        createPredictorTeaser: function() {
+            if (document.getElementById('ohc-predictor-wrapper')) return;
+            
+            // Find "Featured Colleges" section by looking for the heading
+            var featuredHeading = null;
+            var headings = document.querySelectorAll('h2, h3, .section-title, [class*="title"]');
+            
+            for (var i = 0; i < headings.length; i++) {
+                var text = (headings[i].innerText || '').toLowerCase();
+                if (text.includes('featured') && text.includes('college')) {
+                    featuredHeading = headings[i];
+                    break;
+                }
+            }
+            
+            // Find the parent section/container of Featured Colleges
+            var targetSection = null;
+            if (featuredHeading) {
+                // Go up to find the section container
+                targetSection = featuredHeading.closest('section, .section, [class*="section"], div[class*="featured"]');
+                if (!targetSection) {
+                    // Use the parent of the heading
+                    targetSection = featuredHeading.parentElement;
+                }
+            }
+            
+            if (!targetSection) {
+                console.log('OHC Lead Gen: Featured Colleges section not found');
+                return;
+            }
+            
+            // Create wrapper
+            var wrapper = document.createElement('div');
+            wrapper.className = 'ohc-predictor-wrapper';
+            wrapper.id = 'ohc-predictor-wrapper';
+            
+            var teaser = document.createElement('div');
+            teaser.className = 'ohc-predictor-teaser';
+            teaser.id = 'ohc-predictor-teaser';
+            teaser.innerHTML = '\
+                <h3>Find Your Perfect College Based on Rank</h3>\
+                <p>Enter your expected rank to discover matching colleges for KCET, NEET, JEE and more</p>\
+                <div class="ohc-predictor-input-group">\
+                    <input type="number" class="ohc-predictor-input" placeholder="Enter your rank" id="ohc-rank-input">\
+                    <select class="ohc-predictor-input" id="ohc-exam-select">\
+                        <option value="KCET">KCET</option>\
+                        <option value="NEET">NEET</option>\
+                        <option value="JEE">JEE Main</option>\
+                        <option value="COMEDK">COMEDK</option>\
+                    </select>\
+                    <button class="ohc-predictor-btn" id="ohc-check-btn">Check Colleges</button>\
+                </div>';
+            
+            wrapper.appendChild(teaser);
+            
+            // Insert BEFORE the Featured Colleges section
+            targetSection.parentNode.insertBefore(wrapper, targetSection);
+            console.log('OHC Lead Gen: Predictor teaser injected before Featured Colleges');
+            
+            // Add event listener
+            setTimeout(function() {
+                var checkBtn = document.getElementById('ohc-check-btn');
+                if (checkBtn) {
+                    checkBtn.addEventListener('click', function() { OHCAMPUS_LEADGEN.checkRank(); });
+                }
+            }, 100);
+        },
+        
+        checkRank: function() {
+            var rankInput = document.getElementById('ohc-rank-input');
+            var examSelect = document.getElementById('ohc-exam-select');
+            var rank = parseInt(rankInput ? rankInput.value : 0);
+            var exam = examSelect ? examSelect.value : 'KCET';
+            
+            if (!rank || rank < 1) {
+                alert('Please enter a valid rank');
+                return;
+            }
+            
+            this.trackEvent('predictor_teaser_used', { rank: rank, exam: exam });
+            this.showPredictorModal(rank, exam);
+        },
+        
+        showPredictorModal: function(rank, exam) {
+            var self = this;
+            var collegeCount = Math.max(5, Math.floor(50000 / rank * 3));
+            
+            var modal = document.createElement('div');
+            modal.className = 'ohc-modal-overlay';
+            modal.innerHTML = '\
+                <div class="ohc-modal">\
+                    <button class="ohc-modal-close" id="ohc-modal-close">&times;</button>\
+                    <h2>' + collegeCount + '+ Colleges Found!</h2>\
+                    <p>Based on your ' + exam + ' rank of <strong>' + rank.toLocaleString() + '</strong></p>\
+                    <div class="ohc-blurred-results">\
+                        <div style="padding: 10px; border-bottom: 1px solid #64b5f6;">1. RVCE Bangalore - 85%</div>\
+                        <div style="padding: 10px; border-bottom: 1px solid #64b5f6;">2. MSRIT Bangalore - 78%</div>\
+                        <div style="padding: 10px;">3. BMS College - 72%</div>\
+                    </div>\
+                    <p style="font-weight: 700; color: #1a73e8;">Download the App for your complete list!</p>\
+                    <div class="ohc-app-buttons">\
+                        <a href="' + self.config.playStoreUrl + '" class="ohc-app-btn" target="_blank">Google Play</a>\
+                        <a href="' + self.config.appStoreUrl + '" class="ohc-app-btn secondary" target="_blank">App Store</a>\
+                    </div>\
+                    <p style="margin-top: 16px; font-size: 13px; color: #64748b;">Or call: <a href="tel:+918884560456" style="color: #1a73e8; font-weight: 600;">+91 88845 60456</a></p>\
+                </div>';
+            
+            document.body.appendChild(modal);
+            setTimeout(function() { modal.classList.add('visible'); }, 10);
+            
+            document.getElementById('ohc-modal-close').addEventListener('click', function() { modal.remove(); });
+            modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+        },
+        
+        enhanceCollegePages: function() {
+            var isCollegePage = window.location.pathname.includes('/college');
+            if (!isCollegePage) return;
+            this.addManagementWidget();
+        },
+        
+        addManagementWidget: function() {
+            var self = this;
+            var targetElement = document.querySelector('.mat-tab-body-content, [class*="college-detail"], .content-area');
+            
+            if (!targetElement || document.getElementById('ohc-mgmt-widget')) return;
+            
+            var collegeName = document.querySelector('h1') ? document.querySelector('h1').textContent : 'this college';
+            
+            var widget = document.createElement('div');
+            widget.id = 'ohc-mgmt-widget';
+            widget.style.cssText = 'background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 2px solid #ff6f00; border-radius: 16px; padding: 24px; margin: 20px 0;';
+            widget.innerHTML = '\
+                <h4 style="margin: 0 0 8px; color: #e65100; font-size: 18px; font-weight: 700;">Skip the Counseling Uncertainty</h4>\
+                <p style="margin: 0 0 16px; color: #bf360c; font-size: 14px;">Get direct admission to <strong>' + collegeName + '</strong> through Management Quota.</p>\
+                <button id="ohc-mgmt-btn" style="background: linear-gradient(135deg, #ff6f00 0%, #e65100 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%;">Request Info</button>';
+            
+            targetElement.appendChild(widget);
+            
+            document.getElementById('ohc-mgmt-btn').addEventListener('click', function() { self.showLeadForm('management'); });
+        },
+        
+        showLeadForm: function(type) {
+            var self = this;
+            this.trackEvent('lead_form_opened', { type: type });
+            
+            var titles = {
+                'management': 'Direct Admission Inquiry',
+                'callback': 'Request Callback'
+            };
+            
+            var modal = document.createElement('div');
+            modal.className = 'ohc-modal-overlay';
+            modal.innerHTML = '\
+                <div class="ohc-modal">\
+                    <button class="ohc-modal-close" id="ohc-form-close">&times;</button>\
+                    <div class="ohc-lead-form">\
+                        <h3>' + (titles[type] || 'Get Expert Help') + '</h3>\
+                        <p>Our experts will contact you shortly.</p>\
+                        <form id="ohc-lead-form">\
+                            <div class="ohc-form-group">\
+                                <label>Full Name *</label>\
+                                <input type="text" name="name" required placeholder="Your name">\
+                            </div>\
+                            <div class="ohc-form-group">\
+                                <label>Phone *</label>\
+                                <input type="tel" name="phone" required placeholder="10-digit number" pattern="[0-9]{10}">\
+                            </div>\
+                            <div class="ohc-form-group">\
+                                <label>Email</label>\
+                                <input type="email" name="email" placeholder="your@email.com">\
+                            </div>\
+                            <input type="hidden" name="source" value="website_' + type + '">\
+                            <input type="hidden" name="page_url" value="' + window.location.href + '">\
+                            <button type="submit" class="ohc-submit-btn" id="ohc-submit-btn">Submit</button>\
+                        </form>\
+                    </div>\
+                </div>';
+            
+            document.body.appendChild(modal);
+            setTimeout(function() { modal.classList.add('visible'); }, 10);
+            
+            document.getElementById('ohc-form-close').addEventListener('click', function() { modal.remove(); });
+            document.getElementById('ohc-lead-form').addEventListener('submit', function(e) { self.submitLead(e, type); });
+        },
+        
+        submitLead: function(event, type) {
+            var self = this;
+            event.preventDefault();
+            
+            var form = event.target;
+            var submitBtn = document.getElementById('ohc-submit-btn');
+            var formData = new FormData(form);
+            var data = {};
+            formData.forEach(function(value, key) { data[key] = value; });
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            fetch(this.config.apiUrl + '/Campus_app/submitWebLead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
+                self.trackEvent('lead_submitted', { type: type, success: true });
+                self.showThankYou(data.name);
+            })
+            .catch(function(error) {
+                console.error('Lead error:', error);
+                self.showThankYou(data.name);
+            });
+        },
+        
+        showThankYou: function(name) {
+            var self = this;
+            var modal = document.querySelector('.ohc-modal-overlay');
+            if (modal) {
+                modal.innerHTML = '\
+                    <div class="ohc-modal">\
+                        <h2 style="color: #00c853;">Thank You!</h2>\
+                        <p>We will contact you within 24 hours, ' + name + '.</p>\
+                        <div class="ohc-app-buttons">\
+                            <a href="' + self.config.playStoreUrl + '" class="ohc-app-btn" target="_blank">Get the App</a>\
+                            <a href="https://wa.me/' + self.config.whatsappNumber + '" class="ohc-floating-btn" style="animation: none;" target="_blank">Chat Now</a>\
+                        </div>\
+                        <button id="ohc-close-ty" style="margin-top: 16px; background: ' + self.config.colors.primary + '; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Close</button>\
+                    </div>';
+                document.getElementById('ohc-close-ty').addEventListener('click', function() { modal.remove(); });
+            }
+        },
+        
+        createServiceMatrix: function() {
+            if (document.getElementById('ohc-service-matrix')) return;
+            
+            var self = this;
+            var footer = document.querySelector('footer, .footer, [class*="footer"]');
+            if (!footer) return;
+            
+            var matrix = document.createElement('div');
+            matrix.className = 'ohc-service-matrix';
+            matrix.id = 'ohc-service-matrix';
+            matrix.innerHTML = '\
+                <h3>How Can We Help You?</h3>\
+                <div class="ohc-service-grid">\
+                    <a href="' + self.config.playStoreUrl + '" target="_blank" class="ohc-service-card" id="ohc-svc-merit">\
+                        <div class="ohc-service-card-icon">&#127891;</div>\
+                        <h4>Merit Seat</h4>\
+                        <p>College Predictor in App</p>\
+                    </a>\
+                    <a href="' + self.config.scholarshipUrl + '" class="ohc-service-card" id="ohc-svc-scholarship">\
+                        <div class="ohc-service-card-icon">&#128176;</div>\
+                        <h4>Scholarship</h4>\
+                        <p>Apply & track status</p>\
+                    </a>\
+                    <div class="ohc-service-card" id="ohc-svc-mgmt">\
+                        <div class="ohc-service-card-icon">&#127979;</div>\
+                        <h4>Management Seat</h4>\
+                        <p>Direct admission help</p>\
+                    </div>\
+                    <a href="' + self.config.playStoreUrl + '" target="_blank" class="ohc-service-card" id="ohc-svc-option">\
+                        <div class="ohc-service-card-icon">&#128203;</div>\
+                        <h4>Option Entry</h4>\
+                        <p>AI Simulator in App</p>\
+                    </a>\
+                </div>';
+            
+            footer.parentNode.insertBefore(matrix, footer);
+            
+            setTimeout(function() {
+                var mgmtCard = document.getElementById('ohc-svc-mgmt');
+                if (mgmtCard) {
+                    mgmtCard.addEventListener('click', function() { self.showLeadForm('management'); });
+                }
+            }, 100);
+            
+            console.log('OHC Lead Gen: Service matrix injected');
+        },
+        
+        setupScrollTriggers: function() {
+            var self = this;
+            var exitShown = false;
+            
+            if (!this.isMobile()) {
+                document.addEventListener('mouseout', function(e) {
+                    if (e.clientY < 10 && !exitShown && !sessionStorage.getItem('ohc_exit_shown')) {
+                        exitShown = true;
+                        sessionStorage.setItem('ohc_exit_shown', 'true');
+                        self.showExitPopup();
+                    }
+                });
+            }
+        },
+        
+        showExitPopup: function() {
+            var self = this;
+            var popup = document.createElement('div');
+            popup.className = 'ohc-modal-overlay';
+            popup.innerHTML = '\
+                <div class="ohc-modal">\
+                    <button class="ohc-modal-close" id="ohc-exit-close" style="background: #ff6f00;">&times;</button>\
+                    <h2 style="background: linear-gradient(135deg, #ff6f00 0%, #e65100 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Wait!</h2>\
+                    <p>Get personalized college recommendations with our FREE app!</p>\
+                    <div class="ohc-app-buttons">\
+                        <a href="' + self.config.playStoreUrl + '" class="ohc-app-btn secondary" target="_blank">Download App</a>\
+                    </div>\
+                    <p style="margin-top: 16px;"><a href="#" id="ohc-exit-talk" style="color: #1a73e8;">Talk to an expert</a></p>\
+                </div>';
+            
+            document.body.appendChild(popup);
+            setTimeout(function() { popup.classList.add('visible'); }, 10);
+            
+            document.getElementById('ohc-exit-close').addEventListener('click', function() { popup.remove(); });
+            document.getElementById('ohc-exit-talk').addEventListener('click', function(e) { e.preventDefault(); popup.remove(); self.showLeadForm('callback'); });
+        },
+        
+        createFloatingCTA: function() {
+            if (document.querySelector('.ohc-floating-cta')) return;
+            
+            var cta = document.createElement('div');
+            cta.className = 'ohc-floating-cta';
+            cta.innerHTML = '<a href="https://wa.me/' + this.config.whatsappNumber + '?text=Hi, I need help with college admissions." class="ohc-floating-btn" target="_blank"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.98 3.8 13.46 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M8.53 7.33C8.37 7.33 8.1 7.39 7.87 7.64C7.65 7.89 7 8.5 7 9.71C7 10.93 7.89 12.1 8 12.27C8.14 12.44 9.76 14.94 12.25 16C12.84 16.27 13.3 16.42 13.66 16.53C14.25 16.72 14.79 16.69 15.22 16.63C15.7 16.56 16.68 16.03 16.89 15.45C17.1 14.87 17.1 14.38 17.04 14.27C16.97 14.17 16.81 14.11 16.56 14C16.31 13.86 15.09 13.26 14.87 13.18C14.64 13.1 14.5 13.06 14.31 13.3C14.15 13.55 13.67 14.11 13.53 14.27C13.38 14.44 13.24 14.46 13 14.34C12.74 14.21 11.94 13.95 11 13.11C10.26 12.45 9.77 11.64 9.62 11.39C9.5 11.15 9.61 11 9.73 10.89C9.84 10.78 10 10.6 10.1 10.45C10.23 10.31 10.27 10.2 10.35 10.04C10.43 9.87 10.39 9.73 10.33 9.61C10.27 9.5 9.77 8.26 9.56 7.77C9.36 7.29 9.16 7.35 9 7.34C8.86 7.34 8.7 7.33 8.53 7.33Z"/></svg>Chat with Expert</a>';
+            
+            document.body.appendChild(cta);
+        },
+        
+        trackEvent: function(name, data) {
+            if (typeof gtag !== 'undefined') gtag('event', name, data || {});
+            console.log('OHC Event:', name, data);
+        },
+        
+        trackUserBehavior: function() {
+            this.trackEvent('page_view', { page: window.location.pathname, mobile: this.isMobile() });
+        }
+    };
+    
+    window.OHCAMPUS_LEADGEN = OHCAMPUS_LEADGEN;
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { OHCAMPUS_LEADGEN.init(); });
+    } else {
+        OHCAMPUS_LEADGEN.init();
+    }
+    
+    setTimeout(function() { OHCAMPUS_LEADGEN.createFloatingCTA(); }, 2000);
+})();

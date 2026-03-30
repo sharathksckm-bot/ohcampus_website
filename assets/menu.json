@@ -1,0 +1,602 @@
+[
+    {
+      "id": "91",
+      "catname": "Engineering",
+      "menuorder": "1",
+      "type": "college"
+    },
+    {
+      "id": "96",
+      "catname": "Management",
+      "menuorder": "2",
+      "type": "college"
+    },
+    {
+      "id": "97",
+      "catname": "Medicine & Health Sciences",
+      "menuorder": "3",
+      "type": "college"
+    },
+    {
+      "id": "164",
+      "catname": "Nursing",
+      "menuorder": "4",
+      "type": "college"
+    },
+    {
+      "id": "180",
+      "catname": "IT/Software",
+      "menuorder": "4",
+      "type": "college"
+    },
+    {
+      "id": "90",
+      "catname": "Science",
+      "menuorder": "5",
+      "type": "college"
+    },
+    {
+      "id": "219",
+      "catname": "Dental",
+      "menuorder": "5",
+      "type": "college"
+    },
+    {
+      "id": "162",
+      "catname": "Pharmacy",
+      "menuorder": "5",
+      "type": "college"
+    },
+    {
+      "id": "217",
+      "catname": "Hotel management",
+      "menuorder": "6",
+      "type": "college"
+    },
+    {
+      "id": "92",
+      "catname": "Fashion",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "210",
+      "catname": "Acting",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "199",
+      "catname": "Farm Sciences",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "198",
+      "catname": "Humanities & Social Sciences",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "191",
+      "catname": "Arts (Liberal / Fine / Visual / Performing)",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "155",
+      "catname": "Design",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "216",
+      "catname": "Architecture & Planning",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "95",
+      "catname": "Law",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "163",
+      "catname": "Vocational Training Course",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "93",
+      "catname": "Accounting and Commerce",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "165",
+      "catname": "Para Medical",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "94",
+      "catname": "Hospitality Tourism and Travel",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "181",
+      "catname": "Mass Media and Communication",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "89",
+      "catname": "Animation & Gaming",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "104",
+      "catname": "Teaching and Education",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "103",
+      "catname": "Aviation",
+      "menuorder": "0",
+      "type": "college"
+    },
+    {
+      "id": "218",
+      "catname": "Farm sciences",
+      "menuorder": "1",
+      "type": "exams"
+    },
+    {
+      "id": "183",
+      "catname": "Education",
+      "menuorder": "3",
+      "type": "careers"
+    },
+    {
+      "id": "179",
+      "catname": "Management",
+      "menuorder": "5",
+      "type": "careers"
+    },
+    {
+      "id": "220",
+      "catname": "Ranking",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "190",
+      "catname": "Interior designer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "189",
+      "catname": "Aeronautical ",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "215",
+      "catname": "Pharmacy",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "188",
+      "catname": "Agriculture",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "187",
+      "catname": "Homeopathy",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "186",
+      "catname": "Medicine",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "185",
+      "catname": "Radiology",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "184",
+      "catname": "Robotics",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "214",
+      "catname": "Hospitality and tourism",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "221",
+      "catname": "Highlights",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "222",
+      "catname": "Courses",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "223",
+      "catname": "Placement",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "224",
+      "catname": "Fees",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "236",
+      "catname": "Scholarship",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "244",
+      "catname": "CutOff",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "211",
+      "catname": "Finance & accounts",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "192",
+      "catname": "Science",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "193",
+      "catname": "Hospitality and tourism",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "194",
+      "catname": "Pharmacy",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "195",
+      "catname": "Law",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "196",
+      "catname": "Veterinary",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "197",
+      "catname": "Design",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "213",
+      "catname": "Media, mass communication and journalism",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "212",
+      "catname": "Computer application & it",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "201",
+      "catname": "Dcet",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "202",
+      "catname": "Jee main",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "203",
+      "catname": "Jee advanced",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "204",
+      "catname": "Neet",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "205",
+      "catname": "Nata",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "206",
+      "catname": "Maharashtra-cet",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "207",
+      "catname": "Upsc",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "115",
+      "catname": "Cinematographer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "124",
+      "catname": "Dermatologist",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "123",
+      "catname": "Doctor",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "122",
+      "catname": "Dietitian",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "121",
+      "catname": "Dentist",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "120",
+      "catname": "Choreographer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "119",
+      "catname": "Cartoonist",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "118",
+      "catname": "Cardiologist",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "117",
+      "catname": "Counselor",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "116",
+      "catname": "Copywriter",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "125",
+      "catname": "Accessory designer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "114",
+      "catname": "Caterer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "113",
+      "catname": "Bodyguard",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "112",
+      "catname": "Baker",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "111",
+      "catname": "Biotechnologist",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "109",
+      "catname": "Biochemist",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "108",
+      "catname": "Beautician",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "107",
+      "catname": "Banker",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "106",
+      "catname": "Astronomer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "105",
+      "catname": "Animation",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "143",
+      "catname": "Colleges",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "159",
+      "catname": "MBA",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "158",
+      "catname": "Fashion",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "157",
+      "catname": "Arts & science",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "156",
+      "catname": "Medicine & Health Sciences",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "152",
+      "catname": "Law",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "151",
+      "catname": "Design",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "150",
+      "catname": "Engineering",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "149",
+      "catname": "Management",
+      "menuorder": "0",
+      "type": "exams"
+    },
+    {
+      "id": "141",
+      "catname": "Admissions",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "160",
+      "catname": "Engineering",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "144",
+      "catname": "Loans",
+      "menuorder": "0",
+      "type": "faq"
+    },
+    {
+      "id": "146",
+      "catname": "Documents",
+      "menuorder": "0",
+      "type": "downloads"
+    },
+    {
+      "id": "136",
+      "catname": "Technical",
+      "menuorder": "0",
+      "type": "events"
+    },
+    {
+      "id": "135",
+      "catname": "Sports",
+      "menuorder": "0",
+      "type": "events"
+    },
+    {
+      "id": "134",
+      "catname": "Management",
+      "menuorder": "0",
+      "type": "events"
+    },
+    {
+      "id": "133",
+      "catname": "Cultural",
+      "menuorder": "0",
+      "type": "events"
+    },
+    {
+      "id": "161",
+      "catname": "Conference",
+      "menuorder": "0",
+      "type": "events"
+    },
+    {
+      "id": "127",
+      "catname": "Jewellery Designer",
+      "menuorder": "0",
+      "type": "careers"
+    },
+    {
+      "id": "126",
+      "catname": "Fashion Designer",
+      "menuorder": "0",
+      "type": "careers"
+    }
+  ]
