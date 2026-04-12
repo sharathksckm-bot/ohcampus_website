@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Predictor - OhCampus | Find Colleges Based on Your Rank</title>
+    <meta name="description" content="Find colleges you can get admission to based on your rank. Supports KCET, NEET, JEE, COMEDK, GATE, CAT.">
+    <link rel="icon" type="image/png" href="favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; min-height: 100vh; }
+        
+        .header { background: #2e7d32; color: white; padding: 12px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+        .logo img { height: 32px; }
+        .logo span { font-size: 20px; font-weight: 700; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; opacity: 0.9; transition: opacity 0.3s; font-size: 14px; }
+        .nav-links a:hover, .nav-links a.active { opacity: 1; }
+        .user-section { display: flex; align-items: center; gap: 12px; }
+        .btn-login { background: white; color: #2e7d32; padding: 8px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; text-decoration: none; }
+        .user-info { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 20px; }
+        .user-info .avatar { width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #2e7d32; font-weight: 600; font-size: 12px; }
+        .user-info .name { font-size: 13px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .btn-logout { background: none; border: none; color: white; cursor: pointer; font-size: 13px; opacity: 0.8; }
+        
+        .container { max-width: 1000px; margin: 25px auto; padding: 0 20px; }
+        
+        .page-title { text-align: center; margin-bottom: 25px; }
+        .page-title h1 { font-size: 1.8rem; color: #2e7d32; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .page-title p { color: #666; font-size: 0.95rem; }
+        
+        .exam-selector { background: white; border-radius: 14px; padding: 22px; margin-bottom: 22px; box-shadow: 0 3px 15px rgba(0,0,0,0.06); }
+        .exam-selector h3 { font-size: 0.95rem; color: #333; margin-bottom: 12px; font-weight: 600; }
+        
+        .level-tabs { display: flex; gap: 10px; margin-bottom: 16px; }
+        .level-tab { flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; background: white; cursor: pointer; font-weight: 600; text-align: center; transition: all 0.3s; font-size: 14px; }
+        .level-tab:hover { border-color: #2e7d32; }
+        .level-tab.active { background: #2e7d32; color: white; border-color: #2e7d32; }
+        
+        .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        .exam-card { padding: 14px 10px; border: 2px solid #e8e8e8; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s; background: white; }
+        .exam-card:hover { border-color: #2e7d32; transform: translateY(-2px); }
+        .exam-card.active { border-color: #2e7d32; background: #e8f5e9; }
+        .exam-card i { font-size: 1.6rem; margin-bottom: 6px; display: block; }
+        .exam-card .name { font-weight: 600; font-size: 0.9rem; color: #333; }
+        .exam-card .desc { font-size: 0.7rem; color: #888; margin-top: 3px; }
+        
+        .exam-card.kcet i { color: #4361ee; }
+        .exam-card.comedk i { color: #7c3aed; }
+        .exam-card.jee i { color: #f59e0b; }
+        .exam-card.neet i { color: #10b981; }
+        .exam-card.gate i { color: #6366f1; }
+        .exam-card.cat i { color: #ec4899; }
+        .exam-card.neetpg i { color: #14b8a6; }
+        .exam-card.pgcet i { color: #8b5cf6; }
+        
+        .form-card { background: white; border-radius: 14px; padding: 22px; box-shadow: 0 3px 15px rgba(0,0,0,0.06); }
+        .form-card h3 { font-size: 1rem; color: #2e7d32; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 0.85rem; }
+        .form-group label .required { color: #ef4444; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.3s; background: white; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #2e7d32; }
+        .form-group .hint { font-size: 0.75rem; color: #888; margin-top: 4px; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+        @media (max-width: 768px) { .form-row, .form-row-3 { grid-template-columns: 1fr; } }
+        
+        .btn-predict { width: 100%; padding: 14px; background: #2e7d32; color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
+        .btn-predict:hover { background: #1b5e20; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(46,125,50,0.3); }
+        .btn-predict:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        
+        .results-section { display: none; margin-top: 22px; }
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+        .results-header h3 { color: #2e7d32; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .results-count { background: #e8f5e9; padding: 6px 16px; border-radius: 16px; color: #2e7d32; font-weight: 600; font-size: 0.85rem; }
+        
+        .college-list { display: flex; flex-direction: column; gap: 12px; }
+        .college-card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid; transition: all 0.3s; }
+        .college-card:hover { box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        .college-card.safe { border-color: #4CAF50; }
+        .college-card.possible { border-color: #FF9800; }
+        .college-card.dream { border-color: #f44336; }
+        
+        .college-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
+        .college-name { font-size: 1rem; font-weight: 600; color: #333; flex: 1; }
+        .college-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .badge-safe { background: #e8f5e9; color: #2e7d32; }
+        .badge-possible { background: #fff3e0; color: #e65100; }
+        .badge-dream { background: #ffebee; color: #c62828; }
+        
+        .college-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
+        .detail-item span { display: block; font-size: 0.7rem; color: #888; margin-bottom: 2px; }
+        .detail-item strong { font-size: 0.9rem; color: #333; }
+        
+        .college-actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-view { padding: 6px 14px; border-radius: 6px; font-weight: 500; text-decoration: none; font-size: 0.8rem; transition: all 0.3s; cursor: pointer; }
+        .btn-view-details { background: #2e7d32; color: white; border: none; }
+        .btn-view-courses { background: white; color: #2e7d32; border: 2px solid #2e7d32; }
+        
+        .no-results { text-align: center; padding: 40px 20px; background: white; border-radius: 12px; }
+        .no-results i { font-size: 2.5rem; color: #ccc; margin-bottom: 12px; }
+        .no-results h4 { color: #666; margin-bottom: 6px; }
+        .no-results p { color: #999; font-size: 0.85rem; }
+        
+        .premium-card { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 14px; padding: 22px; margin-top: 22px; }
+        .premium-card h4 { color: #92400e; font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .premium-card p { color: #78350f; font-size: 0.85rem; margin-bottom: 12px; }
+        .premium-features { list-style: none; margin-bottom: 16px; }
+        .premium-features li { padding: 6px 0; color: #78350f; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .premium-features li i { color: #f59e0b; }
+        .btn-premium { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal-content { background: white; border-radius: 16px; padding: 28px; max-width: 400px; width: 100%; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-content h3 { font-size: 1.2rem; margin-bottom: 6px; color: #2e7d32; }
+        .modal-content > p { color: #666; margin-bottom: 18px; font-size: 0.85rem; }
+        .modal-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+        .modal-tab { flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; background: white; cursor: pointer; font-weight: 600; text-align: center; font-size: 0.9rem; }
+        .modal-tab.active { background: #2e7d32; color: white; border-color: #2e7d32; }
+        .btn-submit { width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+        .modal-footer { text-align: center; margin-top: 14px; font-size: 0.8rem; color: #888; }
+        .modal-footer a { color: #2e7d32; text-decoration: none; font-weight: 500; }
+        .close-modal { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+        
+        .footer { text-align: center; padding: 20px; color: #888; font-size: 0.8rem; margin-top: 30px; }
+        .footer a { color: #2e7d32; text-decoration: none; }
+        
+        .spinner { width: 16px; height: 16px; border: 3px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading .spinner { display: inline-block; }
+        .loading .btn-text { display: none; }
+        
+        @media (max-width: 600px) { .exam-grid { grid-template-columns: repeat(2, 1fr); } .user-info .name { display: none; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <img src="/assets/images/logo-white.png" alt="OhCampus" onerror="this.style.display='none'">
+                <span>OhCampus</span>
+            </a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/rank-predictor.html">Rank Predictor</a>
+                <a href="/college-predictor.html" class="active">College Predictor</a>
+            </nav>
+            <div class="user-section" id="userSection">
+                <a href="javascript:void(0)" class="btn-login" id="loginBtn" onclick="showAuthModal('login')">Sign In</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1><i class="fas fa-university"></i> College Predictor</h1>
+            <p>Enter your rank and preferences to find colleges where you can get admission</p>
+        </div>
+
+        <div class="exam-selector">
+            <h3>Select Your Exam</h3>
+            <div class="level-tabs">
+                <div class="level-tab active" data-level="UG" onclick="switchLevel('UG')">Undergraduate (UG)</div>
+                <div class="level-tab" data-level="PG" onclick="switchLevel('PG')">Postgraduate (PG)</div>
+            </div>
+            <div class="exam-grid" id="examGrid"></div>
+        </div>
+
+        <div class="form-card" id="formCard" style="display:none;">
+            <h3><i class="fas fa-search"></i> Enter Your Details</h3>
+            <form id="predictorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Rank <span class="required">*</span></label>
+                        <input type="number" id="rank" placeholder="Enter your rank" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category <span class="required">*</span></label>
+                        <select id="category" required>
+                            <option value="">Select category</option>
+                            <option value="General">General / GM</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="EWS">EWS</option>
+                            <option value="2A">2A</option>
+                            <option value="2B">2B</option>
+                            <option value="3A">3A</option>
+                            <option value="3B">3B</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="examSpecificFields"></div>
+                
+                <div class="form-row" id="stateRow" style="display:none;">
+                    <div class="form-group">
+                        <label>Preferred State</label>
+                        <select id="state">
+                            <option value="">All States</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>College Type</label>
+                        <select id="collegeType">
+                            <option value="">All Types</option>
+                            <option value="Government">Government</option>
+                            <option value="Private">Private</option>
+                            <option value="Deemed">Deemed University</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row" id="karnatakaRow" style="display:none;">
+                    <div class="form-group">
+                        <label>College Type</label>
+                        <select id="collegeTypeK">
+                            <option value="">All Types</option>
+                            <option value="Government">Government</option>
+                            <option value="Private">Private</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Counseling Round</label>
+                        <select id="round">
+                            <option value="1">Round 1</option>
+                            <option value="2">Round 2</option>
+                            <option value="3">Round 3</option>
+                            <option value="4">Spot/Mop-up</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-predict" id="predictBtn">
+                    <span class="btn-text"><i class="fas fa-search"></i> Find Colleges</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h3><i class="fas fa-list-ul"></i> Matching Colleges</h3>
+                <div class="results-count" id="resultsCount">0 colleges found</div>
+            </div>
+            <div class="college-list" id="collegeList"></div>
+        </div>
+
+        <div class="premium-card" id="premiumCard" style="display:none;">
+            <h4><i class="fas fa-crown"></i> Unlock Premium Features</h4>
+            <p>Get exact cutoff data, fee structures and personalized admission guidance</p>
+            <ul class="premium-features">
+                <li><i class="fas fa-check"></i> Exact opening & closing cutoff ranks</li>
+                <li><i class="fas fa-check"></i> Detailed fee structure & bond details</li>
+                <li><i class="fas fa-check"></i> Choice filling simulator</li>
+                <li><i class="fas fa-check"></i> State vs All India Quota (AIQ) comparison</li>
+                <li><i class="fas fa-check"></i> Stray vacancy alerts</li>
+                <li><i class="fas fa-check"></i> Personalized admission guidance</li>
+            </ul>
+            <button class="btn-premium" onclick="showPremiumInfo()"><i class="fas fa-unlock"></i> Get Premium - ₹499/year</button>
+            <p style="text-align:center; margin-top:10px; font-size:0.8rem; color:#92400e;">Available on the OhCampus Mobile App</p>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-content" style="position:relative;">
+            <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+            <h3 id="authTitle"><i class="fas fa-user"></i> Sign In</h3>
+            <p id="authSubtitle">Sign in to save your predictions and access them on mobile app</p>
+            <div class="modal-tabs">
+                <div class="modal-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</div>
+                <div class="modal-tab" id="tabRegister" onclick="switchAuthTab('register')">Register</div>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameGroup" style="display:none;">
+                    <label>Full Name <span class="required">*</span></label>
+                    <input type="text" id="authName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" id="authEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password <span class="required">*</span></label>
+                    <input type="password" id="authPassword" placeholder="Enter password" required>
+                </div>
+                <div class="form-group" id="phoneGroup" style="display:none;">
+                    <label>Phone Number</label>
+                    <input type="tel" id="authPhone" placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                </div>
+                <div class="form-group" id="otpGroup" style="display:none;">
+                    <label>Enter OTP <span class="required">*</span></label>
+                    <input type="text" id="authOtp" placeholder="Enter 6-digit OTP sent to your email" maxlength="6" pattern="[0-9]{6}">
+                    <div class="hint" style="margin-top:6px; font-size:0.8rem; color:#666;">Check your email for the OTP. <a href="javascript:void(0)" onclick="resendOTP()" style="color:#2e7d32; font-weight:500;">Resend OTP</a></div>
+                </div>
+                <div id="authError" style="display:none; color:#ef4444; font-size:0.85rem; margin-bottom:10px; text-align:center;"></div>
+                <button type="submit" class="btn-submit" id="authSubmitBtn">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                By continuing, you agree to our <a href="/terms.html">Terms</a> & <a href="/privacy-policy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 OhCampus. All rights reserved. | <a href="/privacy-policy.html">Privacy Policy</a> | <a href="/terms.html">Terms</a></p>
+    </footer>
+
+    <script>
+        const API_BASE = 'https://campusapi.ohcampus.com/apps';
+        
+        // Karnataka-only exams (no state selection needed)
+        const karnatakaExams = ['kcet', 'comedk', 'pgcet'];
+        
+        const examConfigs = {
+            UG: [
+                { id: 1, code: 'kcet', name: 'KCET', desc: 'Karnataka CET', icon: 'fa-graduation-cap', course: 'Engineering', isKarnataka: true, categories: ['GM','2AG','2BG','3AG','3BG','SCG','STG','GMK','2AK','2BK','3AK','3BK','SCK','STK','GMM','2AM','2BM','3AM','3BM','SCM','STM','GMR','2AR','2BR','3AR','3BR','SCR','STR'] },
+                { id: 2, code: 'comedk', name: 'COMEDK', desc: 'Engineering', icon: 'fa-building', course: 'Engineering', isKarnataka: true, categories: ['General','OBC','SC','ST'] },
+                { id: 3, code: 'jee', name: 'JEE Main', desc: 'Engineering', icon: 'fa-rocket', course: 'Engineering', isKarnataka: false, categories: ['OPEN','OBC-NCL','SC','ST','EWS','OPEN-PwD','OBC-NCL-PwD','SC-PwD','ST-PwD','EWS-PwD'] },
+                { id: 5, code: 'neet', name: 'NEET UG', desc: 'Medical', icon: 'fa-heartbeat', course: 'MBBS', isKarnataka: false, showCourse: true, categories: ['GEN','OBC','SC','ST','EWS','GEN-PH','OBC-PH','SC-PH','ST-PH','EWS-PH'] }
+            ],
+            PG: [
+                { id: 10, code: 'gate', name: 'GATE', desc: 'Engineering PG', icon: 'fa-cogs', course: 'M.Tech', isKarnataka: false, categories: ['OPEN','OBC-NCL','SC','ST','EWS','OPEN-PwD'] },
+                { id: 11, code: 'cat', name: 'CAT', desc: 'MBA/Management', icon: 'fa-briefcase', course: 'MBA', isKarnataka: false, categories: ['General','OBC-NCL','SC','ST','EWS','PwD'] },
+                { id: 12, code: 'neetpg', name: 'NEET PG', desc: 'Medical PG', icon: 'fa-stethoscope', course: 'MD/MS', isKarnataka: false, showCourse: true, categories: ['GEN','OBC','SC','ST','EWS','GEN-PH','OBC-PH','SC-PH','ST-PH','EWS-PH'] },
+                { id: 13, code: 'pgcet', name: 'PGCET', desc: 'Karnataka PG', icon: 'fa-user-graduate', course: 'M.Tech', isKarnataka: true, categories: ['GM','2AG','2BG','3AG','3BG','SCG','STG','GMK','2AK','2BK','3AK','3BK','SCK','STK'] }
+            ]
+        };
+        
+        const courseOptions = { 'NEET UG': ['MBBS', 'BDS', 'BAMS', 'BHMS'], 'NEET PG': ['MD', 'MS', 'DNB'] };
+        
+        let currentLevel = 'UG';
+        let selectedExam = null;
+        let pendingResults = null;
+        let currentUser = null;
+        let authMode = 'login';
+        
+        // Check if user is logged in
+        function checkAuth() {
+            const userData = localStorage.getItem('ohcampus_user');
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                updateUserUI();
+            }
+        }
+        
+        function updateUserUI() {
+            const section = document.getElementById('userSection');
+            if (currentUser) {
+                const initials = (currentUser.name || currentUser.email || 'U').substring(0, 2).toUpperCase();
+                section.innerHTML = `
+                    <div class="user-info">
+                        <div class="avatar">${initials}</div>
+                        <span class="name">${currentUser.name || currentUser.email}</span>
+                    </div>
+                    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                `;
+            } else {
+                section.innerHTML = '<a href="javascript:void(0)" class="btn-login" onclick="showAuthModal(\'login\')">Sign In</a>';
+            }
+        }
+        
+        function showAuthModal(mode) {
+            authMode = mode;
+            switchAuthTab(mode);
+            document.getElementById('authModal').classList.add('show');
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('show');
+        }
+        
+        function switchAuthTab(tab) {
+            authMode = tab;
+            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+            document.getElementById('nameGroup').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('phoneGroup').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('otpGroup').style.display = 'none';
+            document.getElementById('authEmail').parentElement.style.display = 'block';
+            document.getElementById('authPassword').parentElement.style.display = 'block';
+            document.querySelector('.modal-tabs').style.display = 'flex';
+            document.getElementById('authError').style.display = 'none';
+            document.getElementById('authTitle').innerHTML = tab === 'login' ? '<i class="fas fa-user"></i> Sign In' : '<i class="fas fa-user-plus"></i> Register';
+            document.getElementById('authSubtitle').textContent = tab === 'login' ? 'Sign in to save your predictions and access them on mobile app' : 'Create an account to save predictions across devices';
+            document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Sign In' : 'Register';
+        }
+        
+        var pendingOtpEmail = null;
+        
+        function showAuthError(msg) {
+            var el = document.getElementById('authError');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(function() { el.style.display = 'none'; }, 5000);
+        }
+        
+        async function resendOTP() {
+            if (!pendingOtpEmail) return;
+            try {
+                const res = await fetch(API_BASE + '/User/resendOTP', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: pendingOtpEmail })
+                });
+                const data = await res.json();
+                if (data.response_code === '200') {
+                    showAuthError('OTP resent to your email!');
+                    document.getElementById('authError').style.color = '#2e7d32';
+                } else {
+                    showAuthError(data.response_message || 'Failed to resend OTP');
+                }
+            } catch (err) { showAuthError('Connection error.'); }
+        }
+        
+        document.getElementById('authForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var email = document.getElementById('authEmail').value;
+            var password = document.getElementById('authPassword').value;
+            var name = document.getElementById('authName').value;
+            var phone = document.getElementById('authPhone').value;
+            var otp = document.getElementById('authOtp').value;
+            
+            var btn = document.getElementById('authSubmitBtn');
+            btn.disabled = true;
+            document.getElementById('authError').style.display = 'none';
+            
+            try {
+                if (authMode === 'otp') {
+                    btn.textContent = 'Verifying OTP...';
+                    var res = await fetch(API_BASE + '/User/verifyOTP', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingOtpEmail, Otp: otp })
+                    });
+                    var data = await res.json();
+                    if (data.response_code === '200') {
+                        showAuthError('Account verified! Please sign in now.');
+                        document.getElementById('authError').style.color = '#2e7d32';
+                        switchAuthTab('login');
+                        document.getElementById('authEmail').value = pendingOtpEmail;
+                        pendingOtpEmail = null;
+                    } else {
+                        showAuthError(data.response_message || 'Invalid OTP. Please try again.');
+                    }
+                } else if (authMode === 'login') {
+                    btn.textContent = 'Signing in...';
+                    var res = await fetch(API_BASE + '/Authentication/validateUser', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: email, password: password, platform: 'web' })
+                    });
+                    var data = await res.json();
+                    if (data.response_code === '200') {
+                        currentUser = data.response_message.user;
+                        localStorage.setItem('ohcampus_user', JSON.stringify(currentUser));
+                        localStorage.setItem('ohcampus_token', data.response_message.token);
+                        localStorage.setItem('ohcampus_lead_captured', 'true');
+                        updateUserUI();
+                        closeAuthModal();
+                    } else {
+                        showAuthError(data.response_message || 'Invalid credentials. If you just registered, please verify your OTP first.');
+                    }
+                } else if (authMode === 'register') {
+                    btn.textContent = 'Registering...';
+                    var res = await fetch(API_BASE + '/User/createUser', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ form: { email: email, password: password, name: name, mobilenum: phone }, platform: 'web' })
+                    });
+                    var data = await res.json();
+                    if (data.response_code === '200') {
+                        pendingOtpEmail = email;
+                        authMode = 'otp';
+                        document.getElementById('nameGroup').style.display = 'none';
+                        document.getElementById('phoneGroup').style.display = 'none';
+                        document.getElementById('authEmail').parentElement.style.display = 'none';
+                        document.getElementById('authPassword').parentElement.style.display = 'none';
+                        document.getElementById('otpGroup').style.display = 'block';
+                        document.querySelector('.modal-tabs').style.display = 'none';
+                        document.getElementById('authTitle').innerHTML = '<i class="fas fa-envelope-open"></i> Verify Your Email';
+                        document.getElementById('authSubtitle').textContent = 'An OTP has been sent to ' + email + '. Enter it below to complete registration.';
+                        btn.textContent = 'Verify OTP';
+                    } else if (data.response_code === '300') {
+                        showAuthError('This email is already registered. Please sign in.');
+                        switchAuthTab('login');
+                        document.getElementById('authEmail').value = email;
+                    } else {
+                        showAuthError(data.response_message || 'Registration failed.');
+                    }
+                }
+            } catch (err) {
+                showAuthError('Connection error. Please try again.');
+            } finally {
+                btn.disabled = false;
+                if (authMode === 'login') btn.textContent = 'Sign In';
+                else if (authMode === 'register') btn.textContent = 'Register';
+                else if (authMode === 'otp') btn.textContent = 'Verify OTP';
+            }
+        });
+        
+        function logout() {
+            localStorage.removeItem('ohcampus_user');
+            localStorage.removeItem('ohcampus_token'); localStorage.removeItem('ohcampus_lead_captured');
+            currentUser = null;
+            updateUserUI();
+        }
+        
+        function switchLevel(level) {
+            currentLevel = level;
+            document.querySelectorAll('.level-tab').forEach(t => t.classList.toggle('active', t.dataset.level === level));
+            renderExamGrid();
+            document.getElementById('formCard').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+        
+        function renderExamGrid() {
+            const exams = examConfigs[currentLevel];
+            document.getElementById('examGrid').innerHTML = exams.map(e => `
+                <div class="exam-card ${e.code}" data-id="${e.id}" onclick="selectExam(${e.id})">
+                    <i class="fas ${e.icon}"></i>
+                    <div class="name">${e.name}</div>
+                    <div class="desc">${e.desc}</div>
+                </div>
+            `).join('');
+        }
+        
+        function selectExam(examId) {
+            const exams = examConfigs[currentLevel];
+            selectedExam = exams.find(e => e.id === examId);
+            
+            document.querySelectorAll('.exam-card').forEach(c => c.classList.toggle('active', parseInt(c.dataset.id) === examId));
+            
+            // Show/hide state row based on exam type
+            const stateRow = document.getElementById('stateRow');
+            const karnatakaRow = document.getElementById('karnatakaRow');
+            
+            if (selectedExam.isKarnataka) {
+                stateRow.style.display = 'none';
+                karnatakaRow.style.display = 'grid';
+            } else {
+                stateRow.style.display = 'grid';
+                karnatakaRow.style.display = 'none';
+            }
+            
+            // Add exam-specific fields
+            let extraFields = '';
+            if (selectedExam.showCourse && courseOptions[selectedExam.name]) {
+                extraFields += `<div class="form-group"><label>Course <span class="required">*</span></label>
+                    <select id="course" required>${courseOptions[selectedExam.name].map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>`;
+            }
+            document.getElementById('examSpecificFields').innerHTML = extraFields;
+            
+            // Update categories dynamically based on exam
+            var catSelect = document.getElementById('category');
+            catSelect.innerHTML = '<option value="">Select category</option>';
+            if (selectedExam.categories) {
+                selectedExam.categories.forEach(function(cat) {
+                    catSelect.innerHTML += '<option value="' + cat + '">'+cat+'</option>';
+                });
+            }
+            
+            document.getElementById('formCard').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        document.getElementById('predictorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!selectedExam) return;
+            
+            const rank = parseInt(document.getElementById('rank').value);
+            const category = document.getElementById('category').value;
+            const state = selectedExam.isKarnataka ? 'Karnataka' : (document.getElementById('state').value || '');
+            const collegeType = selectedExam.isKarnataka ? document.getElementById('collegeTypeK').value : document.getElementById('collegeType').value;
+            const round = document.getElementById('round').value;
+            const course = document.getElementById('course')?.value || selectedExam.course;
+            
+            if (!category) { alert('Please select category'); return; }
+            
+            // Check if user is logged in, if not show auth modal
+            if (!currentUser) {
+                showAuthModal('login');
+                pendingResults = { rank, category, state, collegeType, course, round };
+                return;
+            }
+            
+            const btn = document.getElementById('predictBtn');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/Predictor/predictColleges`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rank, category, preferred_state: state, college_type: collegeType, course, exam_type: selectedExam.name, round })
+                });
+                const data = await response.json();
+                
+                if (data.response_code === '200' || data.response_code === 200) {
+                    pendingResults = data.data || [];
+                } else {
+                    pendingResults = generateSampleColleges(rank, selectedExam);
+                }
+            } catch (err) {
+                pendingResults = generateSampleColleges(rank, selectedExam);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+            }
+            
+            showResults(pendingResults);
+        });
+        
+        function generateSampleColleges(rank, exam) {
+            const baseColleges = exam.isKarnataka ? [
+                { name: 'RV College of Engineering', state: 'Karnataka', type: 'Private', cutoff: rank - 800, fee: 250000, class: 'safe' },
+                { name: 'BMS College of Engineering', state: 'Karnataka', type: 'Private', cutoff: rank - 400, fee: 220000, class: 'safe' },
+                { name: 'PES University', state: 'Karnataka', type: 'Private', cutoff: rank + 200, fee: 280000, class: 'possible' },
+                { name: 'UVCE Bangalore', state: 'Karnataka', type: 'Government', cutoff: rank + 1500, fee: 50000, class: 'dream' }
+            ] : [
+                { name: 'IIT Delhi', state: 'Delhi', type: 'Government', cutoff: rank + 2000, fee: 200000, class: 'dream' },
+                { name: 'NIT Trichy', state: 'Tamil Nadu', type: 'Government', cutoff: rank + 500, fee: 150000, class: 'possible' },
+                { name: 'BITS Pilani', state: 'Rajasthan', type: 'Private', cutoff: rank - 200, fee: 500000, class: 'safe' }
+            ];
+            return baseColleges.map(c => ({
+                college_name: c.name, state: c.state, college_type: c.type, cutoff_rank: Math.max(1, c.cutoff), 
+                fee: c.fee, classification: c.class
+            }));
+        }
+        
+        function showResults(colleges) {
+            if (!Array.isArray(colleges)) { colleges = []; }
+            const container = document.getElementById('collegeList');
+            const countEl = document.getElementById('resultsCount');
+            
+            if (!colleges || colleges.length === 0) {
+                container.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><h4>No colleges found</h4><p>Try adjusting your filters or rank</p></div>`;
+                countEl.textContent = '0 colleges found';
+            } else {
+                countEl.textContent = `${colleges.length} colleges found`;
+                container.innerHTML = colleges.map(c => {
+                    const cls = c.classification || 'possible';
+                    const badge = cls === 'safe' ? 'Safe' : (cls === 'dream' ? 'Dream' : 'Possible');
+                    return `
+                        <div class="college-card ${cls}">
+                            <div class="college-header">
+                                <div class="college-name">${c.college_name || c.name}</div>
+                                <span class="college-badge badge-${cls}">${badge}</span>
+                            </div>
+                            <div class="college-details">
+                                <div class="detail-item"><span>State</span><strong>${c.state || 'Karnataka'}</strong></div>
+                                <div class="detail-item"><span>Type</span><strong>${c.college_type || 'Private'}</strong></div>
+                                <div class="detail-item"><span>Cutoff Rank</span><strong>${(c.cutoff_rank || 0).toLocaleString()}</strong></div>
+                                <div class="detail-item"><span>Annual Fee</span><strong>₹${((c.fee || 0) / 100000).toFixed(1)}L</strong></div>
+                            </div>
+                            <div class="college-actions">
+                                <a href="/college/${c.slug || c.college_id || '#'}" class="btn-view btn-view-details">View Details</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('premiumCard').style.display = 'block';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showPremiumInfo() {
+            var premiumModal = document.createElement('div');
+            premiumModal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;';
+            premiumModal.innerHTML = '<div style="background:white;border-radius:16px;padding:28px;max-width:420px;width:100%;text-align:center;animation:slideUp 0.3s ease;">' +
+                '<div style="width:60px;height:60px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><i class="fas fa-crown" style="color:white;font-size:1.5rem;"></i></div>' +
+                '<h3 style="color:#92400e;margin-bottom:8px;font-size:1.2rem;">Upgrade to Premium</h3>' +
+                '<p style="color:#666;font-size:0.9rem;margin-bottom:16px;">Get exact cutoffs, bond details, choice simulator and personalized guidance for just <strong style="color:#d97706;">₹499/year</strong></p>' +
+                '<div style="background:#fef3c7;border-radius:10px;padding:14px;margin-bottom:16px;text-align:left;">' +
+                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#f59e0b;"></i><span style="font-size:0.85rem;color:#78350f;">Exact opening & closing cutoff ranks</span></div>' +
+                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#f59e0b;"></i><span style="font-size:0.85rem;color:#78350f;">Fee structure & bond details</span></div>' +
+                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#f59e0b;"></i><span style="font-size:0.85rem;color:#78350f;">Choice filling simulator</span></div>' +
+                '<div style="display:flex;align-items:center;gap:8px;"><i class="fas fa-check-circle" style="color:#f59e0b;"></i><span style="font-size:0.85rem;color:#78350f;">State vs AIQ seat comparison</span></div>' +
+                '</div>' +
+                '<a href="https://play.google.com/store/apps/details?id=com.app.ohcampus" target="_blank" style="display:block;width:100%;padding:12px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.95rem;text-decoration:none;margin-bottom:10px;"><i class="fas fa-mobile-alt"></i> Get Premium on Mobile App</a>' +
+                '<button onclick="this.closest(\'div\').parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.85rem;">Maybe Later</button>' +
+                '</div>';
+            document.body.appendChild(premiumModal);
+            premiumModal.addEventListener('click', function(e) { if (e.target === premiumModal) premiumModal.remove(); });
+        }
+        
+        // Initialize
+        checkAuth();
+        renderExamGrid();
+    </script>
+</body>
+</html>

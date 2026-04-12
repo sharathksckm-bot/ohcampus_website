@@ -1,0 +1,213 @@
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--ohc-green:#2e7d32;--ohc-green-hover:#1b5e20;--ohc-green-light:#e8f5e9;--ohc-surface:#f8fafc;--ohc-text:#0f172a;--ohc-body:#334155;--ohc-muted:#64748b;--ohc-border:#e2e8f0;--ohc-radius:8px;--ohc-blue:#1a73e8;}
+body{font-family:'Manrope',system-ui,sans-serif!important;-webkit-font-smoothing:antialiased;}
+
+/* ── HERO ── */
+.heroSection,.heroSection.relative{
+  min-height:500px!important;position:relative!important;overflow:visible!important;
+  background-color:#070d14!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+.heroSection>img.herosecimg,.heroSection>img{
+  width:100%!important;min-width:100%!important;object-fit:cover!important;
+  position:absolute!important;top:0!important;left:0!important;height:100%!important;
+  opacity:0.3!important;
+}
+.heroSection .textset{
+  position:relative!important;z-index:5!important;
+  text-align:center!important;width:100%!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  padding:0 20px!important;
+}
+.heroSection [class*="text-8xl"],.heroSection [class*="text-7xl"],.heroSection [class*="text-3xl"]{
+  font-family:'Cabinet Grotesk',sans-serif!important;font-weight:800!important;
+  letter-spacing:-0.03em!important;color:var(--ohc-blue)!important;
+  text-shadow:0 2px 10px rgba(0,0,0,0.3)!important;
+  font-size:clamp(2rem,5vw,3.2rem)!important;line-height:1.2!important;margin-bottom:6px!important;
+  word-spacing:0.15em!important;
+}
+.heroSection [class*="text-gray-300"],.heroSection .textset>div:nth-child(2){
+  color:white!important;text-shadow:0 1px 6px rgba(0,0,0,0.3)!important;font-weight:600!important;animation:none!important;transition:none!important;opacity:1!important;position:relative!important;bottom:auto!important;top:auto!important;transform:none!important;
+  font-size:1rem!important;margin-bottom:4px!important;
+}
+.heroSection .textset>div:nth-child(n+3):not(#ohc-hero-search){display:none!important;}
+.heroSection .textset .mat-focus-indicator{display:none!important;}
+.heroSection .textset input:not(#ohcHeroInput){display:none!important;}
+.heroSection .textset mat-form-field{display:none!important;}
+#ohcHeroInput{display:block!important;}
+#ohc-hero-search{max-width:680px!important;width:100%!important;margin:16px auto 0!important;position:relative!important;z-index:20!important;pointer-events:auto!important;}
+
+/* ── SEARCH BOX ── */
+.ohc-search-box{display:flex;background:white;border-radius:14px;padding:6px;box-shadow:0 20px 60px -12px rgba(0,0,0,0.4);position:relative;z-index:25;}
+.ohc-search-box input{flex:1;border:none;padding:14px 18px;font-size:1rem;font-family:'Manrope',sans-serif;outline:none;color:var(--ohc-text);background:transparent;border-radius:10px;min-width:0;position:relative;z-index:25;}
+.ohc-search-box input::placeholder{color:var(--ohc-muted);}
+.ohc-search-btn{background:var(--ohc-blue)!important;color:white;border:none;padding:12px 28px;border-radius:10px;font-family:'Manrope',sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.ohc-search-btn:hover{background:#1557b0!important;}
+
+/* ── DROPDOWN ── */
+.ohc-search-dropdown{position:absolute;top:100%;left:0;right:0;margin-top:6px;background:white;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.18);border:1px solid var(--ohc-border);max-height:400px;overflow-y:auto;z-index:100;}
+.ohc-dd-label{padding:8px 18px 4px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--ohc-muted);}
+.ohc-dd-item{display:flex;align-items:center;gap:12px;padding:11px 18px;text-decoration:none;color:var(--ohc-text);font-size:0.9rem;transition:background 0.15s;border-bottom:1px solid #f1f5f9;}
+.ohc-dd-item:last-child{border-bottom:none;}
+.ohc-dd-item:hover{background:var(--ohc-green-light);}
+.ohc-dd-item i{flex-shrink:0;}
+.ohc-dd-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ── QUICK TAGS ── */
+.ohc-search-tags{display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap;}
+.ohc-search-tag{padding:7px 16px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:white;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none;backdrop-filter:blur(4px);}
+.ohc-search-tag:hover{background:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.5);color:white;}
+
+/* ── TOP EXAMS ── */
+.ohc-top-exams{padding:50px 20px;background:var(--ohc-surface);}
+.ohc-section-title{font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;color:var(--ohc-text);text-align:center;margin-bottom:8px;letter-spacing:-0.02em;}
+.ohc-section-subtitle{text-align:center;color:var(--ohc-muted);font-size:0.95rem;margin-bottom:30px;}
+.ohc-exams-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.ohc-exam-card{background:white;border:1px solid var(--ohc-border);border-radius:var(--ohc-radius);padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;text-decoration:none;color:inherit;}
+.ohc-exam-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px -4px rgba(0,0,0,0.08);border-color:var(--ohc-green);}
+.ohc-exam-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:white;flex-shrink:0;}
+.ohc-exam-info h4{font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:1rem;color:var(--ohc-text);margin:0 0 3px;}
+.ohc-exam-info p{font-size:0.8rem;color:var(--ohc-muted);margin:0;line-height:1.4;}
+.ohc-exam-badge{margin-left:auto;padding:3px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;background:#fef3c7;color:#92400e;white-space:nowrap;}
+
+/* ── CATEGORY TABS ── */
+.ohc-cat-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;max-width:1100px;margin-left:auto;margin-right:auto;}
+.ohc-cat-tab{padding:9px 20px;border-radius:24px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.25s;border:1.5px solid var(--ohc-border);background:white;color:var(--ohc-body);font-family:'Manrope',sans-serif;display:inline-flex;align-items:center;gap:6px;}
+.ohc-cat-tab:hover{border-color:var(--ohc-green);color:var(--ohc-green);}
+.ohc-cat-tab.active{background:var(--ohc-green);color:white;border-color:var(--ohc-green);}
+
+/* ── CATEGORY COLLEGES ── */
+.ohc-cat-colleges{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;}
+.ohc-cat-loading{grid-column:1/-1;text-align:center;padding:40px;color:var(--ohc-muted);font-size:0.9rem;}
+.ohc-clg-card{background:white;border:1px solid var(--ohc-border);border-radius:var(--ohc-radius);padding:16px;display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;}
+.ohc-clg-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,0.06);border-color:var(--ohc-green);}
+.ohc-clg-left{width:50px;height:50px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--ohc-surface);display:flex;align-items:center;justify-content:center;}
+.ohc-clg-left img{width:100%;height:100%;object-fit:contain;}
+.ohc-clg-info{flex:1;min-width:0;}
+.ohc-clg-info h4{font-size:0.9rem;font-weight:700;color:var(--ohc-text);margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ohc-clg-info p{font-size:0.78rem;color:var(--ohc-muted);margin:0;}
+.ohc-clg-right{flex-shrink:0;}
+.ohc-clg-rating{background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
+
+/* ── EXISTING OVERRIDES ── */
+.bg-card.rounded-lg,.bg-card.rounded,mat-card,.mat-card{border-radius:var(--ohc-radius)!important;border:1px solid var(--ohc-border)!important;box-shadow:none!important;transition:transform 0.3s,box-shadow 0.3s!important;overflow:hidden!important;}
+.bg-card.rounded-lg:hover,.bg-card.rounded:hover,mat-card:hover,.mat-card:hover{transform:translateY(-4px)!important;box-shadow:0 10px 25px -5px rgba(0,0,0,0.1)!important;}
+.mat-chip,[class*="mat-chip"]{font-family:'Manrope',sans-serif!important;border-radius:20px!important;border:1px solid var(--ohc-border)!important;background:white!important;transition:all 0.2s!important;}
+.mat-chip:hover,[class*="mat-chip"]:hover{background:var(--ohc-green-light)!important;border-color:var(--ohc-green)!important;color:var(--ohc-green)!important;}
+.mat-ink-bar{background-color:var(--ohc-green)!important;}
+.predictor-section{background:var(--ohc-surface)!important;}
+.predictor-card{border:1px solid var(--ohc-border)!important;box-shadow:none!important;}
+.predictor-card:hover{box-shadow:0 10px 25px -5px rgba(0,0,0,0.1)!important;}
+.bg-gray-900{font-family:'Manrope',sans-serif!important;}
+
+/* ── EXAMS PAGE: Smaller banner ── */
+.examsBanner,.exams-banner,[class*="examBanner"]{max-height:250px!important;min-height:200px!important;}
+
+@media(max-width:768px){
+  .heroSection{min-height:420px!important;}
+  .ohc-search-box{flex-direction:column;}
+  .ohc-search-btn{width:100%;justify-content:center;}
+  .ohc-exams-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .ohc-exam-badge{display:none;}
+  .ohc-cat-tab{padding:7px 14px;font-size:0.78rem;}
+  .ohc-cat-colleges{grid-template-columns:1fr;}
+}
+@media(max-width:480px){.ohc-exams-grid{grid-template-columns:1fr;}}
+
+/* Hero textset vertical centering fix */
+.heroSection .textset > div:first-child {
+  margin-top: auto !important;
+}
+#ohc-hero-search {
+  margin-bottom: auto !important;
+}
+.heroSection .textset {
+  min-height: 100% !important;
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+}
+
+/* Exams page banner - target the image directly */
+body:not(.home-page) .heroSection > img,
+body:not(.home-page) .heroSection {
+  /* Only applies to non-home pages where our hero override kicks in */
+}
+
+/* NIRF Rank Badge */
+.ohc-clg-rank{flex-shrink:0;display:flex;align-items:center;}
+.ohc-rank-badge{background:linear-gradient(135deg,#1a73e8,#4285f4);color:white;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:700;min-width:36px;text-align:center;}
+.ohc-nirf-tag{background:#e3f2fd;color:#1a73e8;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;display:inline-block;}
+
+
+
+/* NIRF card - hide rating div */
+.ohc-clg-right {
+  display: none !important;
+}
+
+/* Featured Colleges - Square 1:1 banner images */
+img.update-image.object-cover {
+  aspect-ratio: 1 / 1 !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 200px !important;
+  max-height: 200px !important;
+  max-height: none !important;
+}
+/* Force parent container to accommodate square image */
+.filter-article {
+  height: auto !important;
+}
+.filter-article img.update-image {
+  min-height: 200px !important;
+  max-height: 200px !important;
+}
+
+/* Articles section - proper image display */
+.filter-article img,
+[class*="article"] img {
+  object-fit: cover !important;
+  width: 100% !important;
+  min-height: 150px !important;
+  border-radius: 8px !important;
+}
+
+/* Fix: Hide Angular's character-by-character title animation immediately */
+.heroSection [class*="text-8xl"] span,
+.heroSection [class*="text-7xl"] span,
+.heroSection [class*="text-3xl"] span {
+  opacity: 0 !important;
+  animation: none !important;
+  transition: none !important;
+}
+/* But show our replaced title span */
+.heroSection [class*="text-8xl"] > span[style],
+.heroSection [class*="text-7xl"] > span[style],
+.heroSection [class*="text-3xl"] > span[style] {
+  opacity: 1 !important;
+}
+/* Immediately position the title in center, not at bottom */
+.heroSection [class*="text-8xl"],
+.heroSection [class*="text-7xl"],
+.heroSection [class*="text-3xl"] {
+  position: relative !important;
+  bottom: auto !important;
+  top: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+/* Fix subtitle animation - hide Angular char animation, show immediately */
+.heroSection .textset > div:nth-child(2) span,
+.heroSection .textset > div:nth-child(2) * {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  position: relative !important;
+  bottom: auto !important;
+  top: auto !important;
+  transform: none !important;
+  color: white !important;
+}

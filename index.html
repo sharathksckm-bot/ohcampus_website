@@ -88,7 +88,7 @@ button:has(.icon-link.whatsapp),
     <app-root></app-root>
 <script src="https://accounts.google.com/gsi/client" async="" defer></script>
 
-<script src="runtime.d4bad2bda5ebdcaab17b.js?v=1771332526" defer></script><script src="polyfills.44a7a4ac4a0b482d929b.js?v=1771332526" defer></script><script src="main.2934f57dfdb08027ca8d.js?v=1771332526" defer></script>
+<script src="runtime.d4bad2bda5ebdcaab17b.js?v=1775844163" defer></script><script src="polyfills.44a7a4ac4a0b482d929b.js?v=1775844163" defer></script><script src="main.2934f57dfdb08027ca8d.js?v=1775844163" defer></script>
 
 
 <style>
@@ -248,4 +248,31 @@ agm-map { display: none !important; height: 0 !important; }
     }).observe(document.body, {childList: true, subtree: true});
 })();
 </script>
-<script src="/assets/js/lead-gen/ohcampus-leadgen.js"></script></body></html>
+<script src="/assets/js/lead-gen/ohcampus-leadgen.js"></script><script src="/assets/js/chatbot-widget.js"></script><link rel="stylesheet" href="/homepage-redesign.css"><script src="/homepage-redesign.js"></script><script src="/exams-page-enhance.js"></script><script src="/predictor-widget.js"></script>
+</body></html>
+<!-- Privacy Policy Link Injection -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for Angular to render the footer
+    setTimeout(function() {
+        var footerLinks = document.querySelectorAll('footer a, .footer a, [class*="footer"] a');
+        footerLinks.forEach(function(link) {
+            if (link.textContent.includes('Terms and Condition') || link.textContent.includes('Terms & Condition')) {
+                // Create Privacy Policy link
+                var privacyLi = document.createElement('li');
+                var privacyLink = document.createElement('a');
+                privacyLink.href = '/privacy-policy';
+                privacyLink.textContent = 'Privacy Policy';
+                privacyLink.style.cssText = link.style.cssText;
+                privacyLi.appendChild(privacyLink);
+                
+                // Insert after Terms
+                var parentLi = link.closest('li');
+                if (parentLi && parentLi.parentNode) {
+                    parentLi.parentNode.insertBefore(privacyLi, parentLi.nextSibling);
+                }
+            }
+        });
+    }, 2000);
+});
+</script>

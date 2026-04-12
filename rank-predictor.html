@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank Predictor - OhCampus | Predict Your Exam Rank</title>
+    <meta name="description" content="Predict your rank for KCET, NEET, JEE, COMEDK, GATE, CAT and more. Enter your marks and get instant rank prediction.">
+    <link rel="icon" type="image/png" href="favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; min-height: 100vh; }
+        
+        .header { background: #1a237e; color: white; padding: 12px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+        .logo img { height: 32px; }
+        .logo span { font-size: 20px; font-weight: 700; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; opacity: 0.9; transition: opacity 0.3s; font-size: 14px; }
+        .nav-links a:hover, .nav-links a.active { opacity: 1; }
+        .user-section { display: flex; align-items: center; gap: 12px; }
+        .btn-login { background: white; color: #1a237e; padding: 8px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; text-decoration: none; }
+        .user-info { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 20px; }
+        .user-info .avatar { width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1a237e; font-weight: 600; font-size: 12px; }
+        .user-info .name { font-size: 13px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .btn-logout { background: none; border: none; color: white; cursor: pointer; font-size: 13px; opacity: 0.8; }
+        
+        .container { max-width: 800px; margin: 25px auto; padding: 0 20px; }
+        
+        .page-title { text-align: center; margin-bottom: 25px; }
+        .page-title h1 { font-size: 1.8rem; color: #1a237e; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .page-title p { color: #666; font-size: 0.95rem; }
+        
+        .exam-selector { background: white; border-radius: 14px; padding: 22px; margin-bottom: 22px; box-shadow: 0 3px 15px rgba(0,0,0,0.06); }
+        .exam-selector h3 { font-size: 0.95rem; color: #333; margin-bottom: 12px; font-weight: 600; }
+        
+        .level-tabs { display: flex; gap: 10px; margin-bottom: 16px; }
+        .level-tab { flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; background: white; cursor: pointer; font-weight: 600; text-align: center; transition: all 0.3s; font-size: 14px; }
+        .level-tab:hover { border-color: #1a237e; }
+        .level-tab.active { background: #1a237e; color: white; border-color: #1a237e; }
+        
+        .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        .exam-card { padding: 14px 10px; border: 2px solid #e8e8e8; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s; background: white; }
+        .exam-card:hover { border-color: #1a237e; transform: translateY(-2px); }
+        .exam-card.active { border-color: #1a237e; background: #e8eaf6; }
+        .exam-card i { font-size: 1.6rem; margin-bottom: 6px; display: block; }
+        .exam-card .name { font-weight: 600; font-size: 0.9rem; color: #333; }
+        .exam-card .desc { font-size: 0.7rem; color: #888; margin-top: 3px; }
+        
+        .exam-card.kcet i { color: #4361ee; }
+        .exam-card.comedk i { color: #7c3aed; }
+        .exam-card.jee i { color: #f59e0b; }
+        .exam-card.neet i { color: #10b981; }
+        .exam-card.gate i { color: #6366f1; }
+        .exam-card.cat i { color: #ec4899; }
+        .exam-card.neetpg i { color: #14b8a6; }
+        .exam-card.pgcet i { color: #8b5cf6; }
+        
+        .form-card { background: white; border-radius: 14px; padding: 22px; box-shadow: 0 3px 15px rgba(0,0,0,0.06); }
+        .form-card h3 { font-size: 1rem; color: #1a237e; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 0.85rem; }
+        .form-group label .required { color: #ef4444; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.3s; background: white; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #1a237e; }
+        .form-group .max-marks { font-size: 0.75rem; color: #888; margin-top: 4px; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+        
+        .btn-predict { width: 100%; padding: 14px; background: #1a237e; color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
+        .btn-predict:hover { background: #0d1b5e; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(26, 35, 126, 0.3); }
+        .btn-predict:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        
+        .result-card { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 14px; padding: 25px; margin-top: 22px; text-align: center; display: none; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-card h3 { color: #2e7d32; margin-bottom: 8px; font-size: 1rem; }
+        .result-card .rank { font-size: 3rem; font-weight: 700; color: #1a237e; margin: 12px 0; }
+        .result-card .rank-range { color: #666; font-size: 0.9rem; margin-bottom: 16px; }
+        .result-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+        .result-details .item { background: white; padding: 10px; border-radius: 8px; }
+        .result-details .item span { display: block; font-size: 0.7rem; color: #888; }
+        .result-details .item strong { font-size: 0.9rem; color: #333; }
+        
+        .result-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+        .btn-action { padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }
+        .btn-college { background: #2e7d32; color: white; border: none; }
+        .btn-reset { background: white; color: #1a237e; border: 2px solid #1a237e; }
+        
+        .premium-card { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 14px; padding: 22px; margin-top: 22px; display: none; }
+        .premium-card h4 { color: #92400e; font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .premium-card p { color: #78350f; font-size: 0.85rem; margin-bottom: 12px; }
+        .premium-features { list-style: none; margin-bottom: 16px; }
+        .premium-features li { padding: 6px 0; color: #78350f; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .premium-features li i { color: #f59e0b; }
+        .btn-premium { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        
+        .tips-card { background: #f0f4ff; border-radius: 10px; padding: 18px; margin-top: 22px; }
+        .tips-card h4 { color: #1a237e; font-size: 0.9rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .tips-card ul { list-style: none; }
+        .tips-card ul li { padding: 5px 0; color: #555; font-size: 0.8rem; display: flex; align-items: flex-start; gap: 8px; }
+        .tips-card ul li i { color: #1a237e; margin-top: 2px; font-size: 0.7rem; }
+        
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal-content { background: white; border-radius: 16px; padding: 28px; max-width: 400px; width: 100%; animation: slideUp 0.3s ease; position: relative; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-content h3 { font-size: 1.2rem; margin-bottom: 6px; color: #1a237e; }
+        .modal-content > p { color: #666; margin-bottom: 18px; font-size: 0.85rem; }
+        .modal-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+        .modal-tab { flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; background: white; cursor: pointer; font-weight: 600; text-align: center; font-size: 0.9rem; }
+        .modal-tab.active { background: #1a237e; color: white; border-color: #1a237e; }
+        .btn-submit { width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+        .modal-footer { text-align: center; margin-top: 14px; font-size: 0.8rem; color: #888; }
+        .modal-footer a { color: #1a237e; text-decoration: none; font-weight: 500; }
+        .close-modal { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+        
+        .footer { text-align: center; padding: 20px; color: #888; font-size: 0.8rem; margin-top: 30px; }
+        .footer a { color: #1a237e; text-decoration: none; }
+        
+        .spinner { width: 16px; height: 16px; border: 3px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading .spinner { display: inline-block; }
+        .loading .btn-text { display: none; }
+        
+        @media (max-width: 600px) { .result-details { grid-template-columns: 1fr; } .exam-grid { grid-template-columns: repeat(2, 1fr); } .user-info .name { display: none; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <img src="/assets/images/logo-white.png" alt="OhCampus" onerror="this.style.display='none'">
+                <span>OhCampus</span>
+            </a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/rank-predictor.html" class="active">Rank Predictor</a>
+                <a href="/college-predictor.html">College Predictor</a>
+            </nav>
+            <div class="user-section" id="userSection">
+                <a href="javascript:void(0)" class="btn-login" onclick="showAuthModal('login')">Sign In</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1><i class="fas fa-chart-line"></i> Rank Predictor</h1>
+            <p>Enter your marks to predict your expected rank based on previous year data</p>
+        </div>
+
+        <div class="exam-selector">
+            <h3>Select Your Exam</h3>
+            <div class="level-tabs">
+                <div class="level-tab active" data-level="UG" onclick="switchLevel('UG')">Undergraduate (UG)</div>
+                <div class="level-tab" data-level="PG" onclick="switchLevel('PG')">Postgraduate (PG)</div>
+            </div>
+            <div class="exam-grid" id="examGrid"></div>
+        </div>
+
+        <div class="form-card" id="formCard" style="display:none;">
+            <h3><i class="fas fa-edit"></i> Enter Your Scores</h3>
+            <form id="predictorForm">
+                <div id="dynamicFields"></div>
+                <div class="form-group">
+                    <label>Category <span class="required">*</span></label>
+                    <select id="category" required>
+                        <option value="">Select your category</option>
+                        <option value="General">General / GM</option>
+                        <option value="OBC">OBC</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="EWS">EWS</option>
+                        <option value="2A">2A</option>
+                        <option value="2B">2B</option>
+                        <option value="3A">3A</option>
+                        <option value="3B">3B</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-predict" id="predictBtn">
+                    <span class="btn-text"><i class="fas fa-calculator"></i> Predict My Rank</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+        </div>
+
+        <div class="result-card" id="resultCard">
+            <h3><i class="fas fa-trophy"></i> Your Predicted Rank</h3>
+            <div class="rank" id="predictedRank">--</div>
+            <div class="rank-range" id="rankRange">Estimated range: -- to --</div>
+            <div class="result-details">
+                <div class="item"><span>Exam</span><strong id="resExam">-</strong></div>
+                <div class="item"><span>Score</span><strong id="resScore">-</strong></div>
+                <div class="item"><span>Category</span><strong id="resCategory">-</strong></div>
+            </div>
+            <div class="result-actions">
+                <a href="/college-predictor.html" class="btn-action btn-college"><i class="fas fa-university"></i> Find Colleges</a>
+                <button class="btn-action btn-reset" onclick="resetForm()"><i class="fas fa-redo"></i> Predict Again</button>
+            </div>
+        </div>
+
+        <div class="premium-card" id="premiumCard">
+            <h4><i class="fas fa-crown"></i> Unlock Premium Features</h4>
+            <p>Get more accurate predictions and exclusive features</p>
+            <ul class="premium-features">
+                <li><i class="fas fa-check"></i> Detailed rank range analysis</li>
+                <li><i class="fas fa-check"></i> College admission probability</li>
+                <li><i class="fas fa-check"></i> Choice filling simulator</li>
+                <li><i class="fas fa-check"></i> Personalized counseling support</li>
+            </ul>
+            <button class="btn-premium" onclick="showPremiumInfo()"><i class="fas fa-unlock"></i> Get Premium - ₹499</button>
+        </div>
+
+        <div class="tips-card">
+            <h4><i class="fas fa-lightbulb"></i> Tips for Accurate Prediction</h4>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Enter your actual marks/score as obtained in the exam</li>
+                <li><i class="fas fa-check-circle"></i> For board marks, enter the aggregate of relevant subjects only</li>
+                <li><i class="fas fa-check-circle"></i> Predictions are based on previous year's data patterns</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+            <h3 id="authTitle"><i class="fas fa-user"></i> Sign In</h3>
+            <p id="authSubtitle">Sign in to save your predictions and access them on mobile app</p>
+            <div class="modal-tabs">
+                <div class="modal-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</div>
+                <div class="modal-tab" id="tabRegister" onclick="switchAuthTab('register')">Register</div>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameGroup" style="display:none;">
+                    <label>Full Name <span class="required">*</span></label>
+                    <input type="text" id="authName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" id="authEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password <span class="required">*</span></label>
+                    <input type="password" id="authPassword" placeholder="Enter password" required>
+                </div>
+                <div class="form-group" id="phoneGroup" style="display:none;">
+                    <label>Phone Number</label>
+                    <input type="tel" id="authPhone" placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                </div>
+                <div class="form-group" id="otpGroup" style="display:none;">
+                    <label>Enter OTP <span class="required">*</span></label>
+                    <input type="text" id="authOtp" placeholder="Enter 6-digit OTP sent to your email" maxlength="6" pattern="[0-9]{6}">
+                    <div class="hint" style="margin-top:6px; font-size:0.8rem; color:#666;">Check your email for the OTP. <a href="javascript:void(0)" onclick="resendOTP()" style="color:#1a237e; font-weight:500;">Resend OTP</a></div>
+                </div>
+                <div id="authError" style="display:none; color:#ef4444; font-size:0.85rem; margin-bottom:10px; text-align:center;"></div>
+                <button type="submit" class="btn-submit" id="authSubmitBtn">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                By continuing, you agree to our <a href="/terms.html">Terms</a> & <a href="/privacy-policy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 OhCampus. All rights reserved. | <a href="/privacy-policy.html">Privacy Policy</a> | <a href="/terms.html">Terms</a></p>
+    </footer>
+
+    <script>
+        const API_BASE = 'https://campusapi.ohcampus.com/apps';
+        
+        const examConfigs = {
+            UG: [
+                { id: 1, code: 'kcet', name: 'KCET', desc: 'Karnataka CET', icon: 'fa-graduation-cap',
+                  fields: [
+                    { name: 'kcet_marks', label: 'KCET Marks', max: 180, weight: 0.5 },
+                    { name: 'pcm_marks', label: 'PCM Board Marks', max: 300, weight: 0.5 }
+                  ],
+                  categories: ['GM','2AG','2BG','3AG','3BG','SCG','STG','GMK','2AK','2BK','3AK','3BK','SCK','STK','GMM','2AM','2BM','3AM','3BM','SCM','STM','GMR','2AR','2BR','3AR','3BR','SCR','STR']
+                },
+                { id: 2, code: 'comedk', name: 'COMEDK', desc: 'Engineering', icon: 'fa-building',
+                  fields: [{ name: 'comedk_marks', label: 'COMEDK Marks', max: 180, weight: 1 }],
+                  categories: ['General','OBC','SC','ST']
+                },
+                { id: 3, code: 'jee', name: 'JEE Main', desc: 'Engineering', icon: 'fa-rocket',
+                  fields: [{ name: 'jee_percentile', label: 'JEE Main Percentile', max: 100, weight: 1 }],
+                  categories: ['OPEN','OBC-NCL','SC','ST','EWS','OPEN-PwD','OBC-NCL-PwD','SC-PwD','ST-PwD','EWS-PwD']
+                },
+                { id: 5, code: 'neet', name: 'NEET UG', desc: 'Medical', icon: 'fa-heartbeat',
+                  fields: [{ name: 'neet_score', label: 'NEET Score', max: 720, weight: 1 }],
+                  categories: ['GEN','OBC','SC','ST','EWS','GEN-PH','OBC-PH','SC-PH','ST-PH','EWS-PH']
+                }
+            ],
+            PG: [
+                { id: 10, code: 'gate', name: 'GATE', desc: 'Engineering PG', icon: 'fa-cogs',
+                  fields: [{ name: 'gate_score', label: 'GATE Score', max: 100, weight: 1 }],
+                  categories: ['OPEN','OBC-NCL','SC','ST','EWS','OPEN-PwD']
+                },
+                { id: 11, code: 'cat', name: 'CAT', desc: 'MBA/Management', icon: 'fa-briefcase',
+                  fields: [{ name: 'cat_percentile', label: 'CAT Percentile', max: 100, weight: 1 }],
+                  categories: ['General','OBC-NCL','SC','ST','EWS','PwD']
+                },
+                { id: 12, code: 'neetpg', name: 'NEET PG', desc: 'Medical PG', icon: 'fa-stethoscope',
+                  fields: [{ name: 'neetpg_score', label: 'NEET PG Score', max: 1200, weight: 1 }],
+                  categories: ['GEN','OBC','SC','ST','EWS','GEN-PH','OBC-PH','SC-PH','ST-PH','EWS-PH']
+                },
+                { id: 13, code: 'pgcet', name: 'PGCET', desc: 'Karnataka PG', icon: 'fa-user-graduate',
+                  fields: [{ name: 'pgcet_marks', label: 'PGCET Marks', max: 100, weight: 1 }],
+                  categories: ['GM','2AG','2BG','3AG','3BG','SCG','STG','GMK','2AK','2BK','3AK','3BK','SCK','STK']
+                }
+            ]
+        };
+        
+        let currentLevel = 'UG';
+        let selectedExam = null;
+        let pendingResult = null;
+        let currentUser = null;
+        let authMode = 'login';
+        
+        function checkAuth() {
+            const userData = localStorage.getItem('ohcampus_user');
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                updateUserUI();
+            }
+        }
+        
+        function updateUserUI() {
+            const section = document.getElementById('userSection');
+            if (currentUser) {
+                const initials = (currentUser.name || currentUser.email || 'U').substring(0, 2).toUpperCase();
+                section.innerHTML = `<div class="user-info"><div class="avatar">${initials}</div><span class="name">${currentUser.name || currentUser.email}</span></div><button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>`;
+            } else {
+                section.innerHTML = '<a href="javascript:void(0)" class="btn-login" onclick="showAuthModal(\'login\')">Sign In</a>';
+            }
+        }
+        
+        function showAuthModal(mode) { authMode = mode; switchAuthTab(mode); document.getElementById('authModal').classList.add('show'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
+        
+        function switchAuthTab(tab) {
+            authMode = tab;
+            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+            document.getElementById('nameGroup').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('phoneGroup').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('otpGroup').style.display = 'none';
+            document.getElementById('authEmail').parentElement.style.display = 'block';
+            document.getElementById('authPassword').parentElement.style.display = 'block';
+            document.querySelector('.modal-tabs').style.display = 'flex';
+            document.getElementById('authError').style.display = 'none';
+            document.getElementById('authTitle').innerHTML = tab === 'login' ? '<i class="fas fa-user"></i> Sign In' : '<i class="fas fa-user-plus"></i> Register';
+            document.getElementById('authSubtitle').textContent = tab === 'login' ? 'Sign in to save your predictions and access them on mobile app' : 'Create an account to save predictions across devices';
+            document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Sign In' : 'Register';
+        }
+        
+        var pendingOtpEmail = null;
+        
+        function showAuthError(msg) {
+            var el = document.getElementById('authError');
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.style.color = '#ef4444';
+            setTimeout(function() { el.style.display = 'none'; }, 5000);
+        }
+        
+        async function resendOTP() {
+            if (!pendingOtpEmail) return;
+            try {
+                var res = await fetch(API_BASE + '/User/resendOTP', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: pendingOtpEmail })
+                });
+                var data = await res.json();
+                if (data.response_code === '200') {
+                    var el = document.getElementById('authError');
+                    el.textContent = 'OTP resent to your email!';
+                    el.style.color = '#1a237e';
+                    el.style.display = 'block';
+                } else { showAuthError(data.response_message || 'Failed to resend OTP'); }
+            } catch (err) { showAuthError('Connection error.'); }
+        }
+        
+        document.getElementById('authForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var email = document.getElementById('authEmail').value;
+            var password = document.getElementById('authPassword').value;
+            var name = document.getElementById('authName').value;
+            var phone = document.getElementById('authPhone').value;
+            var otp = document.getElementById('authOtp').value;
+            
+            var btn = document.getElementById('authSubmitBtn');
+            btn.disabled = true;
+            document.getElementById('authError').style.display = 'none';
+            
+            try {
+                if (authMode === 'otp') {
+                    btn.textContent = 'Verifying OTP...';
+                    var res = await fetch(API_BASE + '/User/verifyOTP', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingOtpEmail, Otp: otp })
+                    });
+                    var data = await res.json();
+                    if (data.response_code === '200') {
+                        var el = document.getElementById('authError');
+                        el.textContent = 'Account verified! Please sign in now.';
+                        el.style.color = '#1a237e';
+                        el.style.display = 'block';
+                        switchAuthTab('login');
+                        document.getElementById('authEmail').value = pendingOtpEmail;
+                        pendingOtpEmail = null;
+                    } else { showAuthError(data.response_message || 'Invalid OTP.'); }
+                } else if (authMode === 'login') {
+                    btn.textContent = 'Signing in...';
+                    var res = await fetch(API_BASE + '/Authentication/validateUser', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: email, password: password, platform: 'web' })
+                    });
+                    var data = await res.json();
+                    if (data.response_code === '200') {
+                        currentUser = data.response_message.user;
+                        localStorage.setItem('ohcampus_user', JSON.stringify(currentUser));
+                        localStorage.setItem('ohcampus_token', data.response_message.token);
+                        localStorage.setItem('ohcampus_lead_captured', 'true');
+                        updateUserUI();
+                        closeAuthModal();
+                    } else { showAuthError(data.response_message || 'Invalid credentials. If you just registered, verify your OTP first.'); }
+                } else if (authMode === 'register') {
+                    btn.textContent = 'Registering...';
+                    var res = await fetch(API_BASE + '/User/createUser', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ form: { email: email, password: password, name: name, mobilenum: phone }, platform: 'web' })
+                    });
+                    var data = await res.json();
+                    if (data.response_code === '200') {
+                        pendingOtpEmail = email;
+                        authMode = 'otp';
+                        document.getElementById('nameGroup').style.display = 'none';
+                        document.getElementById('phoneGroup').style.display = 'none';
+                        document.getElementById('authEmail').parentElement.style.display = 'none';
+                        document.getElementById('authPassword').parentElement.style.display = 'none';
+                        document.getElementById('otpGroup').style.display = 'block';
+                        document.querySelector('.modal-tabs').style.display = 'none';
+                        document.getElementById('authTitle').innerHTML = '<i class="fas fa-envelope-open"></i> Verify Your Email';
+                        document.getElementById('authSubtitle').textContent = 'An OTP has been sent to ' + email + '. Enter it below.';
+                        btn.textContent = 'Verify OTP';
+                    } else if (data.response_code === '300') {
+                        showAuthError('Email already registered. Please sign in.');
+                        switchAuthTab('login');
+                        document.getElementById('authEmail').value = email;
+                    } else { showAuthError(data.response_message || 'Registration failed.'); }
+                }
+            } catch (err) { showAuthError('Connection error. Please try again.'); }
+            finally {
+                btn.disabled = false;
+                if (authMode === 'login') btn.textContent = 'Sign In';
+                else if (authMode === 'register') btn.textContent = 'Register';
+                else if (authMode === 'otp') btn.textContent = 'Verify OTP';
+            }
+        });
+        
+        function logout() { localStorage.removeItem('ohcampus_user'); localStorage.removeItem('ohcampus_token'); localStorage.removeItem('ohcampus_lead_captured'); currentUser = null; updateUserUI(); }
+        
+        function switchLevel(level) {
+            currentLevel = level;
+            document.querySelectorAll('.level-tab').forEach(t => t.classList.toggle('active', t.dataset.level === level));
+            renderExamGrid();
+            document.getElementById('formCard').style.display = 'none';
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('premiumCard').style.display = 'none';
+        }
+        
+        function renderExamGrid() {
+            const exams = examConfigs[currentLevel];
+            document.getElementById('examGrid').innerHTML = exams.map(e => `
+                <div class="exam-card ${e.code}" data-id="${e.id}" onclick="selectExam(${e.id})">
+                    <i class="fas ${e.icon}"></i><div class="name">${e.name}</div><div class="desc">${e.desc}</div>
+                </div>
+            `).join('');
+        }
+        
+        function selectExam(examId) {
+            const exams = examConfigs[currentLevel];
+            selectedExam = exams.find(e => e.id === examId);
+            document.querySelectorAll('.exam-card').forEach(c => c.classList.toggle('active', parseInt(c.dataset.id) === examId));
+            
+            const fieldsHtml = selectedExam.fields.map(f => `
+                <div class="form-group">
+                    <label>${f.label} <span class="required">*</span></label>
+                    <input type="number" id="field_${f.name}" min="0" max="${f.max}" placeholder="Enter ${f.label.toLowerCase()}" required>
+                    <div class="max-marks">Max: ${f.max}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('dynamicFields').innerHTML = fieldsHtml;
+            
+            // Update categories dynamically based on exam
+            var catSelect = document.getElementById('category');
+            catSelect.innerHTML = '<option value="">Select your category</option>';
+            if (selectedExam.categories) {
+                selectedExam.categories.forEach(function(cat) {
+                    catSelect.innerHTML += '<option value="' + cat + '">' + cat + '</option>';
+                });
+            }
+            document.getElementById('formCard').style.display = 'block';
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('premiumCard').style.display = 'none';
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        document.getElementById('predictorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!selectedExam) return;
+            
+            let totalScore = 0;
+            const formData = {};
+            selectedExam.fields.forEach(f => {
+                const val = parseFloat(document.getElementById('field_' + f.name).value) || 0;
+                formData[f.name] = val;
+                totalScore += val * f.weight;
+            });
+            
+            const category = document.getElementById('category').value;
+            if (!category) { alert('Please select category'); return; }
+            
+            if (!currentUser) {
+                showAuthModal('login');
+                return;
+            }
+            
+            const btn = document.getElementById('predictBtn');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/Predictor/predictRank`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ exam_id: selectedExam.id, marks: totalScore, category, input_data: formData })
+                });
+                const data = await response.json();
+                
+                if (data.response_code === '200' || data.response_code === 200) {
+                    pendingResult = { rank: data.data.predicted_rank, rangeLow: data.data.rank_range_low || Math.floor(data.data.predicted_rank * 0.9), rangeHigh: data.data.rank_range_high || Math.ceil(data.data.predicted_rank * 1.1), exam: selectedExam.name, score: totalScore, category };
+                } else {
+                    pendingResult = simulatePrediction(totalScore, selectedExam, category);
+                }
+            } catch (err) {
+                pendingResult = simulatePrediction(totalScore, selectedExam, category);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+            }
+            
+            showResult(pendingResult);
+        });
+        
+        function simulatePrediction(score, exam, category) {
+            let baseRank;
+            if (exam.code === 'kcet') baseRank = Math.round(Math.max(1, (480 - score) * 250));
+            else if (exam.code === 'comedk') baseRank = Math.round(Math.max(1, (180 - score) * 350));
+            else if (exam.code === 'jee') baseRank = Math.round(Math.max(1, (100 - score) * 12000));
+            else if (exam.code === 'neet') baseRank = Math.round(Math.max(1, (720 - score) * 30));
+            else baseRank = Math.round(Math.max(1, (100 - score) * 500));
+            return { rank: baseRank, rangeLow: Math.floor(baseRank * 0.85), rangeHigh: Math.ceil(baseRank * 1.15), exam: exam.name, score, category };
+        }
+        
+        function showResult(result) {
+            document.getElementById('predictedRank').textContent = result.rank.toLocaleString();
+            document.getElementById('rankRange').textContent = `Estimated range: ${result.rangeLow.toLocaleString()} to ${result.rangeHigh.toLocaleString()}`;
+            document.getElementById('resExam').textContent = result.exam;
+            document.getElementById('resScore').textContent = result.score;
+            document.getElementById('resCategory').textContent = result.category;
+            document.getElementById('resultCard').style.display = 'block';
+            document.getElementById('premiumCard').style.display = 'block';
+            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetForm() {
+            document.getElementById('predictorForm').reset();
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('premiumCard').style.display = 'none';
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showPremiumInfo() { alert('Premium features coming soon! Download the OhCampus mobile app for premium access.'); }
+        
+        checkAuth();
+        renderExamGrid();
+    </script>
+</body>
+</html>

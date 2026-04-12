@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results - OhCampus</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--green:#2e7d32;--blue:#1a73e8;--text:#0f172a;--body:#334155;--muted:#64748b;--border:#e2e8f0;--surface:#f8fafc;--radius:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--surface);color:var(--text);-webkit-font-smoothing:antialiased;}
+.topbar-contact{background:#1a1a2e;color:white;padding:6px 20px;display:flex;justify-content:flex-end;gap:20px;font-size:0.8rem;}
+.topbar-contact span{display:flex;align-items:center;gap:6px;opacity:0.8;}
+.topbar{background:white;padding:8px 20px;display:flex;align-items:center;border-bottom:1px solid var(--border);gap:20px;}
+.topbar .logo-link{display:flex;align-items:center;}
+.topbar .nav-logo{height:40px;width:auto;}
+.topbar .nav-links{display:flex;gap:4px;flex:1;justify-content:center;}
+.topbar .nav-links a{font-size:0.8rem;font-weight:600;color:var(--text);text-decoration:none;padding:8px 12px;border-radius:4px;transition:color 0.2s;}
+.topbar .nav-links a:hover{color:var(--blue);}
+.topbar .nav-auth{display:flex;gap:8px;}
+.auth-btn{padding:7px 18px;border-radius:6px;font-size:0.82rem;font-weight:600;text-decoration:none;border:1.5px solid var(--border);color:var(--text);transition:all 0.2s;}
+.auth-btn:hover{border-color:var(--blue);color:var(--blue);}
+.auth-btn.signup{background:var(--blue);color:white;border-color:var(--blue);}
+.auth-btn.signup:hover{background:#1557b0;}
+.search-header{background:white;border-bottom:1px solid var(--border);padding:20px;}
+.search-header-inner{max-width:900px;margin:0 auto;display:flex;gap:10px;}
+.search-header-inner input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius);font-size:1rem;font-family:inherit;outline:none;transition:border-color 0.2s;}
+.search-header-inner input:focus{border-color:var(--blue);}
+.search-header-inner button{background:var(--blue);color:white;border:none;padding:12px 24px;border-radius:var(--radius);font-family:inherit;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.search-header-inner button:hover{background:#1557b0;}
+.container{max-width:900px;margin:0 auto;padding:20px;}
+.result-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0;}
+.result-tab{padding:10px 20px;cursor:pointer;font-weight:600;font-size:0.9rem;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;}
+.result-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.result-tab:hover{color:var(--text);}
+.result-tab .count{background:var(--surface);padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-left:6px;}
+.result-tab.active .count{background:#e3f2fd;color:var(--blue);}
+.loading{text-align:center;padding:60px 20px;color:var(--muted);}
+.loading i{font-size:2rem;margin-bottom:10px;display:block;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.no-results{text-align:center;padding:60px 20px;color:var(--muted);}
+.no-results i{font-size:3rem;margin-bottom:12px;display:block;color:var(--border);}
+.result-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;transition:box-shadow 0.2s,border-color 0.2s;cursor:pointer;text-decoration:none;display:block;color:inherit;}
+.result-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.06);border-color:var(--green);}
+.result-card .card-top{display:flex;align-items:center;gap:12px;}
+.result-card .card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:white;flex-shrink:0;}
+.result-card .card-icon.college{background:var(--green);}
+.result-card .card-icon.exam{background:#6366f1;}
+.result-card .card-icon.course{background:#f59e0b;}
+.result-card h3{font-size:1rem;font-weight:700;margin-bottom:2px;}
+.result-card p{font-size:0.85rem;color:var(--muted);line-height:1.4;}
+.result-card .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;margin-top:6px;}
+.result-card .badge.college{background:#e8f5e9;color:#2e7d32;}
+.result-card .badge.exam{background:#ede9fe;color:#6366f1;}
+.result-card .badge.course{background:#fef3c7;color:#92400e;}
+</style>
+</head>
+<body>
+<div class="topbar-contact">
+    <span><i class="fas fa-phone"></i> 08884560456</span>
+    <span><i class="fas fa-envelope"></i> enquiry@ohcampus.com</span>
+</div>
+<div class="topbar">
+    <a href="/home" class="logo-link"><img src="/assets/images/logo/logo.png" alt="OhCampus" class="nav-logo"></a>
+    <div class="nav-links">
+        <a href="/home">HOME</a>
+        <a href="/home">MANAGEMENT</a>
+        <a href="/home">ENGINEERING</a>
+        <a href="/home">MEDICINE & HEALTH SCIENCES</a>
+        <a href="/home">PHARMACY</a>
+        <a href="/exams">EXAMS</a>
+    </div>
+    <div class="nav-auth">
+        <a href="/home" class="auth-btn">Sign In</a>
+        <a href="/home" class="auth-btn signup">Sign Up</a>
+    </div>
+</div>
+<div class="search-header">
+    <div class="search-header-inner">
+        <input type="text" id="searchInput" placeholder="Search colleges, courses, exams..." data-testid="search-input" autocomplete="off">
+        <button onclick="performSearch()" data-testid="search-btn"><i class="fas fa-search"></i> Search</button>
+    </div>
+</div>
+<div class="container">
+    <div class="result-tabs" id="tabs" style="display:none;">
+        <div class="result-tab active" data-tab="all" onclick="switchTab('all')">All <span class="count" id="countAll">0</span></div>
+        <div class="result-tab" data-tab="colleges" onclick="switchTab('colleges')"><i class="fas fa-university"></i> Colleges <span class="count" id="countColleges">0</span></div>
+        <div class="result-tab" data-tab="exams" onclick="switchTab('exams')"><i class="fas fa-file-alt"></i> Exams <span class="count" id="countExams">0</span></div>
+        <div class="result-tab" data-tab="courses" onclick="switchTab('courses')"><i class="fas fa-book"></i> Courses <span class="count" id="countCourses">0</span></div>
+    </div>
+    <div id="results">
+        <div class="no-results"><i class="fas fa-search"></i><p>Enter a search term to find colleges, courses, and exams</p></div>
+    </div>
+</div>
+<script>
+var API='https://campusapi.ohcampus.com/apps';
+var allResults={colleges:[],exams:[],courses:[]};
+var currentTab='all';
+
+function getQuery(){return new URLSearchParams(window.location.search).get('q')||'';}
+
+function performSearch(){
+    var q=document.getElementById('searchInput').value.trim();
+    if(!q)return;
+    window.history.replaceState(null,'','?q='+encodeURIComponent(q));
+    doSearch(q);
+}
+
+function doSearch(q){
+    document.getElementById('results').innerHTML='<div class="loading"><i class="fas fa-spinner"></i>Searching...</div>';
+    document.getElementById('tabs').style.display='none';
+
+    var collegeP=fetch(API+'/Common/getDataBySearch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:q})}).then(function(r){return r.json();}).catch(function(){return{Colleges:[]};});
+    var examP=fetch(API+'/Exam/getExamSearch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchexam:q})}).then(function(r){return r.json();}).catch(function(){return{Exams:[]};});
+    var courseP=fetch(API+'/Course/getCourseByCategory',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({categoryId:'2',search:''})}).then(function(r){return r.json();}).then(function(d){var all=d.data||[];var lq=q.toLowerCase();return all.filter(function(c){return c.name.toLowerCase().indexOf(lq)!==-1;});}).catch(function(){return[];});
+
+    Promise.all([collegeP,examP,courseP]).then(function(res){
+        allResults.colleges=(res[0].Colleges||[]);
+        allResults.exams=(res[1].Exams||[]);
+        allResults.courses=(res[2]||[]);
+
+        var total=allResults.colleges.length+allResults.exams.length+allResults.courses.length;
+        document.getElementById('countAll').textContent=total;
+        document.getElementById('countColleges').textContent=allResults.colleges.length;
+        document.getElementById('countExams').textContent=allResults.exams.length;
+        document.getElementById('countCourses').textContent=allResults.courses.length;
+        document.getElementById('tabs').style.display='flex';
+
+        renderResults();
+    });
+}
+
+function switchTab(tab){
+    currentTab=tab;
+    document.querySelectorAll('.result-tab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-tab')===tab);});
+    renderResults();
+}
+
+function renderResults(){
+    var html='';
+    var colleges=allResults.colleges;
+    var exams=allResults.exams;
+
+    if(currentTab==='all'||currentTab==='colleges'){
+        colleges.forEach(function(c){
+            html+='<a href="/collegeDetails/'+c.id+'" class="result-card" data-testid="result-college-'+c.id+'">' +
+                '<div class="card-top"><div class="card-icon college"><i class="fas fa-university"></i></div><div><h3>'+c.title+'</h3><p>View college details, courses, placements & more</p><span class="badge college">College</span></div></div></a>';
+        });
+    }
+    if(currentTab==='all'||currentTab==='exams'){
+        exams.forEach(function(e){
+            html+='<a href="/examsdetails/'+e.id+'" class="result-card" data-testid="result-exam-'+e.id+'">' +
+                '<div class="card-top"><div class="card-icon exam"><i class="fas fa-file-alt"></i></div><div><h3>'+e.title+'</h3><p>View exam details, syllabus, dates & more</p><span class="badge exam">Exam</span></div></div></a>';
+        });
+    }
+    var courses=allResults.courses;
+    if(currentTab==='all'||currentTab==='courses'){
+        courses.forEach(function(c){
+            html+='<a href="/allCollegeList/course/bycat/'+c.id+'" class="result-card" data-testid="result-course-'+c.id+'">' +
+                '<div class="card-top"><div class="card-icon course"><i class="fas fa-book"></i></div><div><h3>'+c.name+'</h3><p>View course details, colleges offering this course & more</p><span class="badge course">Course</span></div></div></a>';
+        });
+    }
+
+    if(!html){
+        html='<div class="no-results"><i class="fas fa-search"></i><p>No results found. Try a different search term.</p></div>';
+    }
+    document.getElementById('results').innerHTML=html;
+}
+
+// Init
+document.getElementById('searchInput').addEventListener('keydown',function(e){if(e.key==='Enter')performSearch();});
+var initQ=getQuery();
+if(initQ){document.getElementById('searchInput').value=initQ;doSearch(initQ);}
+</script>
+</body>
+</html>
