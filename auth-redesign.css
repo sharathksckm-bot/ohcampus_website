@@ -1,0 +1,276 @@
+/* Auth Pages Redesign - OhCampus */
+
+/* FULL PAGE: Sign In & Sign Up */
+.bgsigninpage.bglayer {
+  background: linear-gradient(135deg, #070d14 0%, #0f1b2d 50%, #162544 100%) !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bgsigninpage .flex-auto {
+  justify-content: center !important;
+  align-items: center !important;
+  padding-right: 0 !important;
+}
+
+.bgsigninpage .z-10 {
+  background: rgba(255, 255, 255, 0.97) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  padding: 48px 40px !important;
+  max-width: 440px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  animation: authCardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+@keyframes authCardSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Logo */
+.bgsigninpage .w-28 img,
+.bgsigninpage .w-36 img,
+.bgsigninpage7 .w-28 img {
+  width: 140px !important;
+  height: auto !important;
+}
+
+/* Heading */
+.bgsigninpage .text-4xl,
+.bgsigninpage .text-2xl,
+.bgsigninpage7 .text-2xl,
+.bgsigninpage .border-t.pt-3,
+.bgsigninpage7 .border-t.pt-3 {
+  font-family: 'Cabinet Grotesk', 'Manrope', sans-serif !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  font-size: 1.75rem !important;
+  letter-spacing: -0.02em !important;
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+
+/* Subtitle */
+.bgsigninpage .font-medium,
+.bgsigninpage7 .font-medium {
+  color: #64748b !important;
+  font-size: 0.9rem !important;
+}
+
+/* Links */
+.bgsigninpage a.text-primary,
+.bgsigninpage7 a.text-primary,
+.bgsigninpage .text-primary,
+.bgsigninpage7 .text-primary {
+  color: #1a73e8 !important;
+  font-weight: 600 !important;
+}
+
+/* FORM FIELDS */
+.bgsigninpage .mat-form-field-appearance-fill .mat-form-field-flex,
+.bgsigninpage7 .mat-form-field-appearance-fill .mat-form-field-flex {
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 8px 16px 0 !important;
+  transition: all 0.25s ease !important;
+}
+
+.bgsigninpage .mat-form-field-appearance-fill .mat-form-field-flex:hover,
+.bgsigninpage7 .mat-form-field-appearance-fill .mat-form-field-flex:hover {
+  border-color: #94a3b8 !important;
+  background: #fff !important;
+}
+
+.bgsigninpage .mat-form-field.mat-focused .mat-form-field-flex,
+.bgsigninpage7 .mat-form-field.mat-focused .mat-form-field-flex {
+  border-color: #1a73e8 !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12) !important;
+}
+
+.bgsigninpage .mat-form-field-appearance-fill .mat-form-field-underline,
+.bgsigninpage7 .mat-form-field-appearance-fill .mat-form-field-underline {
+  display: none !important;
+}
+
+.bgsigninpage .mat-form-field-label,
+.bgsigninpage7 .mat-form-field-label {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+.bgsigninpage .mat-input-element,
+.bgsigninpage7 .mat-input-element {
+  color: #0f172a !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 0.95rem !important;
+}
+
+/* PRIMARY BUTTON */
+.SignForm .mat-raised-button,
+.SignForm .mat-flat-button,
+.SignUpForm .mat-raised-button,
+.SignUpForm .mat-flat-button,
+.bgsigninpage7 .mat-raised-button,
+.bgsigninpage7 .mat-flat-button {
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 14px 32px !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.35) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  min-height: 48px !important;
+}
+
+.SignForm .mat-raised-button:hover,
+.SignUpForm .mat-raised-button:hover,
+.bgsigninpage7 .mat-raised-button:hover {
+  background: linear-gradient(135deg, #1557b0 0%, #0d47a1 100%) !important;
+  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Google Sign In */
+.bgsigninpage asl-google-signin-button,
+.bgsigninpage7 asl-google-signin-button {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  margin-top: 8px !important;
+}
+
+/* Forgot Password */
+.bgsigninpage a[class*="text-warn"],
+.bgsigninpage7 a[class*="text-warn"] {
+  color: #1a73e8 !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Checkbox */
+.bgsigninpage .mat-checkbox-label,
+.bgsigninpage7 .mat-checkbox-label {
+  color: #475569 !important;
+  font-size: 0.85rem !important;
+}
+
+.bgsigninpage .mat-checkbox-frame,
+.bgsigninpage7 .mat-checkbox-frame {
+  border-color: #cbd5e1 !important;
+  border-radius: 4px !important;
+}
+
+/* Error messages */
+.bgsigninpage .mat-error,
+.bgsigninpage7 .mat-error {
+  color: #dc2626 !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+}
+
+/* POPUP DIALOG */
+.mat-dialog-container:has(.bgsigninpage7) {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25) !important;
+  padding: 0 !important;
+  animation: authDialogPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes authDialogPop {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.bgsigninpage7.wres {
+  background: #fff !important;
+  height: auto !important;
+  max-height: 90vh !important;
+}
+
+.bgsigninpage7 .bglayer4 {
+  background: #fff !important;
+}
+
+.bgsigninpage7 .z-10 {
+  padding: 36px 36px 28px !important;
+}
+
+/* Close button */
+.bgsigninpage7 .mat-icon[data-mat-icon-name="clear"] {
+  right: 12px !important;
+  top: 12px !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 6px !important;
+  border-radius: 50% !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  transition: all 0.2s !important;
+  z-index: 30 !important;
+}
+
+.bgsigninpage7 .mat-icon[data-mat-icon-name="clear"]:hover {
+  background: #e2e8f0 !important;
+}
+
+/* Backdrop */
+.cdk-overlay-dark-backdrop {
+  background: rgba(7, 13, 20, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+/* Eye icon */
+.bgsigninpage .mat-icon-button .mat-icon,
+.bgsigninpage7 .mat-icon-button .mat-icon {
+  color: #94a3b8 !important;
+}
+
+/* border-t fix for popup heading */
+.bgsigninpage7 .border-t.pt-3 {
+  border-top: none !important;
+}
+.bgsigninpage7 .border-t:not(.pt-3) {
+  border-top-color: #e2e8f0 !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .bgsigninpage.bglayer {
+    padding: 16px !important;
+    align-items: flex-start !important;
+    padding-top: 40px !important;
+  }
+  .bgsigninpage .z-10 {
+    padding: 32px 24px !important;
+    border-radius: 16px !important;
+  }
+  .bgsigninpage7 .z-10 {
+    padding: 28px 20px 20px !important;
+  }
+  .mat-dialog-container:has(.bgsigninpage7) {
+    border-radius: 16px !important;
+  }
+  .bgsigninpage .text-4xl,
+  .bgsigninpage7 .text-2xl {
+    font-size: 1.5rem !important;
+  }
+}
