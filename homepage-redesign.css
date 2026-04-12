@@ -4,37 +4,37 @@
 body{font-family:'Manrope',system-ui,sans-serif!important;-webkit-font-smoothing:antialiased;}
 
 /* ── HERO ── */
-.heroSection,.heroSection.relative{
+.heroSection.ohc-home-hero,.heroSection.ohc-home-hero.relative{
   min-height:500px!important;position:relative!important;overflow:visible!important;
   background-color:#070d14!important;
   display:flex!important;align-items:center!important;justify-content:center!important;
 }
-.heroSection>img.herosecimg,.heroSection>img{
+.heroSection.ohc-home-hero>img.herosecimg,.heroSection.ohc-home-hero>img{
   width:100%!important;min-width:100%!important;object-fit:cover!important;
   position:absolute!important;top:0!important;left:0!important;height:100%!important;
   opacity:0.3!important;
 }
-.heroSection .textset{
+.heroSection.ohc-home-hero .textset{
   position:relative!important;z-index:5!important;
   text-align:center!important;width:100%!important;
   display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
   padding:0 20px!important;
 }
-.heroSection [class*="text-8xl"],.heroSection [class*="text-7xl"],.heroSection [class*="text-3xl"]{
+.heroSection.ohc-home-hero [class*="text-8xl"],.heroSection.ohc-home-hero [class*="text-7xl"],.heroSection.ohc-home-hero [class*="text-3xl"]{
   font-family:'Cabinet Grotesk',sans-serif!important;font-weight:800!important;
   letter-spacing:-0.03em!important;color:var(--ohc-blue)!important;
   text-shadow:0 2px 10px rgba(0,0,0,0.3)!important;
   font-size:clamp(2rem,5vw,3.2rem)!important;line-height:1.2!important;margin-bottom:6px!important;
   word-spacing:0.15em!important;
 }
-.heroSection [class*="text-gray-300"],.heroSection .textset>div:nth-child(2){
+.heroSection.ohc-home-hero [class*="text-gray-300"],.heroSection.ohc-home-hero .textset>div:nth-child(2){
   color:white!important;text-shadow:0 1px 6px rgba(0,0,0,0.3)!important;font-weight:600!important;animation:none!important;transition:none!important;opacity:1!important;position:relative!important;bottom:auto!important;top:auto!important;transform:none!important;
   font-size:1rem!important;margin-bottom:4px!important;
 }
-.heroSection .textset>div:nth-child(n+3):not(#ohc-hero-search){display:none!important;}
-.heroSection .textset .mat-focus-indicator{display:none!important;}
-.heroSection .textset input:not(#ohcHeroInput){display:none!important;}
-.heroSection .textset mat-form-field{display:none!important;}
+.heroSection.ohc-home-hero .textset>div:nth-child(n+3):not(#ohc-hero-search):not(#ohcHeroStats){display:none!important;}
+.heroSection.ohc-home-hero .textset .mat-focus-indicator{display:none!important;}
+.heroSection.ohc-home-hero .textset input:not(#ohcHeroInput){display:none!important;}
+.heroSection.ohc-home-hero .textset mat-form-field{display:none!important;}
 #ohcHeroInput{display:block!important;}
 #ohc-hero-search{max-width:680px!important;width:100%!important;margin:16px auto 0!important;position:relative!important;z-index:20!important;pointer-events:auto!important;}
 
@@ -56,7 +56,7 @@ body{font-family:'Manrope',system-ui,sans-serif!important;-webkit-font-smoothing
 
 /* ── QUICK TAGS ── */
 .ohc-search-tags{display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap;}
-.ohc-search-tag{padding:7px 16px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:white;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none;backdrop-filter:blur(4px);}
+.ohc-search-tag{padding:7px 16px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:white;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);}
 .ohc-search-tag:hover{background:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.5);color:white;}
 
 /* ── TOP EXAMS ── */
@@ -91,10 +91,8 @@ body{font-family:'Manrope',system-ui,sans-serif!important;-webkit-font-smoothing
 .ohc-clg-rating{background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
 
 /* ── EXISTING OVERRIDES ── */
-.bg-card.rounded-lg,.bg-card.rounded,mat-card,.mat-card{border-radius:var(--ohc-radius)!important;border:1px solid var(--ohc-border)!important;box-shadow:none!important;transition:transform 0.3s,box-shadow 0.3s!important;overflow:hidden!important;}
-.bg-card.rounded-lg:hover,.bg-card.rounded:hover,mat-card:hover,.mat-card:hover{transform:translateY(-4px)!important;box-shadow:0 10px 25px -5px rgba(0,0,0,0.1)!important;}
-.mat-chip,[class*="mat-chip"]{font-family:'Manrope',sans-serif!important;border-radius:20px!important;border:1px solid var(--ohc-border)!important;background:white!important;transition:all 0.2s!important;}
-.mat-chip:hover,[class*="mat-chip"]:hover{background:var(--ohc-green-light)!important;border-color:var(--ohc-green)!important;color:var(--ohc-green)!important;}
+/* Card overrides removed - were breaking college detail pages on iOS */
+/* Chip overrides removed - were affecting all pages */
 .mat-ink-bar{background-color:var(--ohc-green)!important;}
 .predictor-section{background:var(--ohc-surface)!important;}
 .predictor-card{border:1px solid var(--ohc-border)!important;box-shadow:none!important;}
@@ -105,7 +103,7 @@ body{font-family:'Manrope',system-ui,sans-serif!important;-webkit-font-smoothing
 .examsBanner,.exams-banner,[class*="examBanner"]{max-height:250px!important;min-height:200px!important;}
 
 @media(max-width:768px){
-  .heroSection{min-height:420px!important;}
+  .heroSection.ohc-home-hero{min-height:420px!important;}
   .ohc-search-box{flex-direction:column;}
   .ohc-search-btn{width:100%;justify-content:center;}
   .ohc-exams-grid{grid-template-columns:1fr 1fr;gap:10px;}
@@ -116,23 +114,20 @@ body{font-family:'Manrope',system-ui,sans-serif!important;-webkit-font-smoothing
 @media(max-width:480px){.ohc-exams-grid{grid-template-columns:1fr;}}
 
 /* Hero textset vertical centering fix */
-.heroSection .textset > div:first-child {
+.heroSection.ohc-home-hero .textset > div:first-child {
   margin-top: auto !important;
 }
 #ohc-hero-search {
-  margin-bottom: auto !important;
+  margin-bottom: 0 !important;
 }
-.heroSection .textset {
+.heroSection.ohc-home-hero .textset {
   min-height: 100% !important;
   padding-top: 40px !important;
   padding-bottom: 40px !important;
 }
 
 /* Exams page banner - target the image directly */
-body:not(.home-page) .heroSection > img,
-body:not(.home-page) .heroSection {
-  /* Only applies to non-home pages where our hero override kicks in */
-}
+
 
 /* NIRF Rank Badge */
 .ohc-clg-rank{flex-shrink:0;display:flex;align-items:center;}
@@ -148,7 +143,7 @@ body:not(.home-page) .heroSection {
 
 /* Featured Colleges - Square 1:1 banner images */
 img.update-image.object-cover {
-  aspect-ratio: 1 / 1 !important;
+  /* aspect-ratio: 1 / 1 - removed for iOS compat */
   object-fit: cover !important;
   width: 100% !important;
   height: 200px !important;
@@ -174,17 +169,17 @@ img.update-image.object-cover {
 }
 
 /* Fix: Hide Angular's character-by-character title animation immediately */
-.heroSection [class*="text-8xl"] span,
-.heroSection [class*="text-7xl"] span,
-.heroSection [class*="text-3xl"] span {
+.heroSection.ohc-home-hero [class*="text-8xl"] span,
+.heroSection.ohc-home-hero [class*="text-7xl"] span,
+.heroSection.ohc-home-hero [class*="text-3xl"] span {
   opacity: 0 !important;
   animation: none !important;
   transition: none !important;
 }
 /* But show our replaced title span */
-.heroSection [class*="text-8xl"] > span[style],
-.heroSection [class*="text-7xl"] > span[style],
-.heroSection [class*="text-3xl"] > span[style] {
+.heroSection.ohc-home-hero [class*="text-8xl"] > span[style],
+.heroSection.ohc-home-hero [class*="text-7xl"] > span[style],
+.heroSection.ohc-home-hero [class*="text-3xl"] > span[style] {
   opacity: 1 !important;
 }
 /* Immediately position the title in center, not at bottom */
@@ -200,8 +195,8 @@ img.update-image.object-cover {
 }
 
 /* Fix subtitle animation - hide Angular char animation, show immediately */
-.heroSection .textset > div:nth-child(2) span,
-.heroSection .textset > div:nth-child(2) * {
+.heroSection.ohc-home-hero .textset > div:nth-child(2) span,
+.heroSection.ohc-home-hero .textset > div:nth-child(2) * {
   animation: none !important;
   transition: none !important;
   opacity: 1 !important;
@@ -210,4 +205,322 @@ img.update-image.object-cover {
   top: auto !important;
   transform: none !important;
   color: white !important;
+}
+
+/* Mobile: ensure search + tags fit within hero */
+@media(max-width:768px) {
+  .heroSection.ohc-home-hero, .heroSection.ohc-home-hero.relative {
+    min-height: auto !important;
+    padding-bottom: 20px !important;
+  }
+  .heroSection.ohc-home-hero .textset {
+    padding-top: 10px !important;
+    padding-bottom: 20px !important;
+  }
+  #ohc-hero-search {
+    margin-top: 10px !important;
+  }
+  .ohc-search-tags {
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .ohc-search-tag {
+    padding: 5px 12px;
+    font-size: 0.75rem;
+  }
+  .heroSection.ohc-home-hero [class*="text-8xl"],
+  .heroSection.ohc-home-hero [class*="text-7xl"],
+  .heroSection.ohc-home-hero [class*="text-3xl"] {
+    font-size: 1.5rem !important;
+    margin-bottom: 2px !important;
+  }
+  .heroSection.ohc-home-hero [class*="text-gray-300"],
+  .heroSection.ohc-home-hero .textset > div:nth-child(2) {
+    font-size: 0.78rem !important;
+    margin-bottom: 2px !important;
+  }
+  .ohc-search-box input {
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+  }
+  .ohc-search-btn {
+    padding: 10px 16px !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+/* NIRF section mobile responsive */
+@media(max-width:768px) {
+  .ohc-cat-tabs {
+    gap: 6px !important;
+    padding: 0 10px !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px !important;
+  }
+  .ohc-cat-tabs::-webkit-scrollbar { display: none; }
+  .ohc-cat-tab {
+    padding: 7px 14px !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  .ohc-cat-colleges {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 0 10px !important;
+  }
+  .ohc-clg-card {
+    padding: 12px !important;
+  }
+  .ohc-clg-info h4 {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+  }
+  .ohc-top-exams {
+    padding: 30px 10px !important;
+  }
+  .ohc-section-title {
+    font-size: 1.3rem !important;
+  }
+  .ohc-section-subtitle {
+    font-size: 0.82rem !important;
+    margin-bottom: 18px !important;
+  }
+  .ohc-exams-grid {
+    padding: 0 5px !important;
+  }
+}
+
+/* Mobile search dropdown */
+@media(max-width:768px) {
+  .ohc-search-dropdown {
+    max-height: 280px !important;
+    border-radius: 8px !important;
+    left: 0 !important;
+    right: 0 !important;
+    font-size: 0.85rem !important;
+  }
+  .ohc-dd-item {
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+  .ohc-dd-item span {
+    font-size: 0.82rem !important;
+  }
+  .ohc-dd-label {
+    padding: 6px 14px 3px !important;
+    font-size: 0.65rem !important;
+  }
+  .ohc-search-box {
+    border-radius: 10px !important;
+    padding: 4px !important;
+  }
+}
+
+/* Hero stats counters */
+#ohcHeroStats, .ohc-hero-stats {
+  display: flex;
+  justify-content: center;
+  margin-bottom: auto !important;
+  gap: 40px;
+  margin-top: 16px;
+}
+.ohc-hero-stat {
+  text-align: center;
+  color: white;
+}
+.ohc-hero-stat-num {
+  display: block;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.ohc-hero-stat-label {
+  font-size: 0.78rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+@media(max-width:768px) {
+  #ohcHeroStats, .ohc-hero-stats {
+    gap: 20px;
+    margin-top: 10px;
+  }
+  .ohc-hero-stat-num {
+    font-size: 1.2rem;
+  }
+  .ohc-hero-stat-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Mobile: Fix Chat with Expert / AI Assistant overlap */
+@media(max-width:768px) {
+  /* Push Chat with Expert and AI Assistant above the fold so they don't overlap content */
+  .whatsapp-chat-widget,
+  [class*="whatsapp"],
+  a[href*="wa.me"],
+  div[onclick*="whatsapp"],
+  [class*="chat-with-expert"],
+  .chat-expert-btn {
+    bottom: 70px !important;
+    z-index: 999 !important;
+  }
+  
+  /* Make AI Assistant smaller and repositioned */
+  .ai-assistant-btn,
+  [class*="ai-assistant"],
+  [class*="chatbot"] {
+    bottom: 120px !important;
+    z-index: 998 !important;
+  }
+
+  /* Fix the "How Can We Help You?" sidebar panel */
+  .cdk-overlay-pane,
+  [class*="sidenav"],
+  [class*="side-nav"],
+  mat-sidenav,
+  .mat-drawer {
+    max-width: 85vw !important;
+    width: 85vw !important;
+  }
+  
+  /* Ensure the "How Can We Help" content doesn't overflow */
+  .mat-drawer-content,
+  [class*="drawer-content"] {
+    overflow-x: hidden !important;
+  }
+  
+  /* Fix the help cards grid to fit in sidebar */
+  .mat-drawer .help-cards,
+  .mat-drawer [class*="grid"],
+  mat-sidenav [class*="grid"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+}
+
+/* Mobile: Collapsible Chat with Expert - initially show only icon */
+@media(max-width:768px) {
+  /* Move Chat with Expert higher to avoid overlapping Apply Now / footer */
+  .ohc-floating-cta {
+    bottom: 75px !important;
+    right: 10px !important;
+    transform: scale(0.9) !important;
+  }
+  
+  /* Move AI Assistant above Chat with Expert */
+  #ai-assistant-btn, .ai-assistant-btn {
+    bottom: 130px !important;
+    right: 10px !important;
+    transform: scale(0.85) !important;
+  }
+
+  /* Fix sidebar/vertical navigation "How Can We Help" overflow */
+  fuse-vertical-navigation,
+  .fuse-vertical-navigation,
+  [class*="vertical-navigation"] {
+    max-width: 280px !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Fix the aside panel (How Can We Help cards) */
+  fuse-vertical-navigation-aside-item,
+  [class*="navigation-aside"],
+  [class*="aside-item"] {
+    max-width: 280px !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Ensure the aside content wraps properly */
+  fuse-vertical-navigation-aside-item .mat-card,
+  fuse-vertical-navigation-aside-item [class*="grid"],
+  [class*="navigation-aside"] [class*="grid"] {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    max-width: 260px !important;
+    padding: 8px !important;
+  }
+  
+  /* Fix cards inside the "How Can We Help" section */
+  fuse-vertical-navigation-aside-item .mat-card,
+  [class*="aside"] [class*="card"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Fix "How Can We Help" card text wrapping in sidebar */
+@media(max-width:768px) {
+  fuse-vertical-navigation .fuse-vertical-navigation-content {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  /* Ensure help cards text wraps fully */
+  fuse-vertical-navigation-aside-item h3,
+  fuse-vertical-navigation-aside-item h4,
+  fuse-vertical-navigation-aside-item p,
+  fuse-vertical-navigation-aside-item span,
+  fuse-vertical-navigation-aside-item .mat-card-title,
+  fuse-vertical-navigation-aside-item [class*="title"],
+  fuse-vertical-navigation-aside-item [class*="label"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    font-size: 0.78rem !important;
+    line-height: 1.3 !important;
+  }
+  /* Make cards in aside narrower to fit */
+  fuse-vertical-navigation-aside-item mat-card,
+  fuse-vertical-navigation-aside-item .mat-card,
+  fuse-vertical-navigation-aside-item [class*="card"] {
+    padding: 8px !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+  /* Hide floating buttons when sidebar is open to prevent overlap */
+  fuse-vertical-navigation.fuse-vertical-navigation-opened ~ #ai-assistant-btn,
+  fuse-vertical-navigation.fuse-vertical-navigation-opened ~ .ohc-floating-cta,
+  .fuse-vertical-navigation-opened ~ #ai-assistant-btn,
+  .fuse-vertical-navigation-opened ~ .ohc-floating-cta {
+    display: none !important;
+  }
+}
+
+/* Override: Single column for help cards in 280px sidebar */
+@media(max-width:768px) {
+  .fuse-vertical-navigation-content [class*="grid"],
+  fuse-vertical-navigation-aside-item [class*="grid"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+    max-width: 260px !important;
+    padding: 6px !important;
+    box-sizing: border-box !important;
+  }
+  .fuse-vertical-navigation-content [class*="grid"] > *,
+  fuse-vertical-navigation-aside-item [class*="grid"] > * {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+  .fuse-vertical-navigation-content [class*="grid"] h3,
+  .fuse-vertical-navigation-content [class*="grid"] h4,
+  .fuse-vertical-navigation-content [class*="grid"] p,
+  .fuse-vertical-navigation-content [class*="grid"] span {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    font-size: 0.72rem !important;
+  }
 }

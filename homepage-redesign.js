@@ -1,5 +1,7 @@
 (function(){
   'use strict';
+  var p=window.location.pathname;
+  if(p!=='/home'&&p!=='/'&&p!=='/index.html'&&p!=='')return;
   var API='https://campusapi.ohcampus.com/apps';
   function isHome(){var p=window.location.pathname;return p==='/'||p==='/home'||p==='/index.html'||p==='';}
   function loadFonts(){
@@ -15,7 +17,7 @@
       var ep=fetch(API+'/Exam/getExamSearch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchexam:q})}).then(function(r){return r.json();}).catch(function(){return{Exams:[]};});
       var crp=fetch(API+'/Course/getCourseByCategory',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({categoryId:'2',search:''})}).then(function(r){return r.json();}).then(function(d){var a=d.data||[];var lq=q.toLowerCase();return a.filter(function(c){return c.name.toLowerCase().indexOf(lq)!==-1;}).slice(0,5);}).catch(function(){return[];});
       Promise.all([cp,ep,crp]).then(function(res){
-        var colleges=(res[0].Colleges||[]).slice(0,4);
+        var lq=q.toLowerCase();var colleges=(res[0].Colleges||[]).filter(function(c){return c.title.toLowerCase().indexOf(lq)!==-1;}).slice(0,5);
         var exams=(res[1].Exams||[]).slice(0,3);
         var courses=res[2]||[];
         var h='';
@@ -33,6 +35,7 @@
   function enhanceHero(){
     var hero=document.querySelector('.heroSection');
     if(!hero||document.getElementById('ohc-hero-search'))return;
+    hero.classList.add('ohc-home-hero');
     var img=hero.querySelector('img.herosecimg,img');
     if(img)img.style.opacity='0.3';
     hero.style.backgroundColor='#070d14';
@@ -44,6 +47,7 @@
     s.id='ohc-hero-search';
     s.innerHTML='<form class="ohc-search-box" action="/search-results.html" method="GET"><input type="text" name="q" placeholder="Search colleges, courses, exams..." id="ohcHeroInput" autocomplete="off"><button type="submit" class="ohc-search-btn"><i class="fas fa-search"></i> Search</button></form><div id="ohcSearchDD" class="ohc-search-dropdown" style="display:none"></div><div class="ohc-search-tags"><a href="/examsdetails/1268" class="ohc-search-tag">KCET</a><a href="/examsdetails/2084" class="ohc-search-tag">NEET</a><a href="/examsdetails/33" class="ohc-search-tag">JEE Main</a><a href="/examsdetails/1265" class="ohc-search-tag">COMEDK</a><a href="/rank-predictor.html" class="ohc-search-tag">Rank Predictor</a><a href="/college-predictor.html" class="ohc-search-tag">College Predictor</a></div>';
     textset.appendChild(s);
+    var statsDiv=document.createElement("div");statsDiv.id="ohcHeroStats";statsDiv.className="ohc-hero-stats";statsDiv.innerHTML="<div class=\"ohc-hero-stat\"><span class=\"ohc-hero-stat-num\">10,616+</span><span class=\"ohc-hero-stat-label\">Colleges</span></div><div class=\"ohc-hero-stat\"><span class=\"ohc-hero-stat-num\">6,303+</span><span class=\"ohc-hero-stat-label\">Courses</span></div><div class=\"ohc-hero-stat\"><span class=\"ohc-hero-stat-num\">201+</span><span class=\"ohc-hero-stat-label\">Exams</span></div>";textset.appendChild(statsDiv);
     var input=document.getElementById('ohcHeroInput');
     if(input){input.addEventListener('input',function(){doSearch(this.value);});input.addEventListener('focus',function(){if(this.value.length>=2)doSearch(this.value);});}
     document.addEventListener('click',function(e){if(!e.target.closest('#ohc-hero-search'))hideDD();});
@@ -98,5 +102,15 @@
   function go(){[1500,3000,5000,7000,10000].forEach(function(d){setTimeout(run,d);});}
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go);}else{go();}
   var cur=location.href;
-  new MutationObserver(function(){if(location.href!==cur){cur=location.href;['ohc-hero-search','ohc-top-exams','ohc-categories'].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});setTimeout(go,1500);}}).observe(document.body,{childList:true,subtree:true});
+  if(isHome()){
+    var obsTimer=null;
+    new MutationObserver(function(){
+      if(location.href!==cur){
+        cur=location.href;
+        clearTimeout(obsTimer);
+        ['ohc-hero-search','ohcHeroStats','ohc-top-exams','ohc-categories'].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});
+        if(isHome()){obsTimer=setTimeout(go,2000);}
+      }
+    }).observe(document.body,{childList:true,subtree:false});
+  }
 })();
