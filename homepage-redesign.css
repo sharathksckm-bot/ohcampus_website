@@ -326,35 +326,73 @@ img.update-image.object-cover {
   display: flex;
   justify-content: center;
   margin-bottom: auto !important;
-  gap: 40px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 18px;
 }
 .ohc-hero-stat {
   text-align: center;
   color: white;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 110px;
+}
+.ohc-hero-stat:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,215,0,0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  color: white;
+  text-decoration: none;
+}
+.ohc-hero-stat-icon {
+  font-size: 1.3rem;
+  color: #ffd700;
+  margin-bottom: 2px;
 }
 .ohc-hero-stat-num {
   display: block;
   font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  color: #ffd700;
 }
 .ohc-hero-stat-label {
   font-size: 0.78rem;
-  opacity: 0.8;
-  font-weight: 500;
+  opacity: 0.85;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.02em;
 }
 @media(max-width:768px) {
   #ohcHeroStats, .ohc-hero-stats {
-    gap: 20px;
-    margin-top: 10px;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .ohc-hero-stat {
+    padding: 8px 14px;
+    min-width: 90px;
+    border-radius: 10px;
+  }
+  .ohc-hero-stat-icon {
+    font-size: 1rem;
   }
   .ohc-hero-stat-num {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   .ohc-hero-stat-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 }
 
