@@ -1,7 +1,5 @@
 (function(){
   'use strict';
-  var p=window.location.pathname;
-  if(p!=='/home'&&p!=='/'&&p!=='/index.html'&&p!=='')return;
   var API='https://campusapi.ohcampus.com/apps';
   function isHome(){var p=window.location.pathname;return p==='/'||p==='/home'||p==='/index.html'||p==='';}
   function loadFonts(){
@@ -98,19 +96,38 @@
     .catch(function(){c.innerHTML='<div class="ohc-cat-loading">Error loading colleges</div>';});
   }
 
-  function run(){if(!isHome())return;loadFonts();enhanceHero();injectTopExams();injectCategories();}
-  function go(){[1500,3000,5000,7000,10000].forEach(function(d){setTimeout(run,d);});}
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go);}else{go();}
-  var cur=location.href;
-  if(isHome()){
-    var obsTimer=null;
-    new MutationObserver(function(){
-      if(location.href!==cur){
-        cur=location.href;
-        clearTimeout(obsTimer);
-        ['ohc-hero-search','ohcHeroStats','ohc-top-exams','ohc-categories'].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});
-        if(isHome()){obsTimer=setTimeout(go,2000);}
-      }
-    }).observe(document.body,{childList:true,subtree:false});
+  function cleanup(){
+    ['ohc-hero-search','ohcHeroStats','ohc-top-exams','ohc-categories'].forEach(function(id){
+      var e=document.getElementById(id);if(e)e.remove();
+    });
+    var hero=document.querySelector('.heroSection.ohc-home-hero');
+    if(hero)hero.classList.remove('ohc-home-hero');
   }
+
+  function run(){
+    if(!isHome()){cleanup();return;}
+    loadFonts();enhanceHero();injectTopExams();injectCategories();
+  }
+
+  function go(){[1000,2000,3500,5000,7000,10000].forEach(function(d){setTimeout(run,d);});}
+
+  /* Initial run */
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go);}else{go();}
+
+  /* Watch for Angular SPA navigation — always active regardless of starting page */
+  var lastUrl=location.href;
+  var navTimer=null;
+  new MutationObserver(function(){
+    if(location.href!==lastUrl){
+      lastUrl=location.href;
+      clearTimeout(navTimer);
+      cleanup();
+      if(isHome()){navTimer=setTimeout(go,800);}
+    }
+    /* Also detect if we're on home but hero hasn't been enhanced yet (Angular rebuilt DOM) */
+    if(isHome()&&document.querySelector('.heroSection')&&!document.getElementById('ohc-hero-search')){
+      clearTimeout(navTimer);
+      navTimer=setTimeout(run,500);
+    }
+  }).observe(document.body,{childList:true,subtree:true});
 })();
