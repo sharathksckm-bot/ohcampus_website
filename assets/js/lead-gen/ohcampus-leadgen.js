@@ -533,7 +533,7 @@
             
             if (!targetElement || document.getElementById('ohc-mgmt-widget')) return;
             
-            var collegeName = document.querySelector('h1') ? document.querySelector('h1').textContent : 'this college';
+            var collegeNameEl = document.querySelector('.text-lg.font-bold.leading-none, .font-bold.text-lg, [class*=college][class*=title], [class*=college][class*=name]'); var collegeName = (collegeNameEl && collegeNameEl.textContent) ? collegeNameEl.textContent.trim() : 'this college';
             
             var widget = document.createElement('div');
             widget.id = 'ohc-mgmt-widget';
