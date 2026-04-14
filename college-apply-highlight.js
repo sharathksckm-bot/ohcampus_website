@@ -94,8 +94,79 @@
     });
   }
   
+
+  function injectCampusVideo(){
+    if(!isCollegePage()) return;
+    if(document.getElementById('ohc-campus-video')) return;
+    
+    // Get college ID from URL
+    var pathParts = window.location.pathname.split('/');
+    var collegeId = pathParts[pathParts.length - 1];
+    if(!collegeId || isNaN(collegeId)) return;
+    
+    // Fetch college details to get video
+    fetch('https://campusapi.ohcampus.com/apps/College/getCollegeDetailsByID', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({collegeId: collegeId})
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var detail = d.college_detail;
+      if(!detail || !detail.length) return;
+      var clg = detail[0];
+      if(!clg.video_url) return;
+      
+      // Find "Take a look at Campus" section
+      var campusSection = null;
+      var headings = document.querySelectorAll('h3, h4, h5, span, div');
+      for(var i = 0; i < headings.length; i++){
+        if(headings[i].innerText && headings[i].innerText.trim().indexOf('Take a look at Campus') === 0){
+          campusSection = headings[i].closest('div');
+          break;
+        }
+      }
+      
+      var videoHtml = '';
+      if(clg.video_type === 'youtube'){
+        // Extract YouTube video ID
+        var ytUrl = clg.video_url;
+        var videoId = '';
+        var match = ytUrl.match(/[?&]v=([^&]+)/);
+        if(match) videoId = match[1];
+        else{
+          match = ytUrl.match(/youtu\.be\/([^?]+)/);
+          if(match) videoId = match[1];
+        }
+        if(videoId){
+          videoHtml = '<iframe width="100%" height="280" src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:12px;"></iframe>';
+        }
+      } else if(clg.video_type === 'upload'){
+        videoHtml = '<video controls width="100%" style="border-radius:12px;max-height:300px;" preload="metadata"><source src="' + clg.video_url + '" type="video/mp4">Your browser does not support video.</video>';
+      }
+      
+      if(!videoHtml) return;
+      
+      var container = document.createElement('div');
+      container.id = 'ohc-campus-video';
+      container.style.cssText = 'margin:16px 0;padding:0 16px;';
+      container.innerHTML = '<h4 style="font-family:Manrope,sans-serif;font-weight:700;font-size:1rem;color:#1a237e;margin:0 0 12px;display:flex;align-items:center;gap:8px"><i class="fas fa-play-circle" style="color:#e65100"></i> Campus Video</h4>' + videoHtml;
+      
+      if(campusSection){
+        // Insert at the top of the campus section
+        campusSection.insertBefore(container, campusSection.children[1] || null);
+      } else {
+        // Try inserting before the gallery/photos section
+        var gallery = document.querySelector('[class*="gallery"], [class*="photo-grid"]');
+        if(gallery) gallery.parentNode.insertBefore(container, gallery);
+      }
+    })
+    .catch(function(e){ console.log('Video fetch error:', e); });
+  }
+
   function cleanup(){
     var el = document.getElementById('ohc-apply-highlight');
+    var vid = document.getElementById('ohc-campus-video'); if(vid) vid.remove();
     if(el) el.remove();
   }
   
@@ -107,6 +178,7 @@
     }
     if(isCollegePage()){
       setTimeout(injectApplyHighlight, 2000);
+      setTimeout(injectCampusVideo, 3000);
     }
   }
   
