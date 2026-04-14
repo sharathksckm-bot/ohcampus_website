@@ -36,6 +36,36 @@
     
     document.body.appendChild(bar);
     
+    // Fix: Prevent campus photo clicks from changing banner image
+    // Store the original banner image URL on page load
+    setTimeout(function(){
+      var bannerImg = document.querySelector('img[class*="cover-img"], [class*="coverphoto"] img, [class*="banner-img"] img');
+      if(!bannerImg) {
+        // Find the first large background image in the header area
+        var allImgs = document.querySelectorAll('img');
+        for(var i = 0; i < allImgs.length; i++) {
+          if(allImgs[i].offsetWidth > 600 && allImgs[i].getBoundingClientRect().top < 400) {
+            bannerImg = allImgs[i];
+            break;
+          }
+        }
+      }
+      if(bannerImg) {
+        var originalBannerSrc = bannerImg.src;
+        // Watch for changes to the banner image src
+        var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(m) {
+            if(m.type === 'attributes' && m.attributeName === 'src') {
+              if(bannerImg.src !== originalBannerSrc) {
+                bannerImg.src = originalBannerSrc;
+              }
+            }
+          });
+        });
+        observer.observe(bannerImg, {attributes: true, attributeFilter: ['src']});
+      }
+    }, 3000);
+    
     // Wire up Apply Now button to click the Angular Apply Now
     document.getElementById('ohc-apply-btn').addEventListener('click', function(){
       // Try clicking Angular's Apply Now button

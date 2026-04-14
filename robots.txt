@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://ohcampus.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 2
+
+# Block backup files and internal paths
+Disallow: /*.bak
+Disallow: /*.bak2
+Disallow: /*.backup
+Disallow: /uploads/
+Disallow: /check-scholarship/test.html
+
+# Allow important resources
+Allow: /assets/
+Allow: /homepage-redesign.css
+Allow: /auth-redesign.css
