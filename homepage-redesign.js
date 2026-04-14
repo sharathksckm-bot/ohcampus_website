@@ -96,8 +96,36 @@
     .catch(function(){c.innerHTML='<div class="ohc-cat-loading">Error loading colleges</div>';});
   }
 
+
+  function injectLoansScholarships(){
+    if(document.getElementById('ohc-loans-scholarships'))return;
+    var cats=document.getElementById('ohc-categories');
+    if(!cats)return;
+    var el=document.createElement('div');
+    el.id='ohc-loans-scholarships';
+    el.className='ohc-top-exams';
+    el.innerHTML='<div class="ohc-section-title">Loans & Scholarships</div>'
+      +'<div class="ohc-section-subtitle">Finance your education with the right support</div>'
+      +'<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;padding:0 20px">'
+      +'<a href="/loans" style="flex:1;min-width:280px;max-width:480px;text-decoration:none">'
+      +'<div style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);border:1px solid #90caf9;border-radius:16px;padding:24px">'
+      +'<div style="width:50px;height:50px;background:#1565c0;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><i class="fas fa-university" style="color:white;font-size:22px"></i></div>'
+      +'<h3 style="font-size:1.1rem;font-weight:700;color:#0d47a1;margin:0 0 8px">Education Loans</h3>'
+      +'<p style="font-size:0.85rem;color:#333;margin:0 0 12px;line-height:1.4">Compare loans from 26+ banks. Get best interest rates for your education.</p>'
+      +'<span style="font-size:0.85rem;font-weight:600;color:#1565c0">Explore Loans <i class="fas fa-arrow-right"></i></span>'
+      +'</div></a>'
+      +'<a href="/scholarships" style="flex:1;min-width:280px;max-width:480px;text-decoration:none">'
+      +'<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1px solid #a5d6a7;border-radius:16px;padding:24px">'
+      +'<div style="width:50px;height:50px;background:#2e7d32;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><i class="fas fa-award" style="color:white;font-size:22px"></i></div>'
+      +'<h3 style="font-size:1.1rem;font-weight:700;color:#1b5e20;margin:0 0 8px">Scholarships</h3>'
+      +'<p style="font-size:0.85rem;color:#333;margin:0 0 12px;line-height:1.4">22+ scholarships available. Check eligibility & apply today!</p>'
+      +'<span style="font-size:0.85rem;font-weight:600;color:#2e7d32">Explore Scholarships <i class="fas fa-arrow-right"></i></span>'
+      +'</div></a></div>';
+    cats.parentNode.insertBefore(el,cats.nextSibling);
+  }
+
   function cleanup(){
-    ['ohc-hero-search','ohcHeroStats','ohc-top-exams','ohc-categories'].forEach(function(id){
+    ['ohc-hero-search','ohcHeroStats','ohc-top-exams','ohc-categories','ohc-loans-scholarships'].forEach(function(id){
       var e=document.getElementById(id);if(e)e.remove();
     });
     var hero=document.querySelector('.heroSection.ohc-home-hero');
@@ -106,7 +134,7 @@
 
   function run(){
     if(!isHome()){cleanup();return;}
-    loadFonts();enhanceHero();injectTopExams();injectCategories();
+    loadFonts();enhanceHero();injectTopExams();injectCategories();injectLoansScholarships();
   }
 
   function go(){[1000,2000,3500,5000,7000,10000].forEach(function(d){setTimeout(run,d);});}
