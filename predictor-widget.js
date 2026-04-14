@@ -203,16 +203,16 @@
         </section>
     `;
 
-    function findTrendingSection() {
-        // Find the "Trending Colleges & Universities" section by text content
+    function findTargetSection() {
+        // First try to find the Top Exams section injected by homepage-redesign.js
+        var topExams = document.getElementById('ohc-top-exams');
+        if (topExams) return topExams;
+        // Fallback: find "Featured Colleges" heading
         var allDivs = document.querySelectorAll('div');
         for (var i = 0; i < allDivs.length; i++) {
-            var div = allDivs[i];
-            var text = div.textContent || '';
-            // Match the heading div specifically (not too deeply nested with lots of child content)
-            if (text.trim().indexOf('Trending Colleges & Universities') === 0 && div.children.length < 10) {
-                // This is the heading container - return its parent which wraps the whole section
-                return div;
+            var text = allDivs[i].textContent || '';
+            if (text.trim().indexOf('Featured Colleges') === 0 && allDivs[i].children.length < 10) {
+                return allDivs[i].closest('[class*="px-30"],[class*="px-14"]') || allDivs[i];
             }
         }
         return null;
@@ -243,11 +243,11 @@
 
         document.head.insertAdjacentHTML('beforeend', widgetStyles);
 
-        // Try to find "Trending Colleges & Universities" section and insert BEFORE it
-        var trendingSection = findTrendingSection();
-        if (trendingSection) {
-            trendingSection.insertAdjacentHTML('beforebegin', widgetHTML);
-            console.log('OhCampus Predictor Widget: Inserted above Trending Colleges section');
+        // Insert above Top Exams section (or Featured Colleges as fallback)
+        var targetSection = findTargetSection();
+        if (targetSection) {
+            targetSection.insertAdjacentHTML('beforebegin', widgetHTML);
+            console.log('OhCampus Predictor Widget: Inserted above Top Exams section');
             return;
         }
 

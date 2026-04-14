@@ -131,39 +131,10 @@
   }
 
 
-  function injectPredictorSection(){
-    if(document.getElementById('ohc-predictor-cards'))return;
-    var topExams=document.getElementById('ohc-top-exams');
-    if(!topExams)return;
-    var el=document.createElement('div');
-    el.id='ohc-predictor-cards';
-    el.className='ohc-top-exams';
-    el.innerHTML='<div class="ohc-section-title">Rank & College Predictors</div>'
-      +'<div class="ohc-section-subtitle">Find the best colleges matching your exam rank</div>'
-      +'<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;padding:0 20px">'
-      +'<a href="/rank-predictor.html" style="flex:1;min-width:280px;max-width:480px;text-decoration:none">'
-      +'<div style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:1px solid #ffcc80;border-radius:16px;padding:28px;transition:transform 0.2s">'
-      +'<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">'
-      +'<div style="width:50px;height:50px;background:#e65100;border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-chart-line" style="color:white;font-size:22px"></i></div>'
-      +'<div><h3 style="font-size:1.15rem;font-weight:700;color:#bf360c;margin:0">Rank Predictor</h3>'
-      +'<p style="font-size:0.8rem;color:#666;margin:2px 0 0">KCET, COMEDK, JEE, NEET & more</p></div></div>'
-      +'<p style="font-size:0.88rem;color:#333;margin:0 0 14px;line-height:1.5">Enter your expected marks and get predicted rank with accuracy based on historical data.</p>'
-      +'<span style="font-size:0.9rem;font-weight:700;color:#e65100;display:flex;align-items:center;gap:6px">Predict My Rank <i class="fas fa-arrow-right"></i></span>'
-      +'</div></a>'
-      +'<a href="/college-predictor.html" style="flex:1;min-width:280px;max-width:480px;text-decoration:none">'
-      +'<div style="background:linear-gradient(135deg,#e8eaf6,#c5cae9);border:1px solid #9fa8da;border-radius:16px;padding:28px;transition:transform 0.2s">'
-      +'<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">'
-      +'<div style="width:50px;height:50px;background:#283593;border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-university" style="color:white;font-size:22px"></i></div>'
-      +'<div><h3 style="font-size:1.15rem;font-weight:700;color:#1a237e;margin:0">College Predictor</h3>'
-      +'<p style="font-size:0.8rem;color:#666;margin:2px 0 0">Find colleges by your rank</p></div></div>'
-      +'<p style="font-size:0.88rem;color:#333;margin:0 0 14px;line-height:1.5">Enter your exam rank and discover matching colleges with cutoff details, fees & more.</p>'
-      +'<span style="font-size:0.9rem;font-weight:700;color:#283593;display:flex;align-items:center;gap:6px">Find Colleges <i class="fas fa-arrow-right"></i></span>'
-      +'</div></a></div>';
-    topExams.parentNode.insertBefore(el,topExams);
-  }
+
 
   function cleanup(){
-    ['ohc-hero-search','ohcHeroStats','ohc-predictor-cards','ohc-top-exams','ohc-categories','ohc-loans-scholarships'].forEach(function(id){
+    ['ohc-hero-search','ohcHeroStats','ohc-top-exams','ohc-categories','ohc-loans-scholarships'].forEach(function(id){
       var e=document.getElementById(id);if(e)e.remove();
     });
     var hero=document.querySelector('.heroSection.ohc-home-hero');
@@ -172,7 +143,7 @@
 
   function run(){
     if(!isHome()){cleanup();return;}
-    loadFonts();enhanceHero();injectTopExams();injectPredictorSection();injectCategories();injectLoansScholarships();
+    loadFonts();enhanceHero();injectTopExams();injectCategories();injectLoansScholarships();
   }
 
   function go(){[1000,2000,3500,5000,7000,10000].forEach(function(d){setTimeout(run,d);});}
