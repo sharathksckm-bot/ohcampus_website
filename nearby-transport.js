@@ -92,7 +92,7 @@
     
     // Only show on homepage or college listing pages
     var path = window.location.pathname.toLowerCase();
-    if(path !== '/' && path.indexOf('/colleges') < 0 && path.indexOf('/college-details') < 0) return;
+    // Show on homepage and college pages
     
     var html = '<div id="ohc-nearby-section" style="margin:20px auto;max-width:1200px;padding:0 20px">'
       + '<div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">'
@@ -109,12 +109,19 @@
       + '</div></div>';
     
     // Insert on homepage after predictor or top exams
-    var targets = document.querySelectorAll('#predictors, #ohc-top-exams, .trending-section, [class*="trending"]');
-    for(var i=0; i<targets.length; i++){
-      if(targets[i].offsetHeight > 0){
-        targets[i].insertAdjacentHTML('afterend', html);
+    // Try multiple insertion points
+    var targets = ['#ohc-loans-scholarships', '#predictors', '#ohc-top-exams', '#ohc-categories'];
+    for(var t=0; t<targets.length; t++){
+      var el = document.querySelector(targets[t]);
+      if(el){
+        el.insertAdjacentHTML('afterend', html);
         return;
       }
+    }
+    // Fallback: before footer
+    var footer = document.querySelector('footer, .footer-section, [class*="footer"]');
+    if(footer){
+      footer.insertAdjacentHTML('beforebegin', html);
     }
   }
   
