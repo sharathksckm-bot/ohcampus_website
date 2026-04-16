@@ -7,7 +7,7 @@
   
   var PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.ohcampus.ohcampus';
   var PACKAGE = 'com.ohcampus.ohcampus';
-  var ICON = '/assets/images/logo/ohcampus-icon.png';
+  var ICON = '/assets/images/logo/ohcampus-icon.jpg';
   
   function isMobile(){
     return /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
