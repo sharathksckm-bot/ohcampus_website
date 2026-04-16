@@ -67,7 +67,17 @@ button:has(.icon-link.whatsapp),
     pointer-events: none !important;
 }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"OhCampus","url":"https://ohcampus.com","description":"Explore top colleges, courses, entrance exams in India. Compare colleges, predict ranks, get admission alerts.","potentialAction":{"@type":"SearchAction","target":"https://ohcampus.com/search-results.html?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"OhCampus","url":"https://ohcampus.com","logo":"https://ohcampus.com/assets/images/logo/ohcampus-logo.png","contactPoint":{"@type":"ContactPoint","telephone":"+91-8884560456","contactType":"customer support","email":"enquiry@ohcampus.com"},"sameAs":["https://play.google.com/store/apps/details?id=com.app.ohcampus"]}</script></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"OhCampus","url":"https://ohcampus.com","description":"Explore top colleges, courses, entrance exams in India. Compare colleges, predict ranks, get admission alerts.","potentialAction":{"@type":"SearchAction","target":"https://ohcampus.com/search-results.html?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"OhCampus","url":"https://ohcampus.com","logo":"https://ohcampus.com/assets/images/logo/ohcampus-logo.png","contactPoint":{"@type":"ContactPoint","telephone":"+91-8884560456","contactType":"customer support","email":"enquiry@ohcampus.com"},"sameAs":["https://play.google.com/store/apps/details?id=com.app.ohcampus"]}</script><style id="ohc-anti-flicker">
+/* Pre-hide Angular default sections until redesign loads */
+.heroSection,.hero-section,.px-30,.px-14,[class*="featured"],[class*="trending"]{opacity:0;transition:opacity 0.3s ease}
+.ohc-loaded .heroSection,.ohc-loaded .hero-section,.ohc-loaded .px-30,.ohc-loaded .px-14,.ohc-loaded [class*="featured"],.ohc-loaded [class*="trending"]{opacity:1}
+</style>
+<script>
+// Mark body as loaded once redesign scripts execute
+setTimeout(function(){document.body.classList.add("ohc-loaded")},3000);
+window.addEventListener("load",function(){setTimeout(function(){document.body.classList.add("ohc-loaded")},800)});
+</script>
+</head>
 
 <body>
 

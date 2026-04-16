@@ -167,4 +167,6 @@
       navTimer=setTimeout(run,500);
     }
   }).observe(document.body,{childList:true,subtree:true});
+  // Mark body as loaded to reveal sections
+  document.body.classList.add('ohc-loaded');
 })();
