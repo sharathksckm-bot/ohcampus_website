@@ -1,4 +1,4 @@
-/* OhCampus - Single Top App Banner */
+/* OhCampus - App Banner: Blue top Download OR Floating Open in App */
 (function(){
   'use strict';
   
@@ -65,36 +65,33 @@
     setTimeout(onTimeout, 1500);
   }
   
-  function showBanner(installed){
+  /* ===== App NOT installed: Blue top banner with Download ===== */
+  function showBlueDownloadBanner(){
     if(document.getElementById('ohc-app-banner')) return;
     if(sessionStorage.getItem('ohc_banner_dismissed') === 'true') return;
-    
-    var btnHref = installed ? getIntentUrl() : PLAY_STORE;
-    var btnText = installed ? 'Open in App' : 'Download';
-    var btnBg = installed ? '#4f46e5' : '#16a34a';
-    var subtitle = installed ? 'Continue on the app' : 'Get the OhCampus app';
     
     var banner = document.createElement('div');
     banner.id = 'ohc-app-banner';
     banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;'
-      + 'background:#111827;border-bottom:1px solid #1e293b;'
-      + 'padding:8px 10px;display:flex;align-items:center;gap:10px;'
+      + 'background:linear-gradient(135deg,#1565c0,#1976d2);'
+      + 'padding:8px 12px;display:flex;align-items:center;gap:10px;'
       + 'font-family:Inter,-apple-system,sans-serif;'
-      + 'box-shadow:0 2px 12px rgba(0,0,0,0.3);';
+      + 'box-shadow:0 2px 12px rgba(0,0,0,0.25);';
     
-    banner.innerHTML = '<img src="' + ICON + '" style="width:36px;height:36px;border-radius:10px;flex-shrink:0" onerror="this.style.display=\'none\'">'
+    banner.innerHTML = '<img src="' + ICON + '" style="width:38px;height:38px;border-radius:10px;border:2px solid rgba(255,255,255,0.2);flex-shrink:0" onerror="this.style.display=\'none\'">'
       + '<div style="flex:1;min-width:0;overflow:hidden">'
-      + '<div style="font-size:0.82rem;font-weight:700;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">OhCampus</div>'
-      + '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap">' + subtitle + '</div>'
+      + '<div style="font-size:0.85rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">OhCampus App</div>'
+      + '<div style="font-size:0.65rem;color:rgba(255,255,255,0.75);white-space:nowrap">Get accurate College Predictions</div>'
       + '</div>'
-      + '<a id="ohc-banner-btn" href="' + btnHref + '"' + (installed ? '' : ' target="_blank"') + ' style="'
-      + 'background:' + btnBg + ';color:#fff;padding:7px 16px;border-radius:8px;'
-      + 'font-size:0.8rem;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;'
-      + '">' + btnText + '</a>'
-      + '<button id="ohc-banner-dismiss" style="background:none;border:none;color:#475569;font-size:18px;cursor:pointer;padding:2px 4px;flex-shrink:0;line-height:1">&times;</button>';
+      + '<a href="' + PLAY_STORE + '" target="_blank" style="'
+      + 'background:#ff6d00;color:#fff;padding:8px 18px;border-radius:20px;'
+      + 'font-size:0.82rem;font-weight:800;text-decoration:none;white-space:nowrap;flex-shrink:0;'
+      + '">Download</a>'
+      + '<button id="ohc-banner-dismiss" style="background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:14px;cursor:pointer;'
+      + 'width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1">&times;</button>';
     
     document.body.insertBefore(banner, document.body.firstChild);
-    document.body.style.paddingTop = '54px';
+    document.body.style.paddingTop = '56px';
     
     document.getElementById('ohc-banner-dismiss').addEventListener('click', function(){
       banner.remove();
@@ -103,16 +100,54 @@
     });
   }
   
-  function removeBanner(){
+  /* ===== App IS installed: Floating purple pill ===== */
+  function showFloatingOpenInApp(){
+    if(document.getElementById('ohc-floating-open')) return;
+    if(sessionStorage.getItem('ohc_float_dismissed') === 'true') return;
+    
+    var el = document.createElement('div');
+    el.id = 'ohc-floating-open';
+    el.style.cssText = 'position:fixed;bottom:80px;right:14px;z-index:99998;';
+    el.innerHTML = '<a href="' + getIntentUrl() + '" style="'
+      + 'display:flex;align-items:center;gap:8px;'
+      + 'background:linear-gradient(135deg,#4f46e5,#7c3aed);'
+      + 'color:#fff;padding:11px 20px;border-radius:50px;'
+      + 'text-decoration:none;font-family:Inter,-apple-system,sans-serif;'
+      + 'font-size:0.85rem;font-weight:700;'
+      + 'box-shadow:0 4px 24px rgba(79,70,229,0.45);'
+      + '">'
+      + '<img src="' + ICON + '" style="width:22px;height:22px;border-radius:6px" onerror="this.style.display=\'none\'">'
+      + '<span>Open in App</span>'
+      + '</a>'
+      + '<button id="ohc-float-dismiss" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;'
+      + 'background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:11px;cursor:pointer;'
+      + 'display:flex;align-items:center;justify-content:center;line-height:1">&times;</button>';
+    
+    document.body.appendChild(el);
+    
+    document.getElementById('ohc-float-dismiss').addEventListener('click', function(e){
+      e.stopPropagation();
+      el.remove();
+      sessionStorage.setItem('ohc_float_dismissed', 'true');
+    });
+  }
+  
+  function removeAll(){
     var b = document.getElementById('ohc-app-banner');
     if(b){ b.remove(); document.body.style.paddingTop = ''; }
+    var f = document.getElementById('ohc-floating-open');
+    if(f) f.remove();
   }
   
   function init(){
     if(!isMobile()) return;
     detectAppInstalled(function(installed){
-      removeBanner();
-      showBanner(installed);
+      removeAll();
+      if(installed){
+        showFloatingOpenInApp();
+      } else {
+        showBlueDownloadBanner();
+      }
     });
   }
   
@@ -126,7 +161,7 @@
   new MutationObserver(function(){
     if(location.href !== lastUrl){
       lastUrl = location.href;
-      removeBanner();
+      removeAll();
       setTimeout(init, 1000);
     }
   }).observe(document.body, {childList: true, subtree: true});
