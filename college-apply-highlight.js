@@ -29,6 +29,8 @@
               // Remove if already injected during the async check
               var el = document.getElementById('ohc-apply-highlight');
               if(el) el.remove();
+              // Also hide the built-in "Skip the Counseling" section from Angular template
+              hideBuiltInApplyBanners();
               return;
             }
           }
@@ -41,6 +43,28 @@
     doInjectApplyHighlight();
   }
   
+  function hideBuiltInApplyBanners(){
+    // Hide Angular's built-in "Skip the Counseling Uncertainty" and "Request Info" sections
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while(walker.nextNode()){
+      if(walker.currentNode.textContent.indexOf('Skip the Counseling') >= 0){
+        var el = walker.currentNode.parentElement;
+        // Walk up to find the containing card/section div
+        for(var i=0;i<5;i++){
+          if(el && el.parentElement){
+            el = el.parentElement;
+            var s = el.style || {};
+            // Look for the orange/gradient background section
+            if(el.offsetHeight > 50 && el.offsetHeight < 300){
+              el.style.display = 'none';
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
   function doInjectApplyHighlight(){
     if(!isCollegePage()) return;
     if(document.getElementById('ohc-apply-highlight')) return;
@@ -228,5 +252,6 @@
   
   new MutationObserver(function(){
     if(location.href !== lastUrl) check();
+    if(window.__ohcGovtCollege && isCollegePage()) hideBuiltInApplyBanners();
   }).observe(document.body, {childList:true, subtree:true});
 })();
