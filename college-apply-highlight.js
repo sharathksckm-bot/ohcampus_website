@@ -126,41 +126,32 @@
       }
     }, 3000);
     
-    // Wire up Apply Now button - scroll to Request Info / Skip Counseling section
+    // Wire up Apply Now button: scroll to Angular Apply Now and trigger it
     document.getElementById('ohc-apply-btn').addEventListener('click', function(){
-      // Priority 1: Find the "Request Info" button (our injected one)
-      var mgmtBtn = document.getElementById('ohc-mgmt-btn');
-      if(mgmtBtn && mgmtBtn.offsetWidth > 0){
-        mgmtBtn.scrollIntoView({behavior:'smooth', block:'center'});
-        setTimeout(function(){ mgmtBtn.click(); }, 600);
-        return;
-      }
-      // Priority 2: Find "Skip the Counseling" / "Request Info" in Angular content
-      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      while(walker.nextNode()){
-        if(walker.currentNode.textContent.indexOf('Skip the Counseling') >= 0){
-          var section = walker.currentNode.parentElement;
-          for(var k=0;k<5;k++){ if(section.parentElement && section.offsetHeight < 300) section = section.parentElement; }
-          section.scrollIntoView({behavior:'smooth', block:'center'});
-          // Try clicking Request Info button inside
-          setTimeout(function(){
-            var reqBtn = section.querySelector('button, a');
-            if(reqBtn) reqBtn.click();
-          }, 600);
-          return;
-        }
-      }
-      // Priority 3: Find any "Brochure" or "Predict Admission" button to scroll there
-      var allBtns = document.querySelectorAll('button, a');
+      // Find the Angular Apply Now button
+      var angularBtn = null;
+      var allBtns = document.querySelectorAll('button');
       for(var i=0;i<allBtns.length;i++){
-        var txt = allBtns[i].textContent.trim();
-        if((txt.indexOf('Brochure') !== -1 || txt.indexOf('Predict') !== -1) && allBtns[i].offsetWidth > 0){
-          allBtns[i].scrollIntoView({behavior:'smooth', block:'center'});
-          return;
+        if(allBtns[i].textContent.trim()==='Apply Now' && allBtns[i].offsetWidth>0 && !allBtns[i].closest('#ohc-apply-highlight')){
+          angularBtn = allBtns[i];
+          break;
         }
       }
-      // Final fallback: open enquiry via WhatsApp/phone
-      window.open('https://wa.me/918884560456?text=Hi, I am interested in getting admission details for this college: ' + encodeURIComponent(document.title), '_blank');
+      if(angularBtn){
+        // Scroll to make the button visible
+        angularBtn.scrollIntoView({behavior:'smooth', block:'center'});
+        // Flash highlight effect
+        var origBg = angularBtn.style.background;
+        angularBtn.style.background = '#ffd700';
+        angularBtn.style.transform = 'scale(1.15)';
+        angularBtn.style.transition = 'all 0.3s';
+        setTimeout(function(){
+          angularBtn.style.background = origBg;
+          angularBtn.style.transform = '';
+          // Trigger click after scroll completes
+          angularBtn.click();
+        }, 800);
+      }
     });
   }
   
