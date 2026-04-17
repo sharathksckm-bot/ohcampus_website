@@ -1,6 +1,8 @@
 /* OhCampus - Transport + Nearby Colleges */
 (function(){
   var API='https://campusapi.ohcampus.com';
+  var transportShownForCid=null;
+  var transportFetching=false;
 
   function isCollegePage(){
     return location.pathname.indexOf('/collegeDetails/')>=0;
@@ -22,14 +24,26 @@
     return null;
   }
 
+  function removeAllTransport(){
+    var els=document.querySelectorAll('[id="ohc-transport-section"]');
+    for(var i=0;i<els.length;i++)els[i].remove();
+  }
+
   function showTransport(cid){
-    if(document.getElementById('ohc-transport-section'))return;
+    if(transportShownForCid===cid)return;
+    if(transportFetching)return;
     var contactDiv=findContactDetailsSection();
     if(!contactDiv)return;
+    transportFetching=true;
     fetch(API+'/apps/NearbyCollege/getTransport',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({college_id:cid})})
     .then(function(r){return r.json()})
     .then(function(d){
+      transportFetching=false;
       if(!d.feature_enabled||!d.transport||d.transport.length===0)return;
+      // Remove any existing before inserting
+      removeAllTransport();
+      var contactDiv2=findContactDetailsSection();
+      if(!contactDiv2)return;
       var icons={railway:'\u{1F686}',airport:'\u2708\uFE0F',bus_stand:'\u{1F68C}',metro:'\u{1F687}'};
       var labels={railway:'Railway Station',airport:'Airport',bus_stand:'Bus Stand',metro:'Metro Station'};
       var html='<div id="ohc-transport-section" style="margin-top:16px;padding:18px 20px;background:#f0f9ff;border-radius:14px;border:1px solid #bae6fd">'
@@ -43,19 +57,18 @@
           +'<div style="font-size:0.72rem;color:#4f46e5;font-weight:600">'+t.distance_km+' km</div></div></div>';
       });
       html+='</div></div>';
-      contactDiv.insertAdjacentHTML('afterend',html);
-    }).catch(function(){});
+      contactDiv2.insertAdjacentHTML('afterend',html);
+      transportShownForCid=cid;
+    }).catch(function(){transportFetching=false;});
   }
 
   function findQuickEnquirySection(){
-    // Look for the "Quick Enquiry" heading
     var allEls=document.querySelectorAll('div,h1,h2,h3,h4,h5');
     for(var i=0;i<allEls.length;i++){
       var el=allEls[i];
       var nodes=el.childNodes;
       for(var j=0;j<nodes.length;j++){
         if(nodes[j].nodeType===3 && nodes[j].textContent.trim().toLowerCase()==='quick enquiry'){
-          // Walk up to find the section container (parent with bgContact class)
           var parent=el;
           for(var k=0;k<5;k++){
             if(parent.parentElement){
@@ -75,16 +88,12 @@
   function showNearby(){
     if(document.getElementById('ohc-nearby-section'))return;
     if(!navigator.geolocation)return;
-    
-    // Place below Quick Enquiry form
     var anchor=findQuickEnquirySection();
     if(!anchor){
-      // Fallback to footer area
       var f=document.querySelector('footer,[class*="footer"]');
       if(f)anchor=f;
     }
     if(!anchor)return;
-    
     var html='<div id="ohc-nearby-section" style="margin:20px auto;max-width:1200px;padding:0 20px">'
       +'<div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">'
       +'<h3 style="font-size:1.1rem;font-weight:700;color:#0f172a;margin:0 0 4px">\u{1F4CD} Colleges Near You</h3>'
@@ -128,7 +137,9 @@
     var path=location.pathname;
     if(path!==lastPath){
       lastPath=path;
-      var o1=document.getElementById('ohc-transport-section');if(o1)o1.remove();
+      removeAllTransport();
+      transportShownForCid=null;
+      transportFetching=false;
       var o2=document.getElementById('ohc-nearby-section');if(o2)o2.remove();
     }
     if(isCollegePage()){
