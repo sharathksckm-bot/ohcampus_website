@@ -24,17 +24,25 @@
           var detail = d.college_detail;
           if(detail && detail.length > 0){
             var typeName = (detail[0].Collage_category || '').toLowerCase();
+            var packageType = (detail[0].package_type || '').toLowerCase();
+            
             if(typeName === 'government'){
               window.__ohcGovtCollege = true;
-              // Remove if already injected during the async check
               var el = document.getElementById('ohc-apply-highlight');
               if(el) el.remove();
-              // Also hide the built-in "Skip the Counseling" section from Angular template
               hideBuiltInApplyBanners();
               return;
             }
+            
+            // Only show banner for featured colleges (package_type = feature_listing)
+            if(packageType !== 'feature_listing'){
+              window.__ohcNotFeatured = true;
+              var el2 = document.getElementById('ohc-apply-highlight');
+              if(el2) el2.remove();
+              return;
+            }
           }
-          // Not government - proceed with injection
+          // Featured non-government college - proceed with injection
           doInjectApplyHighlight();
         }).catch(function(){ doInjectApplyHighlight(); });
         return;
@@ -69,6 +77,7 @@
     if(!isCollegePage()) return;
     if(document.getElementById('ohc-apply-highlight')) return;
     if(window.__ohcGovtCollege) return;
+    if(window.__ohcNotFeatured) return;
     
     // Add style for repositioning floating buttons
     if(!document.getElementById('ohc-apply-style')){
@@ -230,6 +239,7 @@
     var vid = document.getElementById('ohc-campus-video'); if(vid) vid.remove();
     if(el) el.remove();
     window.__ohcGovtCollege = false;
+    window.__ohcNotFeatured = false;
     window.__ohcCollegeTypeChecked = false;
   }
   
