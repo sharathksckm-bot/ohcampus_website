@@ -18,7 +18,12 @@
   
   function getIntentUrl(){
     var path = window.location.pathname.replace(/^\//, '');
-    return 'intent://' + (path || 'home') + '#Intent;scheme=https;package=' + PACKAGE + ';S.browser_fallback_url=' + encodeURIComponent(PLAY_STORE) + ';end';
+    // Only pass college detail paths to the app; others open app home
+    var appPath = 'home';
+    if(path.indexOf('collegeDetails/') === 0) {
+      appPath = path;
+    }
+    return 'intent://' + appPath + '#Intent;scheme=https;package=' + PACKAGE + ';S.browser_fallback_url=' + encodeURIComponent(PLAY_STORE) + ';end';
   }
   
   function detectAppInstalled(callback){
