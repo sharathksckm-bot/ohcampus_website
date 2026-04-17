@@ -15,7 +15,6 @@
     var h1s=document.querySelectorAll('h1');
     for(var i=0;i<h1s.length;i++){
       if(h1s[i].textContent.trim()==='Contact Details'){
-        // Return the parent div.bg-card.rounded
         var parent=h1s[i].parentElement;
         if(parent)return parent;
       }
@@ -31,14 +30,14 @@
     .then(function(r){return r.json()})
     .then(function(d){
       if(!d.feature_enabled||!d.transport||d.transport.length===0)return;
-      var icons={railway:'&#128646;',airport:'&#9992;&#65039;',bus_stand:'&#128652;'};
-      var labels={railway:'Railway Station',airport:'Airport',bus_stand:'Bus Stand'};
+      var icons={railway:'\u{1F686}',airport:'\u2708\uFE0F',bus_stand:'\u{1F694}',metro:'\u{1F687}'};
+      var labels={railway:'Railway Station',airport:'Airport',bus_stand:'Bus Stand',metro:'Metro Station'};
       var html='<div id="ohc-transport-section" style="margin-top:16px;padding:18px 20px;background:#f0f9ff;border-radius:14px;border:1px solid #bae6fd">'
-        +'<h3 style="font-size:1rem;font-weight:700;color:#0f172a;margin:0 0 12px;display:flex;align-items:center;gap:6px">&#128205; Nearest Transport</h3>'
+        +'<h3 style="font-size:1rem;font-weight:700;color:#0f172a;margin:0 0 12px;display:flex;align-items:center;gap:6px">\u{1F4CD} Nearest Transport</h3>'
         +'<div style="display:flex;flex-direction:column;gap:10px">';
       d.transport.forEach(function(t){
         html+='<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:10px;border:1px solid #e2e8f0">'
-          +'<span style="font-size:22px">'+(icons[t.type]||'&#128205;')+'</span>'
+          +'<span style="font-size:22px">'+(icons[t.type]||'\u{1F4CD}')+'</span>'
           +'<div><div style="font-size:0.72rem;color:#64748b">'+(labels[t.type]||t.type)+'</div>'
           +'<div style="font-size:0.88rem;font-weight:600;color:#1e293b">'+t.name+'</div>'
           +'<div style="font-size:0.72rem;color:#4f46e5;font-weight:600">'+t.distance_km+' km</div></div></div>';
@@ -58,7 +57,7 @@
     if(!anchor)return;
     var html='<div id="ohc-nearby-section" style="margin:20px auto;max-width:1200px;padding:0 20px">'
       +'<div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">'
-      +'<h3 style="font-size:1.1rem;font-weight:700;color:#0f172a;margin:0 0 4px">&#128205; Colleges Near You</h3>'
+      +'<h3 style="font-size:1.1rem;font-weight:700;color:#0f172a;margin:0 0 4px">\u{1F4CD} Colleges Near You</h3>'
       +'<p style="font-size:0.78rem;color:#64748b;margin:0 0 14px">Find colleges in your area offering your preferred courses</p>'
       +'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
       +'<select id="ohc-radius" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem">'
@@ -93,7 +92,6 @@
     },function(){el.innerHTML='<div style="padding:16px;color:#f87171">Location access denied.</div>';},{enableHighAccuracy:true,timeout:10000});
   };
 
-  // Polling: check every 1.5s
   var lastPath='';
   setInterval(function(){
     var path=location.pathname;
