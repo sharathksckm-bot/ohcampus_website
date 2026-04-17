@@ -105,7 +105,7 @@
     if(isCollegePage()){
       var cid=getCollegeId();
       if(cid)showTransport(cid);
-    }else if(path==='/'){
+    }else if(path==='/' || path==='/home'){
       showNearby();
     }
   },1500);
