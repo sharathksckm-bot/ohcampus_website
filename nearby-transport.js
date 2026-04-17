@@ -125,7 +125,7 @@
           h+='<a href="/collegeDetails/'+c.id+'" style="display:block;text-decoration:none;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;transition:border-color 0.2s" onmouseover="this.style.borderColor=\'#4f46e5\'" onmouseout="this.style.borderColor=\'#e2e8f0\'">'
             +'<div style="font-size:0.88rem;font-weight:600;color:#1e293b">'+c.title+'</div>'
             +'<div style="font-size:0.72rem;color:#64748b">'+(c.city||'')+(c.state?', '+c.state:'')+'</div>'
-            +'<div style="font-size:0.75rem;color:#4f46e5;font-weight:600;margin-top:3px">'+c.distance_km+' km away</div></a>';
+            +'<div style="font-size:0.75rem;color:#4f46e5;font-weight:600;margin-top:3px">~'+c.distance_km+' km away</div></a>';
         });
         el.innerHTML=h+'</div>';
       }).catch(function(){el.innerHTML='<div style="padding:16px;color:#f87171">Failed to search. Please try again.</div>';});
