@@ -126,31 +126,41 @@
       }
     }, 3000);
     
-    // Wire up Apply Now button to click the Angular Apply Now
+    // Wire up Apply Now button - scroll to Request Info / Skip Counseling section
     document.getElementById('ohc-apply-btn').addEventListener('click', function(){
-      // Try clicking Angular's Apply Now button
-      var angularBtn = document.querySelector('button[class*="apply"], a[class*="apply"], [class*="Apply Now"]');
-      if(!angularBtn) {
-        // Try finding by text content
-        var allBtns = document.querySelectorAll('button, a');
-        for(var i = 0; i < allBtns.length; i++){
-          if(allBtns[i].textContent.trim().indexOf('Apply Now') !== -1 && allBtns[i].offsetWidth > 0){
-            angularBtn = allBtns[i];
-            break;
-          }
+      // Priority 1: Find the "Request Info" button (our injected one)
+      var mgmtBtn = document.getElementById('ohc-mgmt-btn');
+      if(mgmtBtn && mgmtBtn.offsetWidth > 0){
+        mgmtBtn.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(function(){ mgmtBtn.click(); }, 600);
+        return;
+      }
+      // Priority 2: Find "Skip the Counseling" / "Request Info" in Angular content
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      while(walker.nextNode()){
+        if(walker.currentNode.textContent.indexOf('Skip the Counseling') >= 0){
+          var section = walker.currentNode.parentElement;
+          for(var k=0;k<5;k++){ if(section.parentElement && section.offsetHeight < 300) section = section.parentElement; }
+          section.scrollIntoView({behavior:'smooth', block:'center'});
+          // Try clicking Request Info button inside
+          setTimeout(function(){
+            var reqBtn = section.querySelector('button, a');
+            if(reqBtn) reqBtn.click();
+          }, 600);
+          return;
         }
       }
-      if(angularBtn){
-        angularBtn.click();
-        // Scroll to the form area
-        setTimeout(function(){
-          var form = document.querySelector('form, [class*="apply-form"], mat-dialog-container');
-          if(form) form.scrollIntoView({behavior:'smooth', block:'center'});
-        }, 500);
-      } else {
-        // Fallback: scroll to top where Apply Now button is
-        window.scrollTo({top: 0, behavior: 'smooth'});
+      // Priority 3: Find any "Brochure" or "Predict Admission" button to scroll there
+      var allBtns = document.querySelectorAll('button, a');
+      for(var i=0;i<allBtns.length;i++){
+        var txt = allBtns[i].textContent.trim();
+        if((txt.indexOf('Brochure') !== -1 || txt.indexOf('Predict') !== -1) && allBtns[i].offsetWidth > 0){
+          allBtns[i].scrollIntoView({behavior:'smooth', block:'center'});
+          return;
+        }
       }
+      // Final fallback: open enquiry via WhatsApp/phone
+      window.open('https://wa.me/918884560456?text=Hi, I am interested in getting admission details for this college: ' + encodeURIComponent(document.title), '_blank');
     });
   }
   
