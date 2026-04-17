@@ -54,7 +54,7 @@
           +'<span style="font-size:22px">'+(icons[t.type]||'\u{1F4CD}')+'</span>'
           +'<div><div style="font-size:0.72rem;color:#64748b">'+(labels[t.type]||t.type)+'</div>'
           +'<div style="font-size:0.88rem;font-weight:600;color:#1e293b">'+t.name+'</div>'
-          +'<div style="font-size:0.72rem;color:#4f46e5;font-weight:600">'+t.distance_km+' km</div></div></div>';
+          +'<div style="font-size:0.72rem;color:#4f46e5;font-weight:600">~'+t.distance_km+' km</div></div></div>';
       });
       html+='</div></div>';
       contactDiv2.insertAdjacentHTML('afterend',html);
