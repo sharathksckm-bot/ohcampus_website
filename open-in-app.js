@@ -76,7 +76,7 @@
   /* ===== App NOT installed: Blue Download banner at top ===== */
   function showDownloadBanner(){
     if(document.getElementById('ohc-app-banner')) return;
-    if(sessionStorage.getItem('ohc_banner_dismissed') === 'true') return;
+    if(localStorage.getItem('ohc_banner_dismissed') === 'true') return;
     
     var banner = document.createElement('div');
     banner.id = 'ohc-app-banner';
@@ -104,7 +104,7 @@
     document.getElementById('ohc-banner-dismiss').addEventListener('click', function(){
       banner.remove();
       document.body.style.paddingTop = '';
-      sessionStorage.setItem('ohc_banner_dismissed', 'true');
+      localStorage.setItem('ohc_banner_dismissed', 'true');
     });
   }
   
@@ -115,7 +115,7 @@
     
     var el = document.createElement('div');
     el.id = 'ohc-floating-open';
-    el.style.cssText = 'position:fixed;bottom:80px;right:14px;z-index:99998;';
+    el.style.cssText = 'position:fixed;bottom:140px;right:14px;z-index:99998;';
     el.innerHTML = '<a href="' + getIntentUrl() + '" style="'
       + 'display:flex;align-items:center;gap:8px;'
       + 'background:linear-gradient(135deg,#4f46e5,#7c3aed);'
