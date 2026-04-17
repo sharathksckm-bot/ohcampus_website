@@ -9,6 +9,42 @@
   function injectApplyHighlight(){
     if(!isCollegePage()) return;
     if(document.getElementById('ohc-apply-highlight')) return;
+    if(window.__ohcGovtCollege) return;
+    
+    // Check if this is a Government college - skip the banner
+    if(!window.__ohcCollegeTypeChecked){
+      window.__ohcCollegeTypeChecked = true;
+      var pathParts = window.location.pathname.split('/');
+      var cid = pathParts[pathParts.length - 1];
+      if(cid && !isNaN(cid)){
+        fetch('https://campusapi.ohcampus.com/apps/College/getCollegeDetailsByID',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({collegeId:cid})
+        }).then(function(r){return r.json()}).then(function(d){
+          var detail = d.college_detail;
+          if(detail && detail.length > 0){
+            var typeName = (detail[0].Collage_category || '').toLowerCase();
+            if(typeName === 'government'){
+              window.__ohcGovtCollege = true;
+              // Remove if already injected during the async check
+              var el = document.getElementById('ohc-apply-highlight');
+              if(el) el.remove();
+              return;
+            }
+          }
+          // Not government - proceed with injection
+          doInjectApplyHighlight();
+        }).catch(function(){ doInjectApplyHighlight(); });
+        return;
+      }
+    }
+    doInjectApplyHighlight();
+  }
+  
+  function doInjectApplyHighlight(){
+    if(!isCollegePage()) return;
+    if(document.getElementById('ohc-apply-highlight')) return;
+    if(window.__ohcGovtCollege) return;
     
     // Add style for repositioning floating buttons
     if(!document.getElementById('ohc-apply-style')){
@@ -168,6 +204,8 @@
     var el = document.getElementById('ohc-apply-highlight');
     var vid = document.getElementById('ohc-campus-video'); if(vid) vid.remove();
     if(el) el.remove();
+    window.__ohcGovtCollege = false;
+    window.__ohcCollegeTypeChecked = false;
   }
   
   var lastUrl = location.href;
